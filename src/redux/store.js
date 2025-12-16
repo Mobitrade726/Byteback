@@ -1,0 +1,92 @@
+// // src/redux/store.js
+// import { configureStore } from '@reduxjs/toolkit';
+// import cartReducer from './slices/cartSlice';
+// import wishlistReducer from './slices/wishlistSlice';
+// import homeReducer from './slices/homeSlice';
+// import catReducer from './slices/catSlice';
+// import profileReducer from './slices/profileSlice';
+// import productReducer from './slices/productSlice';
+// import walletReducer from './slices/walletSlice';
+// import orderReducer from './slices/orderSlice';
+// import returnReducer from './slices/returnSlice';
+// import buyerAddressReducer from './slices/buyerAddressSlice';
+// import logoutDevicesReducer from './slices/logoutDevicesSlice';
+// import authReducer from './slices/authSlice'
+
+// export const store = configureStore({
+//   reducer: {
+//     cart: cartReducer,
+//     wishlist: wishlistReducer,
+//     home: homeReducer,
+//     cat: catReducer,
+//     profile: profileReducer,
+//     product: productReducer,
+//     wallet: walletReducer,
+//     orders: orderReducer,
+//     returns: returnReducer,
+//     buyerAddress: buyerAddressReducer,
+//     logoutDevices: logoutDevicesReducer,
+//     auth: authReducer,
+//   },
+// });
+
+
+import { combineReducers, configureStore } from '@reduxjs/toolkit';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import { persistStore, persistReducer } from 'redux-persist';
+
+import cartReducer from './slices/cartSlice';
+import wishlistReducer from './slices/wishlistSlice';
+import homeReducer from './slices/homeSlice';
+import catReducer from './slices/catSlice';
+import profileReducer from './slices/profileSlice';
+import productReducer from './slices/productSlice';
+import walletReducer from './slices/walletSlice';
+import orderReducer from './slices/orderSlice';
+import returnReducer from './slices/returnSlice';
+import buyerAddressReducer from './slices/buyerAddressSlice';
+import logoutDevicesReducer from './slices/logoutDevicesSlice';
+import authReducer from './slices/authSlice';
+
+// --------------------------------------
+// Persist Config
+// --------------------------------------
+const persistConfig = {
+  key: 'root',
+  storage: AsyncStorage,
+  whitelist: ['auth'], // only auth slice persist
+};
+
+// --------------------------------------
+// Root Reducer
+// --------------------------------------
+const rootReducer = combineReducers({
+  auth: authReducer,
+  logoutDevices: logoutDevicesReducer,
+  cart: cartReducer,
+  wishlist: wishlistReducer,
+  home: homeReducer,
+  cat: catReducer,
+  profile: profileReducer,
+  product: productReducer,
+  wallet: walletReducer,
+  orders: orderReducer,
+  returns: returnReducer,
+  buyerAddress: buyerAddressReducer,
+});
+
+// --------------------------------------
+// Persisted Reducer
+// --------------------------------------
+const persistedReducer = persistReducer(persistConfig, rootReducer);
+
+// --------------------------------------
+// Store
+// --------------------------------------
+export const store = configureStore({
+  reducer: persistedReducer, // ✅ only this
+  middleware: getDefaultMiddleware =>
+    getDefaultMiddleware({ serializableCheck: false }),
+});
+
+export const persistor = persistStore(store);
