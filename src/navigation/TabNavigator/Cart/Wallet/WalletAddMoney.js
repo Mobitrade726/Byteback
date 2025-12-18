@@ -273,78 +273,172 @@ const WalletAddMoney = ({ navigation }) => {
   };
 
   return (
+    // <SafeAreaView style={styles.container}>
+    //   <Header
+    //     title="Wallet : Add Money"
+    //     navigation={navigation}
+    //     showBack={true}
+    //   />
+    //   <ScrollView
+    //     contentContainerStyle={{ padding: 20 }}
+    //     showsVerticalScrollIndicator={false}
+    //   >
+    //     <View style={styles.balanceContainer}>
+    //       <Text style={styles.balanceLabel}>Wallet Balance</Text>
+    //       {loading ? (
+    //         <ActivityIndicator color="#14AE5C" />
+    //       ) : (
+    //         <Text style={styles.balanceValue}>₹{balance}</Text>
+    //       )}
+    //     </View>
+
+    //     <TextInput
+    //       style={styles.input}
+    //       placeholder="Enter amount"
+    //       keyboardType="numeric"
+    //       value={amount}
+    //       onChangeText={setAmount}
+    //     />
+
+    //     <Text style={styles.subHeader}>Select Payment Method</Text>
+    //     <View style={styles.methodContainer}>
+    //       {['upi', 'rtgs', 'card'].map(method => (
+    //         <TouchableOpacity
+    //           key={method}
+    //           style={[
+    //             styles.methodButton,
+    //             selectedMethod === method && styles.methodButtonActive,
+    //           ]}
+    //           onPress={() => setSelectedMethod(method)}
+    //         >
+    //           <Text
+    //             style={[
+    //               styles.methodText,
+    //               selectedMethod === method && styles.methodTextActive,
+    //             ]}
+    //           >
+    //             {method.toUpperCase()}
+    //           </Text>
+    //         </TouchableOpacity>
+    //       ))}
+    //     </View>
+
+    //     <TouchableOpacity
+    //       style={styles.payButton}
+    //       onPress={handleAddMoney}
+    //       disabled={isProcessing} // ❌ disable double press
+    //     >
+    //       <Text style={styles.payButtonText}>Add Money</Text>
+    //     </TouchableOpacity>
+
+    //     <View style={styles.historyCard}>
+    //       <Text style={{ fontSize: moderateScale(12) }}>
+    //         History
+    //         <Text style={{ fontSize: moderateScale(12) }}>
+    //           (Showing only Add Money)
+    //         </Text>
+    //       </Text>
+    //       {loading ? (
+    //         <ActivityIndicator
+    //           size="large"
+    //           color="#1A9E41"
+    //           style={{ marginTop: moderateScale(40) }}
+    //         />
+    //       ) : transactions.length === 0 ? (
+    //         <View style={{ alignItems: 'center', marginTop: 40 }}>
+    //           <Ionicons
+    //             name="wallet-outline"
+    //             size={moderateScale(50)}
+    //             color="#bbb"
+    //           />
+    //           <Text style={{ color: '#888', marginTop: moderateScale(10) }}>
+    //             No transactions found
+    //           </Text>
+    //         </View>
+    //       ) : (
+    //         <FlatList
+    //           data={transactions}
+    //           renderItem={renderTransaction}
+    //           showsVerticalScrollIndicator={false}
+    //           keyExtractor={item =>
+    //             item.id?.toString() || Math.random().toString()
+    //           }
+    //           ItemSeparatorComponent={() => <View style={styles.separator} />}
+    //         />
+    //       )}
+    //     </View>
+    //   </ScrollView>
+    //   <Toast />
+    // </SafeAreaView>
     <SafeAreaView style={styles.container}>
-      <Header
-        title="Wallet : Add Money"
-        navigation={navigation}
-        showBack={true}
-      />
-      <ScrollView
-        contentContainerStyle={{ padding: 20 }}
+      <Header title="Wallet : Add Money" navigation={navigation} showBack />
+
+      <FlatList
+        data={transactions}
+        renderItem={renderTransaction}
+        keyExtractor={item => item.id?.toString()}
         showsVerticalScrollIndicator={false}
-      >
-        <View style={styles.balanceContainer}>
-          <Text style={styles.balanceLabel}>Wallet Balance</Text>
-          {loading ? (
-            <ActivityIndicator color="#14AE5C" />
-          ) : (
-            <Text style={styles.balanceValue}>₹{balance}</Text>
-          )}
-        </View>
+        contentContainerStyle={{ padding: 20 }}
+        // 👆 TOP FORM + BALANCE
+        ListHeaderComponent={
+          <>
+            <View style={styles.balanceContainer}>
+              <Text style={styles.balanceLabel}>Wallet Balance</Text>
+              {loading ? (
+                <ActivityIndicator color="#14AE5C" />
+              ) : (
+                <Text style={styles.balanceValue}>₹{balance}</Text>
+              )}
+            </View>
 
-        <TextInput
-          style={styles.input}
-          placeholder="Enter amount"
-          keyboardType="numeric"
-          value={amount}
-          onChangeText={setAmount}
-        />
-
-        <Text style={styles.subHeader}>Select Payment Method</Text>
-        <View style={styles.methodContainer}>
-          {['upi', 'rtgs', 'card'].map(method => (
-            <TouchableOpacity
-              key={method}
-              style={[
-                styles.methodButton,
-                selectedMethod === method && styles.methodButtonActive,
-              ]}
-              onPress={() => setSelectedMethod(method)}
-            >
-              <Text
-                style={[
-                  styles.methodText,
-                  selectedMethod === method && styles.methodTextActive,
-                ]}
-              >
-                {method.toUpperCase()}
-              </Text>
-            </TouchableOpacity>
-          ))}
-        </View>
-
-        <TouchableOpacity
-          style={styles.payButton}
-          onPress={handleAddMoney}
-          disabled={isProcessing} // ❌ disable double press
-        >
-          <Text style={styles.payButtonText}>Add Money</Text>
-        </TouchableOpacity>
-
-        <View style={styles.historyCard}>
-          <Text style={{ fontSize: moderateScale(12) }}>
-            History
-            <Text style={{ fontSize: moderateScale(12) }}>
-              (Showing only Add Money)
-            </Text>
-          </Text>
-          {loading ? (
-            <ActivityIndicator
-              size="large"
-              color="#1A9E41"
-              style={{ marginTop: moderateScale(40) }}
+            <TextInput
+              style={styles.input}
+              placeholder="Enter amount"
+              keyboardType="numeric"
+              value={amount}
+              onChangeText={setAmount}
             />
-          ) : transactions.length === 0 ? (
+
+            <Text style={styles.subHeader}>Select Payment Method</Text>
+
+            <View style={styles.methodContainer}>
+              {['upi', 'rtgs', 'card'].map(method => (
+                <TouchableOpacity
+                  key={method}
+                  style={[
+                    styles.methodButton,
+                    selectedMethod === method && styles.methodButtonActive,
+                  ]}
+                  onPress={() => setSelectedMethod(method)}
+                >
+                  <Text
+                    style={[
+                      styles.methodText,
+                      selectedMethod === method && styles.methodTextActive,
+                    ]}
+                  >
+                    {method.toUpperCase()}
+                  </Text>
+                </TouchableOpacity>
+              ))}
+            </View>
+
+            <TouchableOpacity
+              style={styles.payButton}
+              onPress={handleAddMoney}
+              disabled={isProcessing}
+            >
+              <Text style={styles.payButtonText}>Add Money</Text>
+            </TouchableOpacity>
+
+            <Text style={styles.historyTitle}>
+              History (Showing only Add Money)
+            </Text>
+          </>
+        }
+        // 👇 EMPTY HISTORY
+        ListEmptyComponent={
+          !loading && (
             <View style={{ alignItems: 'center', marginTop: 40 }}>
               <Ionicons
                 name="wallet-outline"
@@ -355,19 +449,19 @@ const WalletAddMoney = ({ navigation }) => {
                 No transactions found
               </Text>
             </View>
-          ) : (
-            <FlatList
-              data={transactions}
-              renderItem={renderTransaction}
-              showsVerticalScrollIndicator={false}
-              keyExtractor={item =>
-                item.id?.toString() || Math.random().toString()
-              }
-              ItemSeparatorComponent={() => <View style={styles.separator} />}
-            />
-          )}
-        </View>
-      </ScrollView>
+          )
+        }
+        ItemSeparatorComponent={() => <View style={styles.separator} />}
+      />
+
+      {loading && (
+        <ActivityIndicator
+          size="large"
+          color="#1A9E41"
+          style={{ marginTop: moderateScale(20) }}
+        />
+      )}
+
       <Toast />
     </SafeAreaView>
   );

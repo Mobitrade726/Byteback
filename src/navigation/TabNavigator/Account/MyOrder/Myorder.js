@@ -350,18 +350,11 @@ const styles = StyleSheet.create({
   // Attractive Card
   card: {
     backgroundColor: '#fff',
-    borderRadius: scale(18),
+    borderRadius: scale(8),
+    marginTop: moderateScale(5),
     padding: scale(18),
     marginBottom: verticalScale(5),
-
-    borderWidth: scale(0.7),
-    borderColor: 'rgba(0,0,0,0.08)',
-
-    shadowColor: '#000',
-    shadowOpacity: 0.12,
-    shadowRadius: scale(10),
-    shadowOffset: { width: 0, height: scale(4) },
-    elevation: 6,
+    borderWidth: scale(1), borderColor:"#f1f1f1",
   },
 
   cardTopRow: {
@@ -407,18 +400,14 @@ const styles = StyleSheet.create({
     paddingVertical: verticalScale(8),
     paddingHorizontal: scale(20),
     borderRadius: scale(25),
-    backgroundColor: '#1C9C48',
-
-    shadowColor: '#1C9C48',
-    shadowOpacity: 0.25,
-    shadowRadius: scale(6),
+    backgroundColor: '#f1f1f1',
     shadowOffset: { width: 0, height: scale(3) },
-    elevation: 4,
+
   },
 
   buttonText: {
-    fontSize: RF(1.8),
-    color: '#fff',
+    fontSize: RF(1.5),
+    color: '#000',
     fontWeight: '700',
   },
 

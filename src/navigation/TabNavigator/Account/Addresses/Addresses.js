@@ -270,7 +270,7 @@ const Addresses = ({ navigation }) => {
       ) : (
         <FlatList
           data={addresses}
-          keyExtractor={item => item.id}
+          keyExtractor={item => item.id?.toString()}
           renderItem={renderAddress}
           contentContainerStyle={{ marginHorizontal: moderateScale(10) }}
           ListEmptyComponent={

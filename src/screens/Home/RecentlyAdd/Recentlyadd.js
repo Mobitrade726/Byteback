@@ -267,7 +267,9 @@ const Recentlyadd = ({ tabId, catName, catId }) => {
             <FlatList
               key={`cat-brands`}
               data={BRANDS}
-              keyExtractor={item => item.name}
+              keyExtractor={(item, index) =>
+                item.name?.toString() ?? index.toString()
+              }
               renderItem={({ item }) => {
                 const selected = selectedBrands.includes(item.brand_name);
                 return (
@@ -308,7 +310,9 @@ const Recentlyadd = ({ tabId, catName, catId }) => {
             <FlatList
               key={`cat-color`}
               data={COLORS}
-              keyExtractor={item => item.name}
+              keyExtractor={(item, index) =>
+                item.name?.toString() ?? index.toString()
+              }
               numColumns={4}
               columnWrapperStyle={styles.row}
               contentContainerStyle={{ paddingTop: 10 }}
@@ -329,7 +333,10 @@ const Recentlyadd = ({ tabId, catName, catId }) => {
             <FlatList
               key={`cat-grade`}
               data={grades}
-              keyExtractor={item => item}
+              // keyExtractor={item => item}
+              keyExtractor={(item, index) =>
+                item.id?.toString() ?? index.toString()
+              }
               renderItem={renderItemGrade}
               contentContainerStyle={styles.listContainer}
             />
@@ -424,7 +431,7 @@ const Recentlyadd = ({ tabId, catName, catId }) => {
         <View style={ProductCardStyles.imageContainerD}>
           {item && (
             <Text style={ProductCardStyles.refurbishedLabelD}>
-              (Refurbished)
+              PRE-OWNED
             </Text>
           )}
 
@@ -465,8 +472,6 @@ const Recentlyadd = ({ tabId, catName, catId }) => {
 
   return (
     <SafeAreaView style={styles.container}>
-      <ScrollView>
-        {/* Top android Devices */}
 
         <View style={styles.headerButtons}>
           <TouchableOpacity
@@ -484,18 +489,18 @@ const Recentlyadd = ({ tabId, catName, catId }) => {
             <Text style={styles.sortText}>Filter</Text>
           </TouchableOpacity>
         </View>
-        <FlatList
+        <FlatList showsVerticalScrollIndicator={false}
           data={filteredProduct}
           renderItem={({ item }) => <ProductCard item={item} />}
-          keyExtractor={item => item.id}
+          keyExtractor={(item, index) =>
+            item.id?.toString() ?? index.toString()
+          }
           showsHorizontalScrollIndicator={false}
           numColumns={2}
           contentContainerStyle={{
-            paddingBottom: moderateScale(80),
+            paddingBottom: moderateScale(80), marginHorizontal:10,
             justifyContent:
-              filteredProduct.length === 1
-                ? 'flex-start'
-                : 'space-between',
+              filteredProduct.length === 1 ? 'flex-start' : 'space-between',
           }}
           ListEmptyComponent={
             !loading && (
@@ -668,7 +673,6 @@ const Recentlyadd = ({ tabId, catName, catId }) => {
             </View>
           </SafeAreaView>
         </Modal>
-      </ScrollView>
     </SafeAreaView>
   );
 };

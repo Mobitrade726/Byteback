@@ -128,6 +128,7 @@ export default StyleSheet.create({
     fontWeight: 'bold',
     color: '#3c8c4d',
     marginBottom: hp(4),
+    marginTop: hp(6)
   },
 
   input: {
@@ -147,10 +148,11 @@ export default StyleSheet.create({
   },
 
   forgotText: {
-    color: '#c44242',
-    textDecorationLine: 'underline',
+    color: '#2B2B2B',
+    // textDecorationLine: 'underline',
     fontSize: width > 600 ? 20 : 16,
     fontFamily: 'Source Serif 4',
+    marginTop: hp(-1)
   },
 
   loginButton: {
@@ -184,7 +186,7 @@ export default StyleSheet.create({
   },
 
   bottomText: {
-    color: '#c44242',
+    color: '#2B2B2B',
     fontSize: width > 600 ? 20 : 17,
     textAlign: 'center',
     fontWeight: '600',

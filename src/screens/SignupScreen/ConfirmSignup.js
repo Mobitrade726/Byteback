@@ -44,8 +44,7 @@ const ConfirmSignup = () => {
           />
         )}
 
-        <Text style={styles_confirmSignup.welcomeText}>Welcome to</Text>
-        <Text style={styles_confirmSignup.brandText}>Byteback</Text>
+        <Text style={styles_confirmSignup.welcomeText}>WELCOME TO BYTEBACK</Text>
 
         <Text style={styles_confirmSignup.description}>
           Your account has been successfully created as an {accountType}{' '}

@@ -213,10 +213,10 @@ const CategoriesTab = ({navigation, route}) => {
             fontSize: responsiveFontSize(1.8),
             fontWeight: '500',
           },
-          tabBarActiveTintColor: '#2E8BFF',
+          tabBarActiveTintColor: '#478F4E',
           tabBarInactiveTintColor: '#aaa',
           tabBarIndicatorStyle: {
-            backgroundColor: '#2E8BFF',
+            backgroundColor: '#478F4E',
             height: responsiveHeight(0.5),
           },
           tabBarStyle: {

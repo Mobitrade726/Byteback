@@ -39,58 +39,6 @@ export default function Wallet({ navigation }) {
     }, [dispatch]),
   );
 
-  // const renderTransaction = ({item}) => {
-  //   let displayAmount = '';
-  //   let iconColor = 'gray'; // main icon color
-  //   let checkmarkColor = 'green'; // default checkmark color
-
-  //   // Determine amount and colors based on status_text
-  //   if (item.description === 'Money Added') {
-  //     displayAmount = `+ ₹ ${item.balance.toLocaleString()}`;
-  //     iconColor = 'green';
-  //     checkmarkColor = 'green';
-  //   } else if (item.description === 'Verification Pending') {
-  //     displayAmount = `₹ ${item.balance.toLocaleString()}`;
-  //     iconColor = 'orange';
-  //     checkmarkColor = 'orange';
-  //   } else if (item.description === 'Rejected') {
-  //     displayAmount = `₹ ${item.balance.toLocaleString()}`;
-  //     iconColor = 'red';
-  //     checkmarkColor = 'red';
-  //   } else {
-  //     // fallback for other statuses
-  //     displayAmount =
-  //       item.type === 'credit'
-  //         ? `+ ₹ ${item.balance.toLocaleString()}`
-  //         : `- ₹ ${item.balance.toLocaleString()}`;
-  //     iconColor = item.type === 'credit' ? 'green' : 'red';
-  //     checkmarkColor = item.type === 'credit' ? 'green' : 'red';
-  //   }
-
-  //   return (
-  //     <View style={styles.transactionRow}>
-  //       <MaterialCommunityIcons
-  //         name={item.icon}
-  //         size={24}
-  //         color={iconColor}
-  //         style={styles.transactionIcon}
-  //       />
-  //       <View style={{flex: 1}}>
-  //         <Text style={[styles.balance, {color: iconColor}]}>
-  //           {displayAmount}
-  //         </Text>
-  //         <Text style={styles.label}>{item.description}</Text>
-  //         <Text style={styles.date}>{item.date}</Text>
-  //       </View>
-  //       <Ionicons
-  //         name="checkmark-circle-outline"
-  //         size={moderateScale(22)}
-  //         color={checkmarkColor}
-  //       />
-  //     </View>
-  //   );
-  // };
-
   const renderTransaction = ({ item }) => {
     // 🟢 Convert credit/debit to numbers
     const credit = Number(item.credit || 0);
@@ -188,7 +136,9 @@ export default function Wallet({ navigation }) {
       <FlatList
         data={ledgerbalance}
         renderItem={renderTransaction}
-        keyExtractor={item => item.id}
+        keyExtractor={(item, index) =>
+          item.id ? item.id.toString() : index.toString()
+        }
         ListEmptyComponent={
           <View
             style={{

@@ -25,6 +25,7 @@ import {
   responsiveFontSize as rf,
 } from 'react-native-responsive-dimensions';
 import { useSelector } from 'react-redux';
+import { moderateScale } from 'react-native-size-matters';
 
 export default function WithdrawScreen({ navigation }) {
   const [amount, setAmount] = useState('');
@@ -214,194 +215,321 @@ export default function WithdrawScreen({ navigation }) {
   };
 
   return (
+    // <SafeAreaView style={styles.safeArea}>
+    //   <ScrollView contentContainerStyle={styles.container}>
+    //     <Header title="Withdraw" navigation={navigation} showBack={true} />
+
+    //     {/* Withdrawal Form */}
+    //     <View style={styles.card}>
+    //       <Text style={styles.sectionTitle}>Account Details</Text>
+    //       <Dropdown
+    //         style={styles.dropdown}
+    //         placeholderStyle={styles.placeholderStyle}
+    //         selectedTextStyle={styles.selectedTextStyle}
+    //         data={transactionOptions}
+    //         labelField="label"
+    //         valueField="value"
+    //         placeholder="Select Transaction Type"
+    //         value={transactionType}
+    //         onChange={item => setTransactionType(item.value)}
+    //       />
+    //       {transactionType === '0' ? (
+    //         <TextInput
+    //           style={styles.input}
+    //           placeholder="Enter UPI ID"
+    //           value={upi}
+    //           onChangeText={setUPI}
+    //         />
+    //       ) : (
+    //         <>
+    //           <TextInput
+    //             style={styles.input}
+    //             placeholder="Account Number"
+    //             value={accountno}
+    //             keyboardType="number-pad"
+    //             onChangeText={setAccountno}
+    //           />
+    //           <TextInput
+    //             style={styles.input}
+    //             placeholder="IFSC Code"
+    //             value={ifsccode}
+    //             autoCapitalize="characters"
+    //             onChangeText={setIfsccode}
+    //           />
+    //         </>
+    //       )}
+    //       <TextInput
+    //         style={styles.input}
+    //         placeholder="Account Holder Name"
+    //         value={acholdername}
+    //         onChangeText={setAcholdername}
+    //       />
+    //       <TextInput
+    //         style={styles.input}
+    //         placeholder="Amount"
+    //         keyboardType="numeric"
+    //         value={amount}
+    //         onChangeText={setAmount}
+    //       />
+    //       <TextInput
+    //         style={[styles.input, { height: rh(10) }]}
+    //         placeholder="Remark (optional)"
+    //         multiline
+    //         value={remark}
+    //         onChangeText={setRemark}
+    //       />
+    //       {/* <TouchableOpacity
+    //         style={styles.button}
+    //         onPress={handleWithdraw}
+    //         disabled={loading}
+    //       >
+    //         {loading ? (
+    //           <ActivityIndicator color="#fff" />
+    //         ) : (
+    //           <>
+    //             <Ionicons name="wallet-outline" size={rf(2.5)} color="#fff" />
+    //             <Text style={styles.buttonText}>Withdraw Now</Text>
+    //           </>
+    //         )}
+    //       </TouchableOpacity> */}
+
+    //       <TouchableOpacity
+    //         style={styles.button}
+    //         onPress={handleWithdraw}
+    //         disabled={loading}
+    //       >
+    //         {loading ? (
+    //           <ActivityIndicator color="#fff" />
+    //         ) : (
+    //           <>
+    //             <View style={{ marginTop: rf(2), paddingHorizontal: 10 }}>
+    //               {/* Balance Row */}
+    //               <View
+    //                 style={{
+    //                   flexDirection: 'row',
+    //                   justifyContent: 'space-between',
+    //                   alignItems: 'center',
+    //                   backgroundColor: '#f4f7ff',
+    //                   paddingVertical: 12,
+    //                   paddingHorizontal: 15,
+    //                   borderRadius: 10,
+    //                   marginBottom: 20,
+    //                   elevation: 2,
+    //                 }}
+    //               >
+    //                 <Text
+    // style={{
+    //   fontSize: rf(2),
+    //   marginHorizontal: 5,
+    //   fontWeight: '600',
+    //   color: '#333',
+    // }}
+    //                 >
+    //                   Available Wallet Balance
+    //                 </Text>
+
+    //                 <Text
+    //                   style={{
+    // fontSize: rf(2.5),
+    // fontWeight: '700',
+    // color: '#1e90ff',
+    //                   }}
+    //                 >
+    //                   ₹{balance}
+    //                 </Text>
+    //               </View>
+
+    //               {/* Withdraw Button */}
+    //               <TouchableOpacity
+    //                 style={{
+    // flexDirection: 'row',
+    // alignItems: 'center',
+    // justifyContent: 'center',
+    // backgroundColor: '#1e90ff',
+    // paddingVertical: 14,
+    // borderRadius: 10,
+    //                 }}
+    //                 onPress={handleWithdraw}
+    //                 disabled={loading}
+    //               >
+    //                 {loading ? (
+    //                   <ActivityIndicator color="#fff" />
+    //                 ) : (
+    //                   <>
+    //                     <Ionicons
+    //                       name="wallet-outline"
+    //                       size={rf(2.5)}
+    //                       color="#fff"
+    //                       style={{ marginRight: 8 }}
+    //                     />
+    //                     <Text
+    //                       style={{
+    // fontSize: rf(2.3),
+    // color: '#fff',
+    // fontWeight: '600',
+    //                       }}
+    //                     >
+    //                       Withdraw Now
+    //                     </Text>
+    //                   </>
+    //                 )}
+    //               </TouchableOpacity>
+    //             </View>
+    //           </>
+    //         )}
+    //       </TouchableOpacity>
+    //     </View>
+
+    //     {/* History */}
+    //     <View style={styles.historyCard}>
+    //       <Text style={styles.sectionTitle}>
+    //         History{' '}
+    //         <Text style={{ fontSize: rf(1.2) }}>(Withdrawal transactions)</Text>
+    //       </Text>
+    //       {historyLoading ? (
+    //         <ActivityIndicator color="#14AE5C" size="large" />
+    //       ) : refundHistory.length === 0 ? (
+    //         <Text style={styles.noHistory}>No withdrawal history found.</Text>
+    //       ) : (
+    //         <FlatList
+    //           data={refundHistory}
+    //           renderItem={renderTransaction}
+    //           keyExtractor={item =>
+    //             item.id?.toString() || Math.random().toString()
+    //           }
+    //           showsVerticalScrollIndicator={false}
+    //           ItemSeparatorComponent={() => <View style={styles.separator} />}
+    //         />
+    //       )}
+    //     </View>
+    //   </ScrollView>
+    // </SafeAreaView>
     <SafeAreaView style={styles.safeArea}>
-      <ScrollView contentContainerStyle={styles.container}>
-        <Header title="Withdraw" navigation={navigation} showBack={true} />
+      <Header title="Withdraw" navigation={navigation} showBack />
 
-        {/* Withdrawal Form */}
-        <View style={styles.card}>
-          <Text style={styles.sectionTitle}>Account Details</Text>
-          <Dropdown
-            style={styles.dropdown}
-            placeholderStyle={styles.placeholderStyle}
-            selectedTextStyle={styles.selectedTextStyle}
-            data={transactionOptions}
-            labelField="label"
-            valueField="value"
-            placeholder="Select Transaction Type"
-            value={transactionType}
-            onChange={item => setTransactionType(item.value)}
-          />
-          {transactionType === '0' ? (
-            <TextInput
-              style={styles.input}
-              placeholder="Enter UPI ID"
-              value={upi}
-              onChangeText={setUPI}
-            />
-          ) : (
-            <>
+      <FlatList
+        data={refundHistory}
+        renderItem={renderTransaction}
+        keyExtractor={item => item.id?.toString()}
+        showsVerticalScrollIndicator={false}
+        ItemSeparatorComponent={() => <View style={styles.separator} />}
+        contentContainerStyle={{ padding: 16 }}
+        // 🔝 WITHDRAW FORM
+        ListHeaderComponent={
+          <>
+            <View style={styles.card}>
+              <Text style={styles.sectionTitle}>Account Details</Text>
+
+              <Dropdown
+                style={styles.dropdown}
+                placeholderStyle={styles.placeholderStyle}
+                selectedTextStyle={styles.selectedTextStyle}
+                data={transactionOptions}
+                labelField="label"
+                valueField="value"
+                placeholder="Select Transaction Type"
+                value={transactionType}
+                onChange={item => setTransactionType(item.value)}
+              />
+
+              {transactionType === '0' ? (
+                <TextInput
+                  style={styles.input}
+                  placeholder="Enter UPI ID"
+                  value={upi}
+                  onChangeText={setUPI}
+                />
+              ) : (
+                <>
+                  <TextInput
+                    style={styles.input}
+                    placeholder="Account Number"
+                    keyboardType="number-pad"
+                    value={accountno}
+                    onChangeText={setAccountno}
+                  />
+                  <TextInput
+                    style={styles.input}
+                    placeholder="IFSC Code"
+                    autoCapitalize="characters"
+                    value={ifsccode}
+                    onChangeText={setIfsccode}
+                  />
+                </>
+              )}
+
               <TextInput
                 style={styles.input}
-                placeholder="Account Number"
-                value={accountno}
-                keyboardType="number-pad"
-                onChangeText={setAccountno}
+                placeholder="Account Holder Name"
+                value={acholdername}
+                onChangeText={setAcholdername}
               />
+
               <TextInput
                 style={styles.input}
-                placeholder="IFSC Code"
-                value={ifsccode}
-                autoCapitalize="characters"
-                onChangeText={setIfsccode}
+                placeholder="Amount"
+                keyboardType="numeric"
+                value={amount}
+                onChangeText={setAmount}
               />
-            </>
-          )}
-          <TextInput
-            style={styles.input}
-            placeholder="Account Holder Name"
-            value={acholdername}
-            onChangeText={setAcholdername}
-          />
-          <TextInput
-            style={styles.input}
-            placeholder="Amount"
-            keyboardType="numeric"
-            value={amount}
-            onChangeText={setAmount}
-          />
-          <TextInput
-            style={[styles.input, { height: rh(10) }]}
-            placeholder="Remark (optional)"
-            multiline
-            value={remark}
-            onChangeText={setRemark}
-          />
-          {/* <TouchableOpacity
-            style={styles.button}
-            onPress={handleWithdraw}
-            disabled={loading}
-          >
-            {loading ? (
-              <ActivityIndicator color="#fff" />
-            ) : (
-              <>
-                <Ionicons name="wallet-outline" size={rf(2.5)} color="#fff" />
-                <Text style={styles.buttonText}>Withdraw Now</Text>
-              </>
-            )}
-          </TouchableOpacity> */}
 
-          <TouchableOpacity
-            style={styles.button}
-            onPress={handleWithdraw}
-            disabled={loading}
-          >
-            {loading ? (
-              <ActivityIndicator color="#fff" />
-            ) : (
-              <>
-                <View style={{ marginTop: rf(2), paddingHorizontal: 10 }}>
-                  {/* Balance Row */}
-                  <View
-                    style={{
-                      flexDirection: 'row',
-                      justifyContent: 'space-between',
-                      alignItems: 'center',
-                      backgroundColor: '#f4f7ff',
-                      paddingVertical: 12,
-                      paddingHorizontal: 15,
-                      borderRadius: 10,
-                      marginBottom: 20,
-                      elevation: 2,
-                    }}
-                  >
-                    <Text
-                      style={{
-                        fontSize: rf(2),
-                        marginHorizontal: 5,
-                        fontWeight: '600',
-                        color: '#333',
-                      }}
-                    >
-                      Available Wallet Balance
-                    </Text>
+              <TextInput
+                style={[styles.input, { height: rh(10) }]}
+                placeholder="Remark (optional)"
+                multiline
+                value={remark}
+                onChangeText={setRemark}
+              />
 
-                    <Text
-                      style={{
-                        fontSize: rf(2.5),
-                        fontWeight: '700',
-                        color: '#1e90ff',
-                      }}
-                    >
-                      ₹{balance}
-                    </Text>
-                  </View>
-
-                  {/* Withdraw Button */}
-                  <TouchableOpacity
-                    style={{
-                      flexDirection: 'row',
-                      alignItems: 'center',
-                      justifyContent: 'center',
-                      backgroundColor: '#1e90ff',
-                      paddingVertical: 14,
-                      borderRadius: 10,
-                    }}
-                    onPress={handleWithdraw}
-                    disabled={loading}
-                  >
-                    {loading ? (
-                      <ActivityIndicator color="#fff" />
-                    ) : (
-                      <>
-                        <Ionicons
-                          name="wallet-outline"
-                          size={rf(2.5)}
-                          color="#fff"
-                          style={{ marginRight: 8 }}
-                        />
-                        <Text
-                          style={{
-                            fontSize: rf(2.3),
-                            color: '#fff',
-                            fontWeight: '600',
-                          }}
-                        >
-                          Withdraw Now
-                        </Text>
-                      </>
-                    )}
-                  </TouchableOpacity>
+              {/* BALANCE + BUTTON */}
+              <View style={{ marginTop: rf(2) ,  backgroundColor: '#1e90ff', borderRadius: moderateScale(10)}}>
+                <View style={styles.balanceRow}>
+                  <Text style={styles.balanceLabel}>
+                    Available Wallet Balance
+                  </Text>
+                  <Text style={styles.balanceValue}>₹{balance}</Text>
                 </View>
-              </>
-            )}
-          </TouchableOpacity>
-        </View>
 
-        {/* History */}
-        <View style={styles.historyCard}>
-          <Text style={styles.sectionTitle}>
-            History{' '}
-            <Text style={{ fontSize: rf(1.2) }}>(Withdrawal transactions)</Text>
-          </Text>
-          {historyLoading ? (
-            <ActivityIndicator color="#14AE5C" size="large" />
-          ) : refundHistory.length === 0 ? (
-            <Text style={styles.noHistory}>No withdrawal history found.</Text>
-          ) : (
-            <FlatList
-              data={refundHistory}
-              renderItem={renderTransaction}
-              keyExtractor={item =>
-                item.id?.toString() || Math.random().toString()
-              }
-              showsVerticalScrollIndicator={false}
-              ItemSeparatorComponent={() => <View style={styles.separator} />}
-            />
-          )}
-        </View>
-      </ScrollView>
+                <TouchableOpacity
+                  style={styles.withdrawBtn}
+                  onPress={handleWithdraw}
+                  disabled={loading}
+                >
+                  {loading ? (
+                    <ActivityIndicator color="#fff" />
+                  ) : (
+                    <>
+                      <Ionicons
+                        name="wallet-outline"
+                        size={rf(2.4)}
+                        color="#fff"
+                      />
+                      <Text style={styles.withdrawText}>Withdraw Now</Text>
+                    </>
+                  )}
+                </TouchableOpacity>
+              </View>
+            </View>
+
+            {/* HISTORY TITLE */}
+            <Text style={styles.sectionTitle}>
+              History <Text style={{ fontSize: rf(1.2) }}>(Withdrawal)</Text>
+            </Text>
+
+            {historyLoading && (
+              <ActivityIndicator
+                color="#14AE5C"
+                size="large"
+                style={{ marginVertical: 20 }}
+              />
+            )}
+
+            {!historyLoading && refundHistory.length === 0 && (
+              <Text style={styles.noHistory}>No withdrawal history found.</Text>
+            )}
+          </>
+        }
+      />
     </SafeAreaView>
   );
 }
@@ -422,6 +550,41 @@ const styles = StyleSheet.create({
     fontWeight: '600',
     marginBottom: rh(1),
     color: '#333',
+  },
+  balanceRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center',
+    backgroundColor: '#fff',
+    paddingVertical: 14,
+    borderRadius: 10,
+    marginHorizontal:10,
+    marginVertical:10
+  },
+  balanceLabel: {
+    fontSize: rf(1.5),
+    marginHorizontal: 5,
+    fontWeight: '600',
+    color: '#000',
+  },
+  balanceValue: {
+    fontSize: rf(2),
+    fontWeight: '700',
+    color: '#1e90ff',
+  },
+  withdrawBtn: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center',
+    backgroundColor: '#1e90ff',
+    paddingVertical: 14,
+    borderRadius: 10,
+  },
+  withdrawText: {
+    fontSize: rf(2),
+    color: '#fff',
+    fontWeight: '600',
+    marginHorizontal:5
   },
   input: {
     backgroundColor: '#f9f9f9',

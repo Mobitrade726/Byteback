@@ -385,7 +385,7 @@ const Header = ({navigation}) => {
         <Image
           source={{uri: logoUrl}}
           style={{
-            width: wp('25%'),
+            width: wp('30%'),
             height: hp('3.5%'),
             resizeMode: 'contain',
           }}
@@ -405,7 +405,7 @@ const Header = ({navigation}) => {
       <View style={{flexDirection: 'row', alignItems: 'center'}}>
         
         {/* Bulk Deals Button */}
-        <TouchableOpacity
+        {/* <TouchableOpacity
           style={{
             flexDirection: 'row',
             backgroundColor: '#fff',
@@ -433,11 +433,11 @@ const Header = ({navigation}) => {
             }}>
             Bulk Deals
           </Text>
-        </TouchableOpacity>
+        </TouchableOpacity> */}
 
         {/* Search Icon */}
         <TouchableOpacity onPress={() => navigation.navigate('Search')}>
-          <EvilIcons name="search" size={wp('10%')} color="#fff" />
+          <EvilIcons name="search" size={wp('8%')} color="#fff" />
         </TouchableOpacity>
 
       </View>

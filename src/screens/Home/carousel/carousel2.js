@@ -10,7 +10,7 @@ import {
 } from 'react-native';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 
-const carousel2 = ({navigation}) => {
+const Carousel2 = ({navigation}) => {
   return (
     <SafeAreaView style={styles.container}>
       {/* Header */}
@@ -136,4 +136,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default carousel2;
+export default Carousel2;

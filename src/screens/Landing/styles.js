@@ -83,6 +83,7 @@
 
 
 import { StyleSheet, Dimensions } from "react-native";
+import { moderateScale } from "react-native-size-matters";
 
 const { width, height } = Dimensions.get("window");
 
@@ -129,8 +130,12 @@ export default StyleSheet.create({
     flexDirection: "row",
     alignItems: "center",
     paddingVertical: hp(2),
+    paddingHorizontal: hp(2),
     borderBottomWidth: 1,
     borderBottomColor: "#eee",
+    backgroundColor:"#f1f1f1",
+    marginVertical:moderateScale(3),
+    borderRadius: moderateScale(12)
   },
 
   icon: {
@@ -138,6 +143,7 @@ export default StyleSheet.create({
     height: wp(12),
     marginRight: wp(3),
     resizeMode: "contain",
+    // tintColor:"#478F4E",
   },
 
   optionText: {
@@ -162,11 +168,11 @@ export default StyleSheet.create({
     height: width > 600 ? 14 : 10,
     width: width > 600 ? 14 : 10,
     borderRadius: width > 600 ? 7 : 5,
-    backgroundColor: "green",
+    backgroundColor: "#478F4E",
   },
 
   button: {
-    backgroundColor: "#4B9AC1",
+    backgroundColor: "#478F4E",
     paddingVertical: hp(2.2),
     borderRadius: 10,
     marginBottom: hp(6),

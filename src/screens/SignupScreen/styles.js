@@ -583,6 +583,7 @@ const styles_confirmSignup = StyleSheet.create({
     color: "#000",
     fontWeight: "400",
     textAlign: "center",
+    marginVertical: moderateScale(10)
   },
 
   brandText: {

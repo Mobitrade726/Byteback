@@ -11,9 +11,9 @@ const Section = ({ title, children, onPress }) => {
            flexDirection: 'row',
            justifyContent: 'space-between',
            alignItems: 'center',
-           marginBottom: moderateScale(10),
+           marginBottom: moderateScale(15),
          }}>
-         <Text style={{fontSize: moderateScale(20), fontWeight: '600', color: '#222'}}>
+         <Text style={{fontSize: moderateScale(18), fontWeight: 'bold', color: '#222'}}>
            {title}
          </Text>
          {title !== 'More Features' && title !== 'Shop by budget' ? (

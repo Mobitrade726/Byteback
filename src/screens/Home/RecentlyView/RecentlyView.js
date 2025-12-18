@@ -67,7 +67,7 @@
 // //       <View style={styles.imageContainerD}>
 // //         <Image source={{uri: item.image}} style={styles.imageD} />
 // //         {item.refurbished && (
-// //           <Text style={styles.refurbishedLabelD}>(Refurbished)</Text>
+// //           <Text style={styles.refurbishedLabelD}>PRE-OWNED</Text>
 // //         )}
 // //         <TouchableOpacity style={styles.heartIconD}>
 // //           <Ionicons name="heart-outline" size={20} color="#333" />
@@ -507,7 +507,7 @@
 //       style={styles.cardD}>
 //       <View style={styles.imageContainerD}>
 //         <Image source={{uri: item.feature_image}} style={styles.imageD} />
-//         {item && <Text style={styles.refurbishedLabelD}>(Refurbished)</Text>}
+//         {item && <Text style={styles.refurbishedLabelD}>PRE-OWNED</Text>}
 //         <TouchableOpacity style={styles.heartIconD}>
 //           <Ionicons name="heart-outline" size={20} color="#333" />
 //         </TouchableOpacity>
@@ -715,7 +715,7 @@ const RecentlyView = ({ navigation }) => {
         <View style={ProductCardStyles.imageContainerD}>
           {item && (
             <Text style={ProductCardStyles.refurbishedLabelD}>
-              (Refurbished)
+              PRE-OWNED
             </Text>
           )}
 
@@ -739,9 +739,9 @@ const RecentlyView = ({ navigation }) => {
 
         {/* Grade Box */}
         {/* <View style={ProductCardStyles.gradeBoxD}> */}
-          <Text style={ProductCardStyles.gradeTextD}>
-            Grade {item.grade_number}
-          </Text>
+        <Text style={ProductCardStyles.gradeTextD}>
+          Grade {item.grade_number}
+        </Text>
         {/* </View> */}
 
         {/* Product Info */}
@@ -756,40 +756,40 @@ const RecentlyView = ({ navigation }) => {
 
   return (
     <SafeAreaView style={styles.container}>
-      <ScrollView>
-        {/* Header */}
-        <Header
-          title="Recently Viewed"
-          navigation={navigation}
-          showBack={true}
-          showSearch
-        />
-        <View style={{ marginLeft: scaleSize(10) }}>
-          <Text
-            style={{
-              fontWeight: '600',
-              fontSize: scaleFont(16),
-              marginVertical: scaleSize(10),
-            }}
-          >
-            Recently Viewed Products
-          </Text>
+      {/* Header */}
+      <Header
+        title="Recently Viewed"
+        navigation={navigation}
+        showBack={true}
+        showSearch
+      />
+      <View style={{ marginLeft: scaleSize(10) }}>
+        <Text
+          style={{
+            fontWeight: '600',
+            fontSize: scaleFont(16),
+            marginVertical: scaleSize(10),
+          }}
+        >
+          Recently Viewed Products
+        </Text>
 
-          <FlatList
-            data={recentlyview}
-            renderItem={({ item }) => <ProductCard item={item} />}
-            keyExtractor={item => item.id}
-            showsHorizontalScrollIndicator={false}
-            numColumns={2}
-            contentContainerStyle={{
-              paddingHorizontal: moderateScale(5),
-              paddingBottom: moderateScale(80),
-              justifyContent:
-                recentlyview.length === 1 ? 'flex-start' : 'space-between',
-            }}
-          />
-        </View>
-      </ScrollView>
+        <FlatList
+          data={recentlyview}
+          renderItem={({ item }) => <ProductCard item={item} />}
+          keyExtractor={(item, index) =>
+            item.id ? item.id.toString() : index.toString()
+          }
+          showsHorizontalScrollIndicator={false}
+          numColumns={2}
+          contentContainerStyle={{
+            paddingHorizontal: moderateScale(5),
+            paddingBottom: moderateScale(80),
+            justifyContent:
+              recentlyview.length === 1 ? 'flex-start' : 'space-between',
+          }}
+        />
+      </View>
     </SafeAreaView>
   );
 };

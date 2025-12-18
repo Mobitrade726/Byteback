@@ -52,7 +52,7 @@
 // //             </TouchableOpacity>
 // //           </View>
 
-// //           <Text style={styles.subtitle}>(Refurbished)</Text>
+// //           <Text style={styles.subtitle}>PRE-OWNED</Text>
 // //           <Text style={styles.specs}>
 // //             {item?.os_name === 'iOS' || item?.os_name === 'Android' ? (
 // //               <>
@@ -333,7 +333,7 @@
 //             </TouchableOpacity>
 //           </View>
 
-//           <Text style={styles.subtitle}>(Refurbished)</Text>
+//           <Text style={styles.subtitle}>PRE-OWNED</Text>
 //           <Text style={styles.specs}>
 //             {item?.variant_name ? item.variant_name : 'N/A'} ●
 //             {item?.color_name ? item.color_name : 'N/A'}
@@ -669,7 +669,7 @@ const WishlistScreen = ({ navigation }) => {
                 </TouchableOpacity>
               </View>
 
-              <Text style={styles.subtitle}>(Refurbished)</Text>
+              <Text style={styles.subtitle}>PRE-OWNED</Text>
               <Text style={styles.specs}>
                 {item?.variant_name ? item.variant_name : item?.storage} ●
                 {item?.color_name ? item.color_name : '--'}

@@ -163,44 +163,40 @@ const CatPage = ({ catName, osName, catId }) => {
 
   return (
     <SafeAreaView style={styles.container}>
-      <ScrollView showsVerticalScrollIndicator={false}>
+      <ScrollView contentContainerStyle={{ paddingBottom: moderateScale(40) }} showsVerticalScrollIndicator={false}>
         <View style={styles.osContainer}>
-          {categoryOSList.length > 0 ? (
-            categoryOSList.map((item, index) => (
-              <TouchableOpacity
-                onPress={() =>
-                  navigation.navigate('Cat_OS_Product', {
-                    osName: item.os_name,
-                    catId: catId,
-                    catName: catName,
-                  })
-                }
-                key={index}
-                style={styles.osCard}
-              >
-                <ImageBackground
-                  source={{ uri: item.image_url }}
-                  style={styles.osImage}
-                  imageStyle={styles.osImageStyle}
+          {categoryOSList.length > 0
+            ? categoryOSList.map((item, index) => (
+                <TouchableOpacity
+                  onPress={() =>
+                    navigation.navigate('Cat_OS_Product', {
+                      osName: item.os_name,
+                      catId: catId,
+                      catName: catName,
+                    })
+                  }
+                  key={index}
+                  style={styles.osCard}
                 >
-                  <LinearGradient
-                    colors={[
-                      'rgba(0,0,0,0.6)',
-                      'rgba(0,0,0,0.2)',
-                      'transparent',
-                    ]}
-                    style={styles.osGradient}
+                  <ImageBackground
+                    source={{ uri: item.image_url }}
+                    style={styles.osImage}
+                    imageStyle={styles.osImageStyle}
                   >
-                    <Text style={styles.osTitle}>{item.os_name}</Text>
-                  </LinearGradient>
-                </ImageBackground>
-              </TouchableOpacity>
-            ))
-          ) : (
-            <Text style={{ color: 'red', fontSize: moderateScale(16) }}>
-              No OS Found
-            </Text>
-          )}
+                    <LinearGradient
+                      colors={[
+                        'rgba(0,0,0,0.6)',
+                        'rgba(0,0,0,0.2)',
+                        'transparent',
+                      ]}
+                      style={styles.osGradient}
+                    >
+                      <Text style={styles.osTitle}>{item.os_name}</Text>
+                    </LinearGradient>
+                  </ImageBackground>
+                </TouchableOpacity>
+              ))
+            : null}
         </View>
         {categoryOSList?.length > 0 ? (
           <>
@@ -216,13 +212,24 @@ const CatPage = ({ catName, osName, catId }) => {
                 renderItem={({ item }) => (
                   <TouchableOpacity
                     style={{
-                      width: cardSize,
+                      // width: cardSize,
                       margin: moderateScale(4),
+                      // alignItems: 'center',
+                      width: moderateScale(150),
+                      marginHorizontal: moderateScale(10),
                       alignItems: 'center',
+                      backgroundColor: '#fff',
+                      borderRadius: moderateScale(20),
+                      paddingBottom: moderateScale(12),
+                      borderWidth: 1,
+                      borderColor: '#ccc',
                     }}
                     onPress={() =>
                       navigation.navigate('shopbybrandfilter', {
                         osName: item.brand_name,
+                        catName: item.product_category
+                          .map(c => c.category_name)
+                          .join(', '),
                       })
                     }
                   >
@@ -234,29 +241,42 @@ const CatPage = ({ catName, osName, catId }) => {
                           : require('../../../../assets/images/empty.jpeg')
                       }
                       style={{
-                        width: cardSize,
+                        width: '100%',
                         height: cardSize,
-                        borderRadius: moderateScale(10),
+                        // borderRadius: moderateScale(10),
                         overflow: 'hidden',
-                        justifyContent: 'center',
+                        // justifyContent: 'center',
+                        justifyContent: 'flex-end',
                         alignItems: 'center',
                       }}
                       imageStyle={{
-                        borderRadius: moderateScale(10),
-                        resizeMode: 'contain',
+                        // borderRadius: moderateScale(10),
+                        // resizeMode: 'contain',
+                        borderTopLeftRadius: moderateScale(20),
+                        borderTopRightRadius: moderateScale(20),
                       }}
-                    />
+                    >
+                      <LinearGradient
+                        colors={['rgba(249, 247, 247, 0)', 'rgba(0,0,0,0.45)']}
+                        style={styles.brandGradient}
+                      />
+                    </ImageBackground>
 
                     {/* BRAND NAME BELOW IMAGE */}
                     <Text
                       style={{
-                        marginTop: moderateScale(6),
-                        fontSize: moderateScale(11),
-                        fontWeight: '600',
+                        // marginTop: moderateScale(6),
+                        // fontSize: moderateScale(11),
+                        // fontWeight: '600',
+                        // textAlign: 'center',
+                        // color: '#000',
+                        marginTop: moderateScale(10),
+                        fontSize: moderateScale(14),
+                        fontWeight: '700',
+                        color: '#333',
                         textAlign: 'center',
-                        color: '#000',
                       }}
-                      numberOfLines={1}
+                      // numberOfLines={1}
                     >
                       {item.brand_name}
                     </Text>
@@ -267,18 +287,25 @@ const CatPage = ({ catName, osName, catId }) => {
             </Section>
 
             {/* Shop by Budget */}
-            <Text
+            <View
               style={{
-                fontSize: moderateScale(20),
-                marginVertical: moderateScale(10),
-                marginHorizontal: moderateScale(15),
-                fontWeight: '600',
-                color: '#222',
+                backgroundColor: '#f1f1f1',
+                marginTop: moderateScale(20),
+                paddingVertical: 15,
               }}
             >
-              Shop by Budget
-            </Text>
-            {/* <View style={styles.grid}>
+              <Text
+                style={{
+                  fontSize: moderateScale(20),
+                  marginVertical: moderateScale(10),
+                  marginHorizontal: moderateScale(15),
+                  fontWeight: '600',
+                  color: '#222',
+                }}
+              >
+                Shop by Budget
+              </Text>
+              {/* <View style={styles.grid}>
               {budgetOptions.map((item, index) => (
                 <TouchableOpacity
                   onPress={() =>
@@ -301,41 +328,42 @@ const CatPage = ({ catName, osName, catId }) => {
                 </TouchableOpacity>
               ))}
             </View> */}
-            <View style={styles.grid}>
-              {budgetOptions.map((item, index) => (
-                <TouchableOpacity
-                  onPress={() =>
-                    navigation.navigate('ShopByBudget', {
-                      osName: osName,
-                      catName: catName,
-                      priceId: item.id,
-                      rangeLabel : item.label
-                    })
-                  }
-                  key={index}
-                  style={styles.budgetCard}
-                  activeOpacity={0.8}
-                >
-                  <View style={styles.cardContent}>
-                    <LinearGradient
-                      colors={['#4facfe', '#00f2fe']}
-                      start={{ x: 0, y: 0 }}
-                      end={{ x: 1, y: 1 }}
-                      style={styles.gradientCircle}
-                    >
-                      <Ionicons
-                        name="pricetag-outline"
-                        size={28}
-                        color="#fff"
-                      />
-                    </LinearGradient>
+              <View style={styles.grid}>
+                {budgetOptions.map((item, index) => (
+                  <TouchableOpacity
+                    onPress={() =>
+                      navigation.navigate('ShopByBudget', {
+                        osName: osName,
+                        catName: catName,
+                        priceId: item.id,
+                        rangeLabel: item.label,
+                      })
+                    }
+                    key={index}
+                    style={styles.budgetCard}
+                    activeOpacity={0.8}
+                  >
+                    <View style={styles.cardContent}>
+                      <LinearGradient
+                        colors={['#3d8e2a', '#b4ffa5']}
+                        start={{ x: 0, y: 0 }}
+                        end={{ x: 1, y: 1 }}
+                        style={styles.gradientCircle}
+                      >
+                        <Ionicons
+                          name="pricetag-outline"
+                          size={28}
+                          color="#fff"
+                        />
+                      </LinearGradient>
 
-                    <Text style={styles.budgetTitle}>{item.label}</Text>
+                      <Text style={styles.budgetTitle}>{item.label}</Text>
 
-                    <Text style={styles.budgetSubText}>Tap to Explore</Text>
-                  </View>
-                </TouchableOpacity>
-              ))}
+                      <Text style={styles.budgetSubText}>Tap to Explore</Text>
+                    </View>
+                  </TouchableOpacity>
+                ))}
+              </View>
             </View>
           </>
         ) : (
@@ -383,41 +411,6 @@ const CatPage = ({ catName, osName, catId }) => {
             </Text>
           </View>
         )}
-
-        {/* Grade A1 to A9  */}
-        <View
-          style={{
-            alignItems: 'center',
-            alignItems: 'center',
-            alignSelf: 'center',
-            justifyContent: 'center',
-            marginLeft: 20,
-            marginVertical: 15,
-            flexDirection: 'row',
-          }}
-        >
-          <View style={styles.leftContainer}>
-            <Text style={styles.heading}>What is A1 to A9?</Text>
-            <Text style={styles.subheading}>How Does Our Grading Work?</Text>
-            <Text style={styles.description}>
-              Grading ranges from A1 (like new) to A9 (heavily used).
-            </Text>
-
-            <TouchableOpacity
-              onPress={() => navigation.navigate('Grade')}
-              style={styles.button}
-            >
-              <Text style={styles.buttonText}>Learn More</Text>
-            </TouchableOpacity>
-          </View>
-
-          {/* Right Image Section */}
-          <Image
-            source={require('../../../../assets/images/mini.png')} // Replace with your image path
-            style={styles.imageG}
-            resizeMode="contain"
-          />
-        </View>
       </ScrollView>
     </SafeAreaView>
   );
@@ -457,7 +450,7 @@ const styles = StyleSheet.create({
     overflow: 'hidden',
     borderWidth: 1,
     shadowRadius: 6,
-    borderColor: '#fff',
+    borderColor: '#f1f1f1',
   },
 
   osImage: {
@@ -547,16 +540,16 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     flexWrap: 'wrap',
     justifyContent: 'space-between',
-    paddingHorizontal: 10,
-    marginTop: 10,
+    paddingHorizontal: moderateScale(20),
+    marginTop: moderateScale(10),
   },
 
   budgetCard: {
     width: '48%',
     backgroundColor: '#fff',
-    borderRadius: 16,
-    paddingVertical: 18,
-    marginBottom: 15,
+    borderRadius: moderateScale(16),
+    paddingVertical: moderateScale(18),
+    marginBottom: moderateScale(15),
     alignItems: 'center',
     elevation: 5,
     shadowColor: '#000',
@@ -570,12 +563,12 @@ const styles = StyleSheet.create({
   },
 
   gradientCircle: {
-    width: 58,
-    height: 58,
-    borderRadius: 30,
+    width: moderateScale(58),
+    height: moderateScale(58),
+    borderRadius: moderateScale(30),
     justifyContent: 'center',
     alignItems: 'center',
-    marginBottom: 10,
+    marginBottom: moderateScale(10),
   },
 
   budgetTitle: {

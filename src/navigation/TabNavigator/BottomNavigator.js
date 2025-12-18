@@ -187,7 +187,7 @@ const BottomNavigator = () => {
           borderTopColor: '#ccc',
         },
 
-        tabBarActiveTintColor: '#00b894',
+        tabBarActiveTintColor: '#478F4E',
         tabBarInactiveTintColor: 'gray',
         headerShown: false,
       })}

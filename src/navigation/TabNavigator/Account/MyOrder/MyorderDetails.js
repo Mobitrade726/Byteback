@@ -101,7 +101,10 @@ const MyorderDetails = ({ navigation, route }) => {
       <View style={styles.statusRight}>
         <Image
           source={status.icon}
-          style={[styles.statusImage, { tintColor: status.tintColor , resizeMode:'contain'}]}
+          style={[
+            styles.statusImage,
+            { tintColor: status.tintColor, resizeMode: 'contain' },
+          ]}
         />
       </View>
     );
@@ -142,6 +145,21 @@ const MyorderDetails = ({ navigation, route }) => {
       border: '#D1D5DB',
     };
   const statusColor = getStatusColor(statusName);
+
+  const RETURN_STATUS_MAP = {
+    0: { label: 'Return Requested', color: '#2563EB', bg: '#EFF6FF' },
+    1: { label: 'Return Rejected', color: '#DC2626', bg: '#FEF2F2' },
+    2: { label: 'Reverse Pickup Initiated', color: '#7C3AED', bg: '#F5F3FF' },
+    3: { label: 'Received At Warehouse', color: '#0F766E', bg: '#ECFEFF' },
+    4: { label: 'Refund Initiated', color: '#CA8A04', bg: '#FEFCE8' },
+    5: { label: 'Refund Added In Wallet', color: '#059669', bg: '#ECFDF5' },
+    6: { label: 'Fixing Defects', color: '#9333EA', bg: '#F5F3FF' },
+    7: { label: 'Packed', color: '#0284C7', bg: '#F0F9FF' },
+    8: { label: 'Ready For Dispatch', color: '#2563EB', bg: '#EFF6FF' },
+    9: { label: 'Dispatched', color: '#16A34A', bg: '#ECFDF5' },
+    10: { label: 'Product Returned To Buyer', color: '#15803D', bg: '#ECFDF5' },
+    11: { label: 'Returned To Origin', color: '#6B7280', bg: '#F3F4F6' },
+  };
 
   return (
     <SafeAreaView style={styles.safe}>
@@ -269,7 +287,7 @@ const MyorderDetails = ({ navigation, route }) => {
                   <Text style={styles.returnBtnText}>Request Return</Text>
                 </TouchableOpacity>
               )} */}
-              {[5, 12].includes(Number(orderDetails?.order_status_value)) && (
+              {/* {[5, 12].includes(Number(orderDetails?.order_status_value)) && (
                 <>
                   {Number(product?.sales_return_status) === 0 ? (
                     <TouchableOpacity
@@ -287,6 +305,52 @@ const MyorderDetails = ({ navigation, route }) => {
                     >
                       <Text style={[styles.returnBtnText, { color: '#fff' }]}>
                         Request Return
+                      </Text>
+                    </View>
+                  )}
+                </>
+              )} */}
+              {/* RETURN ACTION / STATUS */}
+              {/* RETURN ACTION / STATUS */}
+              {[5, 12].includes(Number(orderDetails?.order_status_value)) && (
+                <>
+                  {/* Agar return abhi tak request nahi hua */}
+                  {product?.sales_return_status === null ||
+                  product?.sales_return_status === undefined ? (
+                    <TouchableOpacity
+                      onPress={() => {
+                        setSelectedProduct(product);
+                        setReturnModal(true);
+                      }}
+                      style={styles.returnBtn}
+                    >
+                      <Text style={styles.returnBtnText}>Request Return</Text>
+                    </TouchableOpacity>
+                  ) : (
+                    /* Agar return request ho chuka hai → STATUS SHOW */
+                    <View
+                      style={[
+                        styles.returnStatusBadge,
+                        {
+                          backgroundColor:
+                            RETURN_STATUS_MAP[product.sales_return_status]?.bg,
+                          borderColor:
+                            RETURN_STATUS_MAP[product.sales_return_status]
+                              ?.color,
+                        },
+                      ]}
+                    >
+                      <Text
+                        style={[
+                          styles.returnStatusText,
+                          {
+                            color:
+                              RETURN_STATUS_MAP[product.sales_return_status]
+                                ?.color,
+                          },
+                        ]}
+                      >
+                        {RETURN_STATUS_MAP[product.sales_return_status]?.label}
                       </Text>
                     </View>
                   )}
@@ -784,4 +848,18 @@ const styles = StyleSheet.create({
     backgroundColor: '#10B981',
   },
   modalConfirmText: { color: '#fff', fontWeight: '800' },
+
+  returnStatusBadge: {
+    marginTop: hp(1),
+    alignSelf: 'flex-start',
+    paddingVertical: hp(0.6),
+    paddingHorizontal: wp(4),
+    borderRadius: wp(3),
+    borderWidth: 1,
+  },
+
+  returnStatusText: {
+    fontWeight: '800',
+    fontSize: wp(3.4),
+  },
 });

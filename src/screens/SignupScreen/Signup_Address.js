@@ -336,7 +336,7 @@
 //         {zipLoading && form.billingZip.length === 6 && (
 //           <ActivityIndicator
 //             size="small"
-//             color="#4B9AC1"
+//             color="#478F4E"
 //             style={{marginBottom: 10}}
 //           />
 //         )}
@@ -411,7 +411,7 @@
 //             {zipLoading && form.shippingZip.length === 6 && (
 //               <ActivityIndicator
 //                 size="small"
-//                 color="#4B9AC1"
+//                 color="#478F4E"
 //                 style={{marginBottom: 10}}
 //               />
 //             )}
@@ -450,7 +450,7 @@
 //             styles.registerButton,
 //             {
 //               backgroundColor:
-//                 Object.keys(errors).length > 0 ? '#aaa' : '#4B9AC1',
+//                 Object.keys(errors).length > 0 ? '#aaa' : '#478F4E',
 //             },
 //           ]}
 //           onPress={handleRegister}
@@ -480,7 +480,7 @@
 //   },
 //   divider: {
 //     borderBottomWidth: 2.8,
-//     borderColor: '#4B9AC1',
+//     borderColor: '#478F4E',
 //     marginBottom: 20,
 //     marginTop: 5,
 //   },
@@ -854,7 +854,7 @@ const Signup_Address = ({ navigation }) => {
         {zipLoading && form.billingZip.length === 6 && (
           <ActivityIndicator
             size="small"
-            color="#4B9AC1"
+            color="#478F4E"
             style={{ marginBottom: RH(1) }}
           />
         )}
@@ -929,7 +929,7 @@ const Signup_Address = ({ navigation }) => {
             {zipLoading && form.shippingZip.length === 6 && (
               <ActivityIndicator
                 size="small"
-                color="#4B9AC1"
+                color="#478F4E"
                 style={{ marginBottom: RH(1) }}
               />
             )}
@@ -968,7 +968,7 @@ const Signup_Address = ({ navigation }) => {
             styles.registerButton,
             {
               backgroundColor:
-                Object.keys(errors).length > 0 ? '#aaa' : '#4B9AC1',
+                Object.keys(errors).length > 0 ? '#aaa' : '#478F4E',
             },
           ]}
           onPress={handleRegister}
@@ -1028,7 +1028,7 @@ const styles = StyleSheet.create({
   },
   divider: {
     borderBottomWidth: verticalScale(2.8),
-    borderColor: '#4B9AC1',
+    borderColor: '#478F4E',
     marginBottom: RH(2),
     marginTop: RH(1),
   },

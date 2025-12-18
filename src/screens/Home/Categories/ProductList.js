@@ -846,40 +846,6 @@ const ProductDetail = ({ route, iconType, icon, text }) => {
           )}
         </View>
 
-        {/* Grade A1 to A9  */}
-        <View
-          style={{
-            alignItems: 'center',
-            alignSelf: 'center',
-            justifyContent: 'center',
-            marginLeft: rw(1.8),
-            // marginVertical: rh(1.3),
-            flexDirection: 'row',
-          }}
-        >
-          <View style={styles.leftContainer}>
-            <Text style={styles.heading}>What is A1 to A9?</Text>
-            <Text style={styles.subheading}>How Does Our Grading Work?</Text>
-            <Text style={styles.description}>
-              Grading ranges from A1 (like new) to A9 (heavily used).
-            </Text>
-
-            <TouchableOpacity
-              onPress={() => navigation.navigate('Grade')}
-              style={styles.button}
-            >
-              <Text style={styles.buttonText}>Learn More</Text>
-            </TouchableOpacity>
-          </View>
-
-          {/* Right Image Section */}
-          <Image
-            source={require('../../../../assets/images/mini.png')} // Replace with your image path
-            style={styles.imageG}
-            resizeMode="contain"
-          />
-        </View>
-
         {/* View Similar Products  */}
         {/* <Text style={styles.headlines}>View Similar Products</Text> */}
 

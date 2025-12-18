@@ -59,7 +59,7 @@ const ProductCardStyles = StyleSheet.create({
 
   refurbishedLabelD: {
     alignSelf: 'center',
-    fontSize: responsiveFontSize(2),
+    fontSize: responsiveFontSize(1.5),
     color: '#000',
     backgroundColor: '#EAE6E5',
     width: '100%',
@@ -92,13 +92,13 @@ const ProductCardStyles = StyleSheet.create({
 
   cardD: {
     width: width / 2.3,
-    borderRadius: moderateScale(12),
+    borderRadius: moderateScale(8),
     overflow: 'hidden',
-    shadowColor: '#000',
     shadowRadius: moderateScale(4),
     marginHorizontal: moderateScale(5),
     marginVertical: moderateScale(5),
     borderWidth: moderateScale(1),
+    borderColor: '#ccc',
   },
 });
 export { ProductCardStyles };

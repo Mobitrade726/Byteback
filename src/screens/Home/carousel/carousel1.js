@@ -76,7 +76,7 @@ const discount = [
 const ramOptions = ['4GB', '6GB', '8GB', '12GB', '16GB', '32GB'];
 const storageOptions = ['64GB', '128GB', '256GB', '512GB', '1TB'];
 
-const carousel1 = ({ navigation, visible, onClose, item }) => {
+const Carousel1 = ({ navigation, visible, onClose, item }) => {
   const [search, setSearch] = useState('');
   const [showSortModal, setShowSortModal] = useState(false);
   const [selectedOption, setSelectedOption] = useState('lowToHigh');
@@ -106,7 +106,7 @@ const carousel1 = ({ navigation, visible, onClose, item }) => {
       id: '1',
       image: 'https://i.postimg.cc/KYYyFcgy/Depth-5-Frame-0-14.png',
       name: 'Samsung Galaxy S21',
-      subtitle: '(Refurbished)',
+      subtitle: 'PRE-OWNED',
       specs: '8GB 128GB ⚫ Black',
       color: 'Black',
       price: '₹20,999',
@@ -119,7 +119,7 @@ const carousel1 = ({ navigation, visible, onClose, item }) => {
       id: '2',
       image: 'https://i.postimg.cc/KYYyFcgy/Depth-5-Frame-0-14.png',
       name: 'Apple iPhone 13',
-      subtitle: '(Refurbished)',
+      subtitle: 'PRE-OWNED',
       specs: '8GB 128GB ⚫ Black',
       color: 'Black',
       price: '₹20,999',
@@ -132,7 +132,7 @@ const carousel1 = ({ navigation, visible, onClose, item }) => {
       id: '3',
       image: 'https://i.postimg.cc/KYYyFcgy/Depth-5-Frame-0-14.png',
       name: 'OnePlus 9',
-      subtitle: '(Refurbished)',
+      subtitle: 'PRE-OWNED',
       specs: '8GB 128GB ⚫ Black',
       color: 'Black',
       originalPrice: '₹24,999',
@@ -144,7 +144,7 @@ const carousel1 = ({ navigation, visible, onClose, item }) => {
       id: '4',
       image: 'https://i.postimg.cc/KYYyFcgy/Depth-5-Frame-0-14.png',
       name: 'OnePlus 9',
-      subtitle: '(Refurbished)',
+      subtitle: 'PRE-OWNED',
       specs: '8GB 128GB ⚫ Black',
       color: 'Black',
       price: '₹20,999',
@@ -187,7 +187,7 @@ const carousel1 = ({ navigation, visible, onClose, item }) => {
         <View style={styles.imageContainerD}>
           <Image source={{ uri: item.image }} style={styles.imageD} />
           {item.refurbished && (
-            <Text style={styles.refurbishedLabelD}>(Refurbished)</Text>
+            <Text style={styles.refurbishedLabelD}>PRE-OWNED</Text>
           )}
           <TouchableOpacity
             style={styles.heartIconD}
@@ -1559,4 +1559,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default carousel1;
+export default Carousel1;

@@ -96,7 +96,7 @@ import {
 import { createMaterialTopTabNavigator } from '@react-navigation/material-top-tabs';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import { useSelector } from 'react-redux';
-import ShopByBrand from './shopbybrand';
+import ShopByBrand from './Shopbybrand';
 import Header from '../../../constants/Header';
 
 import {
@@ -108,7 +108,7 @@ import { scale, verticalScale, moderateScale } from 'react-native-size-matters';
 
 const Tab = createMaterialTopTabNavigator();
 
-const shopbybrandsTab = ({ navigation, route }) => {
+const ShopbybrandsTab = ({ navigation, route }) => {
   const { initialTab } = route.params || {};
   const { catList } = useSelector(state => state.home);
 
@@ -208,4 +208,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default shopbybrandsTab;
+export default ShopbybrandsTab;

@@ -206,7 +206,7 @@ const SignUpTab = ({navigation}) => {
             return (
               <Text
                 style={{
-                  color: focused ? '#2E8BFF' : '#aaa',
+                  color: focused ? '#478F4E' : '#aaa',
                   fontSize: responsiveFontSize(1.6), // ~12
                 }}>
                 {label}
@@ -214,10 +214,10 @@ const SignUpTab = ({navigation}) => {
             );
           },
           tabBarIndicatorStyle: {
-            backgroundColor: '#2E8BFF',
+            backgroundColor: '#478F4E',
             height: verticalScale(2),
           },
-          tabBarActiveTintColor: '#2E8BFF',
+          tabBarActiveTintColor: '#478F4E',
           tabBarInactiveTintColor: '#aaa',
           tabBarShowIcon: true,
           tabBarStyle: {

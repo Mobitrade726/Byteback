@@ -295,7 +295,9 @@ const Cat_OS_Product = ({}) => {
             <FlatList
               key={`cat-brands`}
               data={BRANDS}
-              keyExtractor={item => item.name}
+              keyExtractor={(item, index) =>
+                item.name?.toString() ?? index.toString()
+              }
               renderItem={({ item }) => {
                 const selected = selectedBrands.includes(item.brand_name);
                 return (
@@ -491,7 +493,7 @@ const Cat_OS_Product = ({}) => {
         <View style={ProductCardStyles.imageContainerD}>
           {item && (
             <Text style={ProductCardStyles.refurbishedLabelD}>
-              (Refurbished)
+              PRE-OWNED
             </Text>
           )}
 
@@ -531,178 +533,159 @@ const Cat_OS_Product = ({}) => {
   return (
     <SafeAreaView style={styles.container}>
       <Header title={osName} navigation={navigation} showBack={true} />
-      <ScrollView>
-        <View style={styles.headerButtons}>
-          <TouchableOpacity
-            onPress={() => setShowSortModal(true)}
-            style={styles.sortButton}
-          >
-            <Icon name="grid" size={16} color="#000" />
-            <Text style={styles.sortText}>Sort By</Text>
-          </TouchableOpacity>
-          <TouchableOpacity
-            onPress={() => setFilterSortModal(true)}
-            style={styles.filterButton}
-          >
-            <Icon name="sliders" size={16} color="#000" />
-            <Text style={styles.sortText}>Filter</Text>
-          </TouchableOpacity>
+      <View style={styles.headerButtons}>
+        <TouchableOpacity
+          onPress={() => setShowSortModal(true)}
+          style={styles.sortButton}
+        >
+          <Icon name="grid" size={16} color="#000" />
+          <Text style={styles.sortText}>Sort By</Text>
+        </TouchableOpacity>
+        <TouchableOpacity
+          onPress={() => setFilterSortModal(true)}
+          style={styles.filterButton}
+        >
+          <Icon name="sliders" size={16} color="#000" />
+          <Text style={styles.sortText}>Filter</Text>
+        </TouchableOpacity>
+      </View>
+
+      {/* Product List */}
+      {loading ? (
+        <View style={{ alignItems: 'center', marginTop: 60 }}>
+          <Loader size="large" />
         </View>
-        {/* Product List */}
-        {/* {filteredProducts.length > 0 ? (
-          <FlatList
-            data={filteredProduct}
-            renderItem={({ item }) => <ProductCard item={item} />}
-            keyExtractor={item => item.id?.toString()}
-            numColumns={2}
-            contentContainerStyle={{
-              paddingHorizontal: moderateScale(10),
-              paddingBottom: moderateScale(80),
-              justifyContent:
-                filteredProduct.length === 1 ? 'flex-start' : 'space-between',
+      ) : filteredProduct.length > 0 ? (
+        <FlatList
+          data={filteredProduct}
+          renderItem={({ item }) => <ProductCard item={item} />}
+          keyExtractor={(item, index) =>
+            item.id?.toString() ?? index.toString()
+          }
+          numColumns={2}
+          contentContainerStyle={{
+            paddingHorizontal: moderateScale(15),
+            paddingBottom: moderateScale(80),
+            justifyContent:
+              filteredProduct.length === 1 ? 'flex-start' : 'space-between',
+          }}
+        />
+      ) : (
+        <View style={{ alignItems: 'center', marginTop: moderateScale(60) }}>
+          <Ionicons name="alert-circle-outline" size={50} color="#777" />
+          <Text
+            style={{
+              fontSize: moderateScale(16),
+              color: '#777',
+              marginTop: moderateScale(10),
             }}
-          />
-        ) : (
-          <View style={{ alignItems: 'center', marginTop: 60 }}>
-            <Ionicons name="alert-circle-outline" size={50} color="#777" />
-            <Text style={{ fontSize: 16, color: '#777', marginTop: 10 }}>
-              No products available in this range.
-            </Text>
-          </View>
-        )} */}
+          >
+            No products available in this range.
+          </Text>
+        </View>
+      )}
 
-        {/* Product List */}
-        {loading ? (
-          <View style={{ alignItems: 'center', marginTop: 60 }}>
-            <Loader size="large" />
-          </View>
-        ) : filteredProduct.length > 0 ? (
-          <FlatList
-            data={filteredProduct}
-            renderItem={({ item }) => <ProductCard item={item} />}
-            keyExtractor={item => item.id?.toString()}
-            numColumns={2}
-            contentContainerStyle={{
-              paddingHorizontal: moderateScale(15),
-              paddingBottom: moderateScale(80),
-              justifyContent:
-                filteredProduct.length === 1 ? 'flex-start' : 'space-between',
-            }}
-          />
-        ) : (
-          <View style={{ alignItems: 'center', marginTop: moderateScale(60) }}>
-            <Ionicons name="alert-circle-outline" size={50} color="#777" />
-            <Text style={{ fontSize: moderateScale(16), color: '#777', marginTop: moderateScale(10) }}>
-              No products available in this range.
-            </Text>
-          </View>
-        )}
-
-        {/* Sort Modal */}
-        <Modal visible={showSortModal} transparent animationType="slide">
-          <SafeAreaView style={styles.modalContainer}>
-            <View style={{ margin: 20, flex: 1 }}>
-              {/* Modal Header */}
-              <View style={styles.modalHeader}>
-                <TouchableOpacity onPress={() => setShowSortModal(false)}>
-                  <Ionicons name="close" size={24} color="#000" />
-                </TouchableOpacity>
-                <Text style={styles.modalTitle}>Sort by</Text>
-                <Ionicons name="grid-outline" size={20} color="#000" />
-              </View>
-
-              {/* Sort Options */}
-              <View style={styles.optionList}>
-                {sortOptions.map(option => (
-                  <TouchableOpacity
-                    key={option.key}
-                    style={styles.optionRow}
-                    onPress={() => setSelectedOption(option.key)}
-                  >
-                    <Text style={styles.optionText}>{option.label}</Text>
-                    <View
-                      style={[
-                        styles.radioOuter,
-                        selectedOption === option.key &&
-                          styles.radioOuterSelected,
-                      ]}
-                    >
-                      {selectedOption === option.key && (
-                        <View style={styles.radioInner} />
-                      )}
-                    </View>
-                  </TouchableOpacity>
-                ))}
-              </View>
-            </View>
-            {/* Apply Button */}
-            <View style={styles.applyWrapper}>
-              <TouchableOpacity
-                style={styles.applyButton}
-                onPress={handleApply}
-              >
-                <Text style={styles.applyText}>Apply</Text>
+      {/* Sort Modal */}
+      <Modal visible={showSortModal} transparent animationType="slide">
+        <SafeAreaView style={styles.modalContainer}>
+          <View style={{ margin: 20, flex: 1 }}>
+            {/* Modal Header */}
+            <View style={styles.modalHeader}>
+              <TouchableOpacity onPress={() => setShowSortModal(false)}>
+                <Ionicons name="close" size={24} color="#000" />
               </TouchableOpacity>
-            </View>
-          </SafeAreaView>
-        </Modal>
-
-        {/* Filter Modal */}
-        <Modal visible={showFilterModal} animationType="slide" transparent>
-          <SafeAreaView style={styles.modalContainer}>
-            {/* Header */}
-            <View style={styles.header}>
-              <TouchableOpacity onPress={() => setFilterSortModal(false)}>
-                <Ionicons name="close" size={24} />
-              </TouchableOpacity>
-              <Text style={styles.headerTitle}>Filter</Text>
-              <Ionicons name="options-outline" size={20} />
+              <Text style={styles.modalTitle}>Sort by</Text>
+              <Ionicons name="grid-outline" size={20} color="#000" />
             </View>
 
-            <View style={styles.body}>
-              <View style={styles.leftPane}>
-                {FILTER_TABS.map(tab => (
-                  <TouchableOpacity
-                    key={tab.key}
+            {/* Sort Options */}
+            <View style={styles.optionList}>
+              {sortOptions.map(option => (
+                <TouchableOpacity
+                  key={option.key}
+                  style={styles.optionRow}
+                  onPress={() => setSelectedOption(option.key)}
+                >
+                  <Text style={styles.optionText}>{option.label}</Text>
+                  <View
                     style={[
-                      styles.tabItem,
-                      selectedTab === tab.key && styles.tabItemSelected,
+                      styles.radioOuter,
+                      selectedOption === option.key &&
+                        styles.radioOuterSelected,
                     ]}
-                    onPress={() => setSelectedTab(tab.key)}
                   >
-                    <Ionicons
-                      name={tab.icon}
-                      size={18}
-                      color={selectedTab === tab.key ? '#000' : '#555'}
-                    />
-                    <Text
-                      style={[
-                        styles.tabLabel,
-                        selectedTab === tab.key && { fontWeight: '600' },
-                      ]}
-                    >
-                      {tab.label}
-                    </Text>
-                  </TouchableOpacity>
-                ))}
-              </View>
+                    {selectedOption === option.key && (
+                      <View style={styles.radioInner} />
+                    )}
+                  </View>
+                </TouchableOpacity>
+              ))}
+            </View>
+          </View>
+          {/* Apply Button */}
+          <View style={styles.applyWrapper}>
+            <TouchableOpacity style={styles.applyButton} onPress={handleApply}>
+              <Text style={styles.applyText}>Apply</Text>
+            </TouchableOpacity>
+          </View>
+        </SafeAreaView>
+      </Modal>
 
-              {/* Right Pane */}
-              {renderRightPane()}
+      {/* Filter Modal */}
+      <Modal visible={showFilterModal} animationType="slide" transparent>
+        <SafeAreaView style={styles.modalContainer}>
+          {/* Header */}
+          <View style={styles.header}>
+            <TouchableOpacity onPress={() => setFilterSortModal(false)}>
+              <Ionicons name="close" size={24} />
+            </TouchableOpacity>
+            <Text style={styles.headerTitle}>Filter</Text>
+            <Ionicons name="options-outline" size={20} />
+          </View>
+
+          <View style={styles.body}>
+            <View style={styles.leftPane}>
+              {FILTER_TABS.map(tab => (
+                <TouchableOpacity
+                  key={tab.key}
+                  style={[
+                    styles.tabItem,
+                    selectedTab === tab.key && styles.tabItemSelected,
+                  ]}
+                  onPress={() => setSelectedTab(tab.key)}
+                >
+                  <Ionicons
+                    name={tab.icon}
+                    size={18}
+                    color={selectedTab === tab.key ? '#000' : '#555'}
+                  />
+                  <Text
+                    style={[
+                      styles.tabLabel,
+                      selectedTab === tab.key && { fontWeight: '600' },
+                    ]}
+                  >
+                    {tab.label}
+                  </Text>
+                </TouchableOpacity>
+              ))}
             </View>
 
-            {/* Footer */}
-            <View style={styles.footer}>
-              <TouchableOpacity style={styles.resetBtn} onPress={handleReset}>
-                <Text style={styles.resetText}>Reset</Text>
-              </TouchableOpacity>
-              <TouchableOpacity style={styles.applyBtn} onPress={handleApply}>
-                <Text style={styles.applyText}>Apply</Text>
-              </TouchableOpacity>
-            </View>
-          </SafeAreaView>
-        </Modal>
-      </ScrollView>
+            {/* Right Pane */}
+            {renderRightPane()}
+          </View>
+
+          {/* Footer */}
+          <View style={styles.footer}>
+            <TouchableOpacity style={styles.resetBtn} onPress={handleReset}>
+              <Text style={styles.resetText}>Reset</Text>
+            </TouchableOpacity>
+            <TouchableOpacity style={styles.applyBtn} onPress={handleApply}>
+              <Text style={styles.applyText}>Apply</Text>
+            </TouchableOpacity>
+          </View>
+        </SafeAreaView>
+      </Modal>
     </SafeAreaView>
   );
 };

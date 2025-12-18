@@ -48,16 +48,9 @@ const Home = ({ navigation }) => {
   const token = useSelector(state => state.auth.token);
 
   const dispatch = useDispatch();
-  const {
-    carouselData,
-    brands,
-    uri,
-    mobileBudget,
-    LaptopBudget,
-    SUPPORT_CARDS,
-    catList,
-    status,
-  } = useSelector(state => state.home);
+  const { carouselData, brands, uri, catList, status } = useSelector(
+    state => state.home,
+  );
   const { recentlyview } = useSelector(state => state.product);
 
   useFocusEffect(
@@ -69,23 +62,6 @@ const Home = ({ navigation }) => {
       dispatch(fetchProductList());
       dispatch(fetchCatList());
     }, [dispatch]),
-  );
-
-  const ProductMobile = ({ item }) => (
-    <>
-      <View style={styles.offerCard}>
-        <Image source={{ uri: item.image }} style={styles.image} />
-      </View>
-      <Text style={styles.productNameD}>{item.label}</Text>
-      <Text style={styles.colorTextD}>{item.subname}</Text>
-    </>
-  );
-  const ProductLaptop = ({ item }) => (
-    <View style={styles.cardM}>
-      <Image source={{ uri: item.image }} style={styles.imageM} />
-      <Text style={styles.productNameD}>{item.label}</Text>
-      <Text style={styles.colorTextD}>{item.subname}</Text>
-    </View>
   );
 
   const RecentlyView = ({ item }) => {
@@ -114,9 +90,7 @@ const Home = ({ navigation }) => {
         {/* Image + Heart */}
         <View style={ProductCardStyles.imageContainerD}>
           {item && (
-            <Text style={ProductCardStyles.refurbishedLabelD}>
-              (Refurbished)
-            </Text>
+            <Text style={ProductCardStyles.refurbishedLabelD}>PRE-OWNED</Text>
           )}
 
           <Image
@@ -151,21 +125,23 @@ const Home = ({ navigation }) => {
           <Text style={ProductCardStyles.priceD}>₹ {item.price}</Text>
         </View>
       </TouchableOpacity>
-      
     );
   };
 
-  const SUPPORT_CARDS_renderItem = ({ item }) => (
-    <View style={styles.cardSUPPORT_CARDS}>
-      <View style={styles.iconCircleSUPPORT_CARDS}>
-        <Icon name={item.icon} size={20} color="#fff" />
+  const FeatureItem = ({ icon, title, subtitle }) => {
+    return (
+      <View style={styles.itemfooter}>
+        <View style={styles.iconOuteritemfooter}>
+          <View style={styles.iconInneritemfooter}>
+            <Ionicons name={icon} size={24} color="#fff" />
+          </View>
+        </View>
+
+        <Text style={styles.titleitemfooter}>{title}</Text>
+        <Text style={styles.subtitleitemfooter}>{subtitle}</Text>
       </View>
-      <Text style={styles.cardTitleSUPPORT_CARDS}>{item.title}</Text>
-      <Text style={styles.cardDescriptionSUPPORT_CARDS}>
-        {item.description}
-      </Text>
-    </View>
-  );
+    );
+  };
 
   // ✅ Handle Back Button
   useEffect(() => {
@@ -223,6 +199,30 @@ const Home = ({ navigation }) => {
     return <Loader />;
   }
 
+  const budgetOptions = [
+    {
+      id: 1,
+      label: 'Under ₹10,000',
+      image: 'https://i.postimg.cc/Pf3MBSK6/Category-Card-01-1.png',
+    },
+    {
+      id: 2,
+      label: '₹10,000 - ₹20,000',
+      image: 'https://i.postimg.cc/0NRJJB0y/Category-Card-02.png',
+    },
+    {
+      id: 3,
+      label: '₹20,000 - ₹30,000',
+      image:
+        'https://i.postimg.cc/zvBLrZ80/create-an-image-with-multiple-smartphones-that-are-under-10000-20000-rupees.png',
+    },
+    {
+      id: 4,
+      label: 'Above ₹30,000',
+      image: 'https://i.postimg.cc/Ls3hg6sx/Category-Card-4.png',
+    },
+  ];
+
   return (
     <>
       <SafeAreaView style={{ backgroundColor: '#fff' }}>
@@ -233,20 +233,30 @@ const Home = ({ navigation }) => {
         />
         <Header navigation={navigation} />
 
-        <ScrollView showsVerticalScrollIndicator={false}>
+        <ScrollView
+          contentContainerStyle={{ paddingBottom: moderateScale(40) }}
+          showsVerticalScrollIndicator={false}
+        >
           {/* Carousel */}
           <HeroCarousel data={carouselData} navigation={navigation} />
           <FlatList
             horizontal
             data={catList} // clone and reverse
-            keyExtractor={item => item.id.toString()}
+            keyExtractor={(item, index) =>
+              item.id ? item.id.toString() : index.toString()
+            }
             showsHorizontalScrollIndicator={false}
             renderItem={renderItem}
           />
 
           <TouchableOpacity
             onPress={() => navigation.navigate('RecentlyAddedTab')}
-            style={{ flex: 1, backgroundColor: '#fff', marginHorizontal: moderateScale(10) }}
+            style={{
+              flex: 1,
+              backgroundColor: '#fff',
+              marginHorizontal: moderateScale(10),
+              marginBottom: moderateScale(8),
+            }}
           >
             {/* Recently Added Banner */}
             <View style={{ marginTop: moderateScale(16) }}>
@@ -276,7 +286,9 @@ const Home = ({ navigation }) => {
             <FlatList
               horizontal
               data={brands}
-              keyExtractor={item => item.id}
+              keyExtractor={(item, index) =>
+                item.id ? item.id.toString() : index.toString()
+              }
               renderItem={({ item }) => (
                 <TouchableOpacity
                   onPress={() =>
@@ -318,9 +330,15 @@ const Home = ({ navigation }) => {
               showsHorizontalScrollIndicator={false}
             />
           </Section>
-
-          <Section title="Shop by budget">
-            <View
+          <View
+            style={{
+              backgroundColor: '#f1f1f1',
+              marginTop: moderateScale(20),
+              paddingVertical: 15,
+            }}
+          >
+            <Section title="Shop by budget">
+              {/* <View
               style={{ flexDirection: 'row', justifyContent: 'space-between' }}
             >
               <Text
@@ -333,7 +351,7 @@ const Home = ({ navigation }) => {
               </Text>
               <TouchableOpacity
                 onPress={() =>
-                  navigation.navigate('HomeShopByBudget', {
+                  navigation.navigate('ShopByBudget', {
                     priceId: mobileBudget[0]?.id,
                     arrayosname: ['iOS', 'Android'], // shows both iOS & Android
                     rangeLabeldefault: 'Under ₹10,000',
@@ -363,7 +381,9 @@ const Home = ({ navigation }) => {
                   <ProductMobile item={item} />
                 </TouchableOpacity>
               )}
-              keyExtractor={item => item.id}
+              keyExtractor={(item, index) =>
+                item.id ? item.id.toString() : index.toString()
+              }
               contentContainerStyle={styles.listContainerD}
               showsHorizontalScrollIndicator={false}
             />
@@ -384,7 +404,7 @@ const Home = ({ navigation }) => {
               </Text>
               <TouchableOpacity
                 onPress={() =>
-                  navigation.navigate('HomeShopByBudget', {
+                  navigation.navigate('ShopByBudget', {
                     priceId: mobileBudget[0]?.id,
                     arrayosname: ['macOS', 'windows'], // shows both iOS & Android
                     rangeLabeldefault: 'Under ₹10,000',
@@ -414,11 +434,48 @@ const Home = ({ navigation }) => {
                   <ProductLaptop item={item} />
                 </TouchableOpacity>
               )}
-              keyExtractor={item => item.id}
+              keyExtractor={(item, index) =>
+                item.id ? item.id.toString() : index.toString()
+              }
               contentContainerStyle={styles.listContainerD}
               showsHorizontalScrollIndicator={false}
-            />
-          </Section>
+            /> */}
+              <View style={styles.grid}>
+                {budgetOptions.map((item, index) => (
+                  <TouchableOpacity
+                    onPress={() =>
+                      navigation.navigate('ShopByBudget', {
+                        priceId: item.id,
+                        rangeLabel: item.label,
+                      })
+                    }
+                    key={index}
+                    style={styles.budgetCard}
+                    activeOpacity={0.8}
+                  >
+                    <View style={styles.cardContent}>
+                      <LinearGradient
+                        colors={['#3d8e2a', '#b4ffa5']}
+                        start={{ x: 0, y: 0 }}
+                        end={{ x: 1, y: 1 }}
+                        style={styles.gradientCircle}
+                      >
+                        <Ionicons
+                          name="pricetag-outline"
+                          size={28}
+                          color="#fff"
+                        />
+                      </LinearGradient>
+
+                      <Text style={styles.budgetTitle}>{item.label}</Text>
+
+                      <Text style={styles.budgetSubText}>Tap to Explore</Text>
+                    </View>
+                  </TouchableOpacity>
+                ))}
+              </View>
+            </Section>
+          </View>
 
           {recentlyview?.length > 0 ? (
             <>
@@ -430,7 +487,7 @@ const Home = ({ navigation }) => {
                   horizontal
                   data={recentlyview}
                   renderItem={({ item }) => <RecentlyView item={item} />}
-                  keyExtractor={item => item.id?.toString()}
+                  keyExtractor={item => item.barcode_id?.toString()}
                   showsHorizontalScrollIndicator={false}
                 />
               </Section>
@@ -443,19 +500,26 @@ const Home = ({ navigation }) => {
               width: '100%',
               justifyContent: 'flex-end',
               alignItems: 'flex-end',
+              marginTop: moderateScale(20),
             }}
             source={require('../../../assets/images/gstrate.png')}
           ></ImageBackground>
           <View
             style={{
-              width: '95%',
-              marginVertical: scale(15),
+              width: '92%',
+              marginTop: scale(20),
+              marginBottom: moderateScale(5),
               flexDirection: 'row',
               alignSelf: 'center',
+              borderWidth: 1,
+              padding: 15,
+              borderColor: '#ccc',
+              backgroundColor: '#f9f9f9',
+              borderRadius: 8,
             }}
           >
             <View style={styles.leftContainer}>
-              <Text style={styles.heading}>What is A1 to A9?</Text>
+              <Text style={styles.heading}>What is A1 to A9 Grade?</Text>
               <Text style={styles.subheading}>How Does Our Grading Work?</Text>
               <Text style={styles.description}>
                 Grading ranges from A1 (like new) to A9 (heavily used).
@@ -477,13 +541,25 @@ const Home = ({ navigation }) => {
             />
           </View>
           <Section title="More Features">
-            <FlatList
-              data={SUPPORT_CARDS}
-              renderItem={SUPPORT_CARDS_renderItem}
-              keyExtractor={item => item.id}
-              scrollEnabled={false}
-              contentContainerStyle={styles.containerSUPPORT_CARDS}
-            />
+            <View style={styles.container1}>
+              <FeatureItem
+                icon="car-outline"
+                title="FREE AND FAST DELIVERY"
+                subtitle="Free delivery for all orders over ₹5000"
+              />
+
+              <FeatureItem
+                icon="headset-outline"
+                title="24/7 CUSTOMER SERVICE"
+                subtitle="Friendly 24/7 customer support"
+              />
+
+              <FeatureItem
+                icon="shield-checkmark-outline"
+                title="MONEY BACK GUARANTEE"
+                subtitle="We return money within 30 days"
+              />
+            </View>
           </Section>
         </ScrollView>
       </SafeAreaView>

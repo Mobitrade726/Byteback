@@ -85,7 +85,7 @@
 // // //       <View style={styles.cardD}>
 // // //         <View style={styles.imageContainerD}>
 // // //           <Image source={{uri: item.feature_image}} style={styles.imageD} />
-// // //           {item && <Text style={styles.refurbishedLabelD}>(Refurbished)</Text>}
+// // //           {item && <Text style={styles.refurbishedLabelD}>PRE-OWNED</Text>}
 // // //           <TouchableOpacity
 // // //             style={styles.heartIconD}
 // // //             onPress={() => dispatch(toggleWishlist(item))}>
@@ -1119,7 +1119,7 @@
 // //               <Text>No Image</Text>
 // //             </View>
 // //           )}
-// //           <Text style={styles.refurbishedLabel}>(Refurbished)</Text>
+// //           <Text style={styles.refurbishedLabel}>PRE-OWNED</Text>
 // //           <TouchableOpacity
 // //             style={styles.heartIcon}
 // //             onPress={() => dispatch(toggleWishlist(item))}>
@@ -1431,7 +1431,7 @@
 //         <View style={ProductCardStyles.imageContainerD}>
 //           {item && (
 //             <Text style={ProductCardStyles.refurbishedLabelD}>
-//               (Refurbished)
+//               PRE-OWNED
 //             </Text>
 //           )}
 
@@ -1791,7 +1791,7 @@ import {
 import { fetchCatList } from '../../../redux/slices/homeSlice';
 import { useFocusEffect } from '@react-navigation/native';
 
-const shopbybrandfilter = ({ navigation, route }) => {
+const Shopbybrandfilter = ({ navigation, route }) => {
   const { brandname, catName, osName, catId } = route?.params;
   const [brandsData, setBrandsData] = useState([]);
   const [loading, setLoading] = useState(false);
@@ -1900,7 +1900,7 @@ const shopbybrandfilter = ({ navigation, route }) => {
         <View style={ProductCardStyles.imageContainerD}>
           {item && (
             <Text style={ProductCardStyles.refurbishedLabelD}>
-              (Refurbished)
+              PRE-OWNED
             </Text>
           )}
 
@@ -1979,7 +1979,7 @@ const shopbybrandfilter = ({ navigation, route }) => {
           data={paginatedData} // <-- use paginatedData
           keyExtractor={(item, index) => index.toString()} // fallback
           renderItem={({ item }) => <ProductCard item={item} />}
-          showsHorizontalScrollIndicator={false}
+          showsVerticalScrollIndicator={false}
           numColumns={2}
           onEndReached={loadMore} // <-- auto load more
           onEndReachedThreshold={0.5} // <-- triggers when 50% from bottom
@@ -2056,4 +2056,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default shopbybrandfilter;
+export default Shopbybrandfilter;

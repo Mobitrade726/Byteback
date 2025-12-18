@@ -2538,11 +2538,11 @@
 
 // export {styles, stylesSupport};
 
-import {Dimensions, Platform, StyleSheet} from 'react-native';
-import {responsiveWidth} from 'react-native-responsive-dimensions';
-import {scale, verticalScale, moderateScale} from 'react-native-size-matters';
+import { Dimensions, Platform, StyleSheet } from 'react-native';
+import { responsiveWidth } from 'react-native-responsive-dimensions';
+import { scale, verticalScale, moderateScale } from 'react-native-size-matters';
 
-const {width} = Dimensions.get('window');
+const { width } = Dimensions.get('window');
 const cardSize = width * 0.45;
 // Product Card Base Style (to avoid duplication)
 const cardDBase = {
@@ -2559,8 +2559,47 @@ const styles = StyleSheet.create({
     flex: 1,
     paddingRight: scale(10),
   },
-  container: {flex: 1, backgroundColor: '#fff', borderWidth:1},
-  // scrollView: {paddingBottom: verticalScale(20)},
+  container: { flex: 1, backgroundColor: '#fff', borderWidth: 1 },
+  container1: {  backgroundColor: '#fff', marginTop: moderateScale(20) },
+  itemfooter: {
+    alignItems: 'center',
+    marginBottom: 35,
+    paddingHorizontal: 20,
+  },
+
+  iconOuteritemfooter: {
+    width: width * 0.15,
+    height: width * 0.15,
+    borderRadius: width * 0.08,
+    backgroundColor: '#E6E6E6',
+    alignItems: 'center',
+    justifyContent: 'center',
+    marginBottom: 16,
+  },
+
+  iconInneritemfooter: {
+    width: width * 0.10,
+    height: width * 0.10,
+    borderRadius: width * 0.06,
+    backgroundColor: '#000',
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+
+  titleitemfooter: {
+    fontSize: width * 0.030,
+    fontWeight: '700',
+    color: '#000',
+    textAlign: 'center',
+    marginBottom: 6,
+  },
+
+  subtitleitemfooter: {
+    fontSize: width * 0.030,
+    color: '#555',
+    textAlign: 'center',
+    lineHeight: 20,
+  },
 
   heading: {
     fontSize: moderateScale(18),
@@ -2581,13 +2620,13 @@ const styles = StyleSheet.create({
   },
   button: {
     backgroundColor: '#EAE8E8',
-    paddingVertical: verticalScale(12),
+    paddingVertical: verticalScale(8),
     paddingHorizontal: scale(24),
     borderRadius: moderateScale(16),
     alignSelf: 'flex-start',
   },
   buttonText: {
-    fontSize: moderateScale(16),
+    fontSize: moderateScale(13),
     color: '#000',
     fontWeight: '600',
   },
@@ -2608,24 +2647,25 @@ const styles = StyleSheet.create({
   // },
 
   swiper: {
-    height: moderateScale(200), marginTop: moderateScale(5),
+    height: moderateScale(200),
+    // marginTop: moderateScale(5),
   },
   card_Top: {
-    width: width - 15,
+    width: width,
     marginHorizontal: moderateScale(20),
     height: moderateScale(200),
-    borderRadius: moderateScale(16),
+    // borderRadius: moderateScale(16),
     overflow: 'hidden',
     alignSelf: 'center',
   },
   image1: {
     resizeMode: 'stretch',
-    borderRadius: 16,
+    // borderRadius: 16,
   },
 
-  textContainer: {flex: 1},
-  titleT: {fontSize: moderateScale(12), color: '#fff'},
-  subtitleT: {fontSize: moderateScale(14), color: '#fff', fontWeight: '600'},
+  textContainer: { flex: 1 },
+  titleT: { fontSize: moderateScale(12), color: '#fff' },
+  subtitleT: { fontSize: moderateScale(14), color: '#fff', fontWeight: '600' },
   dot: {
     backgroundColor: '#aaa',
     width: scale(6),
@@ -2649,11 +2689,11 @@ const styles = StyleSheet.create({
     padding: moderateScale(5),
     backgroundColor: '#1C9C48',
   },
-  logo: {width: moderateScale(80), height: verticalScale(58)},
+  logo: { width: moderateScale(80), height: verticalScale(58) },
 
   // Hero overlay
-  hero: {height: verticalScale(400), marginBottom: verticalScale(50)},
-  overlay: {flex: 1, justifyContent: 'center', paddingLeft: '10%'},
+  hero: { height: verticalScale(400), marginBottom: verticalScale(50) },
+  overlay: { flex: 1, justifyContent: 'center', paddingLeft: '10%' },
   subtitle: {
     color: '#fff',
     fontSize: moderateScale(17),
@@ -2679,7 +2719,7 @@ const styles = StyleSheet.create({
   },
 
   // Product Cards / List
-  listContainerD: {padding: moderateScale(0)},
+  listContainerD: { padding: moderateScale(0) },
   cardD: {
     width: responsiveWidth(45),
     borderRadius: moderateScale(12),
@@ -2696,7 +2736,7 @@ const styles = StyleSheet.create({
     borderRadius: moderateScale(12),
     marginHorizontal: scale(2),
   },
-  imageContainerD: {position: 'relative', backgroundColor: '#ffffff'},
+  imageContainerD: { position: 'relative', backgroundColor: '#ffffff' },
   imageD: {
     width: responsiveWidth(41),
     height: verticalScale(150),
@@ -2739,7 +2779,11 @@ const styles = StyleSheet.create({
     paddingVertical: verticalScale(2),
     borderRadius: moderateScale(10),
   },
-  badgeTextD: {color: '#fff', fontSize: moderateScale(12), fontWeight: 'bold'},
+  badgeTextD: {
+    color: '#fff',
+    fontSize: moderateScale(12),
+    fontWeight: 'bold',
+  },
 
   // Grade Box
   gradeBoxD: {
@@ -2792,15 +2836,15 @@ const styles = StyleSheet.create({
     textDecorationLine: 'line-through',
   },
 
-  // Buttons
-  button: {
-    backgroundColor: '#EAE8E8',
-    paddingVertical: verticalScale(12),
-    paddingHorizontal: scale(24),
-    borderRadius: moderateScale(16),
-    alignSelf: 'flex-start',
-  },
-  buttonText: {fontSize: moderateScale(16), color: '#000', fontWeight: '600'},
+  // // Buttons
+  // button: {
+  //   backgroundColor: '#EAE8E8',
+  //   paddingVertical: verticalScale(12),
+  //   paddingHorizontal: scale(24),
+  //   borderRadius: moderateScale(16),
+  //   alignSelf: 'flex-start',
+  // },
+  // buttonText: { fontSize: moderateScale(16), color: '#000', fontWeight: '600' },
 
   // Quantity Selector
   quantityContainer: {
@@ -2849,7 +2893,7 @@ const styles = StyleSheet.create({
   },
 
   // Offer Cards
-  offerList: {marginTop: verticalScale(10)},
+  offerList: { marginTop: verticalScale(10) },
   offerCard: {
     width: cardSize,
     height: cardSize,
@@ -2877,19 +2921,20 @@ const styles = StyleSheet.create({
     fontFamily: 'Source Serif 4',
     marginTop: verticalScale(100),
   },
-  offerSubtitle: {fontSize: moderateScale(13), color: '#000'},
+  offerSubtitle: { fontSize: moderateScale(13), color: '#000' },
 
-    brandCardContainer: {
+  brandCardContainer: {
     width: moderateScale(160),
     marginHorizontal: moderateScale(10),
     alignItems: 'center',
     backgroundColor: '#fff',
     borderRadius: moderateScale(20),
     paddingBottom: moderateScale(12),
-    shadowOffset: { width: 0, height: 4 },
-    shadowOpacity: 0.18,
-    shadowRadius: 6,
-    elevation: 5, borderWidth:1,
+    // shadowOffset: { width: 0, height: 4 },
+    // shadowOpacity: 0.18,
+    // shadowRadius: 6,
+    borderWidth: 1,
+    borderColor: '#ccc',
   },
 
   brandImage: {
@@ -2906,8 +2951,8 @@ const styles = StyleSheet.create({
   brandGradient: {
     width: '100%',
     height: '50%',
-    borderBottomLeftRadius: moderateScale(20),
-    borderBottomRightRadius: moderateScale(20),
+    // borderBottomLeftRadius: moderateScale(20),
+    // borderBottomRightRadius: moderateScale(20),
   },
 
   brandTitle: {
@@ -2917,7 +2962,6 @@ const styles = StyleSheet.create({
     color: '#333',
     textAlign: 'center',
   },
-
 
   // Bulk Cards
   card_bulk: {
@@ -2945,7 +2989,7 @@ const styles = StyleSheet.create({
     color: '#111',
     marginBottom: verticalScale(4),
   },
-  subtitle_bulk: {fontSize: moderateScale(14), color: '#444'},
+  subtitle_bulk: { fontSize: moderateScale(14), color: '#444' },
   iconBtn_bulk: {
     width: scale(50),
     height: scale(50),
@@ -2967,12 +3011,12 @@ const styles = StyleSheet.create({
     borderColor: '#00AEEF',
     marginHorizontal: scale(5),
   },
-  activeDot_bulk: {backgroundColor: '#00AEEF'},
+  activeDot_bulk: { backgroundColor: '#00AEEF' },
 
   // Support Cards
   containerSUPPORT_CARDS: {
     paddingHorizontal: 0,
-    paddingTop: verticalScale(12),
+    paddingTop: verticalScale(0),
     paddingBottom: verticalScale(24),
   },
   cardSUPPORT_CARDS: {
@@ -3009,7 +3053,12 @@ const styles = StyleSheet.create({
     marginHorizontal: scale(5),
     marginTop: verticalScale(10),
   },
-  categoryImage: {width: scale(60), height: scale(60), resizeMode: 'contain', borderRadius: moderateScale(15)},
+  categoryImage: {
+    width: scale(60),
+    height: scale(60),
+    resizeMode: 'contain',
+    borderRadius: moderateScale(15),
+  },
   categoryText: {
     marginTop: verticalScale(6),
     fontSize: moderateScale(12),
@@ -3032,7 +3081,55 @@ const styles = StyleSheet.create({
     borderBottomLeftRadius: moderateScale(12),
     borderBottomRightRadius: moderateScale(12),
   },
-  bannerText: {fontSize: moderateScale(18), fontWeight: '600', color: '#fff'},
+  bannerText: { fontSize: moderateScale(18), fontWeight: '600', color: '#fff' },
+
+  grid: {
+    flexDirection: 'row',
+    flexWrap: 'wrap',
+    justifyContent: 'space-between',
+    paddingHorizontal: moderateScale(10),
+    marginTop: moderateScale(10),
+  },
+
+  budgetCard: {
+    width: '48%',
+    backgroundColor: '#fff',
+    borderRadius: moderateScale(16),
+    paddingVertical: moderateScale(18),
+    marginBottom: moderateScale(15),
+    alignItems: 'center',
+    elevation: 5,
+    shadowColor: '#000',
+    shadowOpacity: 0.15,
+    shadowRadius: 6,
+    shadowOffset: { width: 0, height: 3 },
+  },
+
+  cardContent: {
+    alignItems: 'center',
+  },
+
+  gradientCircle: {
+     width: moderateScale(58),
+    height: moderateScale(58),
+    borderRadius: moderateScale(30),
+    justifyContent: 'center',
+    alignItems: 'center',
+    marginBottom: moderateScale(10),
+  },
+
+  budgetTitle: {
+    fontSize: moderateScale(12),
+    fontWeight: '700',
+    color: '#222',
+    marginTop: 2,
+  },
+
+  budgetSubText: {
+    fontSize: 13,
+    color: '#777',
+    marginTop: 4,
+  },
 });
 
 // Support Floating Button
@@ -3076,7 +3173,7 @@ const stylesSupport = StyleSheet.create({
     paddingHorizontal: scale(6),
     paddingVertical: verticalScale(2),
   },
-  badgeText: {color: '#fff', fontWeight: 'bold', fontSize: moderateScale(12)},
+  badgeText: { color: '#fff', fontWeight: 'bold', fontSize: moderateScale(12) },
 });
 
-export {styles, stylesSupport};
+export { styles, stylesSupport };

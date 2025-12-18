@@ -233,7 +233,7 @@ const LoginScreen = ({ navigation }) => {
       <SafeAreaView style={styles.container}>
         <View style={{ marginHorizontal: moderateScale(10) }}>
           {/* Back Arrow */}
-          <TouchableOpacity
+          {/* <TouchableOpacity
             style={styles.backButton}
             onPress={() => BackHandler.exitApp()}
           >
@@ -246,7 +246,7 @@ const LoginScreen = ({ navigation }) => {
                 padding: moderateScale(6),
               }}
             />
-          </TouchableOpacity>
+          </TouchableOpacity> */}
 
           <Text style={styles.title}>Hey!</Text>
 
@@ -362,15 +362,15 @@ const LoginScreen = ({ navigation }) => {
           />
 
           {/* Sign Up */}
-          <TouchableOpacity
+          {/* <TouchableOpacity
             onPress={() => navigation.navigate('LandingPage')}
             style={styles.signupButton}
           >
             <Text style={styles.signupText}>Sign up</Text>
-          </TouchableOpacity>
+          </TouchableOpacity> */}
 
           <TouchableOpacity onPress={() => navigation.navigate('LandingPage')}>
-            <Text style={styles.bottomText}>New here? Create an Account?</Text>
+            <Text style={styles.bottomText}>New here? <Text style={{color:"#478F4E"}}>Create an Account</Text></Text>
           </TouchableOpacity>
         </View>
       </SafeAreaView>

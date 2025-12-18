@@ -81,7 +81,7 @@ const ProductCard = React.memo(
         <View style={ProductCardStyles.imageContainerD}>
           {item && (
             <Text style={ProductCardStyles.refurbishedLabelD}>
-              (Refurbished)
+              PRE-OWNED
             </Text>
           )}
           <Image
@@ -689,7 +689,7 @@ const SearchRefactored = ({ navigation }) => {
           </Text>
         </View>
       ) : (
-        <FlatList
+        <FlatList showsVerticalScrollIndicator={false}
           data={listData}
           renderItem={({ item }) => (
             <ProductCard

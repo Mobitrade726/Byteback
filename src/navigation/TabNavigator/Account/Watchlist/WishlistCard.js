@@ -31,7 +31,7 @@ const WishlistCard = ({data, onRemove}) => {
             </TouchableOpacity>
           </View>
 
-          <Text style={styles.subtitle}>(Refurbished)</Text>
+          <Text style={styles.subtitle}>PRE-OWNED</Text>
           <Text style={styles.specs}>
             {data?.os_name === 'iOS' || data?.os_name === 'Android' ? (
               <>

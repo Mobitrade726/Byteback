@@ -1163,7 +1163,7 @@ const styles = StyleSheet.create({
     fontSize: responsiveFontSize(1.8),
   },
   nextButton: {
-    backgroundColor: '#4BA4D9',
+    backgroundColor: '#478F4E',
     paddingVertical: verticalScale(15),
     borderRadius: moderateScale(10),
     alignItems: 'center',

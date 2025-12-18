@@ -10,7 +10,7 @@ import {
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import {styles_setpassword} from './styles';
 
-const setPassword = ({navigation}) => {
+const SetPassword = ({navigation}) => {
   const [newPassword, setNewPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
   const [showNew, setShowNew] = useState(false);
@@ -147,4 +147,4 @@ const setPassword = ({navigation}) => {
   );
 };
 
-export default setPassword;
+export default SetPassword;
