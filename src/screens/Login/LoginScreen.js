@@ -355,7 +355,7 @@ const LoginScreen = ({ navigation }) => {
               // 👉 ONLY SUCCESS case navigate karega
               if (alertType === 'success') {
                 setAlertVisible(false);
-                navigation.navigate('BottomNavigator');
+                navigation.navigate('Home');
               }
             }}
             onClose={() => setAlertVisible(false)}

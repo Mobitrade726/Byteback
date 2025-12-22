@@ -18,7 +18,7 @@ import {scale, verticalScale, moderateScale} from 'react-native-size-matters';
 
 const Settings = ({navigation}) => {
   const route = useRoute();
-  const {cat, profileEdit} = route.params;
+  const {cat, profileEdit} = route.params || [];
 
   return (
     <SafeAreaView style={styles.container}>

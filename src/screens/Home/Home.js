@@ -281,7 +281,7 @@ const Home = ({ navigation }) => {
           {/* Offers */}
           <Section
             title="Shop by brands"
-            onPress={() => navigation.navigate('shopbybrandsTab')}
+            onPress={() => navigation.navigate('ShopbybrandsTab')}
           >
             <FlatList
               horizontal
@@ -292,7 +292,7 @@ const Home = ({ navigation }) => {
               renderItem={({ item }) => (
                 <TouchableOpacity
                   onPress={() =>
-                    navigation.navigate('shopbybrandfilter', {
+                    navigation.navigate('Shopbybrandfilter', {
                       brandname: item.brand_name,
                       catName: item.product_category
                         .map(c => c.category_name)

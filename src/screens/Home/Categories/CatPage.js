@@ -202,7 +202,7 @@ const CatPage = ({ catName, osName, catId }) => {
           <>
             <Section
               title="Shop by brands"
-              onPress={() => navigation.navigate('shopbybrandsTab')}
+              onPress={() => navigation.navigate('ShopbybrandsTab')}
             >
               <FlatList
                 data={categoryBrands}
@@ -225,7 +225,7 @@ const CatPage = ({ catName, osName, catId }) => {
                       borderColor: '#ccc',
                     }}
                     onPress={() =>
-                      navigation.navigate('shopbybrandfilter', {
+                      navigation.navigate('Shopbybrandfilter', {
                         osName: item.brand_name,
                         catName: item.product_category
                           .map(c => c.category_name)

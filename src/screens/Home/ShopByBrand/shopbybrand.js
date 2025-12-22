@@ -19,7 +19,7 @@ import {
 import { scale, verticalScale, moderateScale } from 'react-native-size-matters';
 import ActivityLoader from '../../../constants/Loader';
 
-const ShopByBrand = ({ catName }) => {
+const Shopbybrand = ({ catName }) => {
   const dispatch = useDispatch();
   const navigation = useNavigation();
   const [page, setPage] = useState(1);
@@ -101,7 +101,7 @@ const ShopByBrand = ({ catName }) => {
   const renderBrandItem = ({ item }) => (
     <TouchableOpacity
       onPress={() =>
-        navigation.navigate('shopbybrandfilter', {
+        navigation.navigate('Shopbybrandfilter', {
           brandname: item.brand_name,
           catName: catName,
         })
@@ -276,4 +276,4 @@ const ShopByBrand = ({ catName }) => {
   );
 };
 
-export default ShopByBrand;
+export default Shopbybrand;

@@ -545,3 +545,4 @@ const styles = StyleSheet.create({
     marginRight: wp('2%'),
   },
 });
+

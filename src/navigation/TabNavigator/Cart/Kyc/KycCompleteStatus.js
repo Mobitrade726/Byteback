@@ -184,7 +184,7 @@ const KycScreen = ({ navigation }) => {
         text2: response?.data?.message,
       });
       setLoading(false);
-      navigation.navigate('BottomNavigator');
+      navigation.goBack();
     } catch (error) {
       setLoading(false);
       Alert.alert('Error', 'Something went wrong. Try again.');

@@ -34,7 +34,7 @@ const ProcessToPay = ({ navigation, route }) => {
   useFocusEffect(
     useCallback(() => {
       const backAction = () => {
-        navigation.navigate('BottomNavigator');
+        navigation.navigate('Home');
         return true; // Default back को रोक दो
       };
 
@@ -55,7 +55,7 @@ const ProcessToPay = ({ navigation, route }) => {
           navigation={navigation}
           showBack={true}
           showSearch
-          onBackPress={() => navigation.navigate('BottomNavigator')}
+          onBackPress={() => navigation.navigate('Home')}
         />
 
         <View style={styles.whiteSection}>
@@ -122,7 +122,7 @@ const ProcessToPay = ({ navigation, route }) => {
         </View>
       </ScrollView>
       <TouchableOpacity
-        onPress={() => navigation.navigate('BottomNavigator')}
+        onPress={() => navigation.navigate('Home')}
         style={styles.greenButton}
       >
         <Text style={styles.greenButtonText}>Continue Shopping</Text>

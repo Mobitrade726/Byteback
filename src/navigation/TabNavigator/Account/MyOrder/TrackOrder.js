@@ -75,7 +75,7 @@ const TrackOrder = ({navigation, route}) => {
 
       {/* Button */}
       <TouchableOpacity
-        onPress={() => navigation.navigate('BottomNavigator')}
+        onPress={() => navigation.navigate('Home')}
         style={styles.continueBtn}>
         <Text style={styles.continueText}>Continue shopping</Text>
       </TouchableOpacity>
