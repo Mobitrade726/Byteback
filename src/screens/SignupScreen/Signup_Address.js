@@ -3,7 +3,7 @@
 //   View,
 //   Text,
 //   TextInput,
-//   SafeAreaView,
+//   View,
 //   TouchableOpacity,
 //   StyleSheet,
 //   ScrollView,
@@ -305,7 +305,7 @@
 //   }, [form.billingZip, form.shippingZip, isBilling]);
 
 //   return (
-//     <SafeAreaView style={styles.container}>
+//     <View style={styles.container}>
 //       <ScrollView contentContainerStyle={styles.form}>
 //         <Text style={styles.sectionHeaderText}>Billing Address</Text>
 //         <View style={styles.divider} />
@@ -463,7 +463,7 @@
 //           )}
 //         </TouchableOpacity>
 //       </ScrollView>
-//     </SafeAreaView>
+//     </View>
 //   );
 // };
 
@@ -537,7 +537,6 @@ import {
   View,
   Text,
   TextInput,
-  SafeAreaView,
   TouchableOpacity,
   StyleSheet,
   ScrollView,
@@ -652,6 +651,7 @@ const Signup_Address = ({ navigation }) => {
     }
 
     setLoading(true);
+
     try {
       if (axiosMethod === 'post') {
         const res = await axios.post(url, payload);
@@ -823,7 +823,7 @@ const Signup_Address = ({ navigation }) => {
   }, [form.billingZip, form.shippingZip, isBilling]);
 
   return (
-    <SafeAreaView style={styles.container}>
+    <View style={styles.container}>
       <ScrollView contentContainerStyle={styles.form}>
         <Text style={styles.sectionHeaderText}>Billing Address</Text>
         <View style={styles.divider} />
@@ -1011,7 +1011,7 @@ const Signup_Address = ({ navigation }) => {
           onClose={() => setAlertVisible(false)}
         />
       </ScrollView>
-    </SafeAreaView>
+    </View>
   );
 };
 

@@ -36,7 +36,6 @@ import {
 import AntDesign from 'react-native-vector-icons/AntDesign';
 import { ProductCardStyles } from '../../constants/ProductCardStyles';
 import {
-  SafeAreaView,
   useSafeAreaInsets,
 } from 'react-native-safe-area-context';
 import LinearGradient from 'react-native-linear-gradient';
@@ -46,6 +45,8 @@ import { clearProfile } from '../../redux/slices/profileSlice';
 
 const Home = ({ navigation }) => {
   const token = useSelector(state => state.auth.token);
+
+  console.log('token------------------->', token);
 
   const dispatch = useDispatch();
   const { carouselData, brands, uri, catList, status } = useSelector(
@@ -96,6 +97,7 @@ const Home = ({ navigation }) => {
           <Image
             source={{ uri: item.feature_image }}
             style={ProductCardStyles.imageD}
+            resizeMode='contain'
           />
 
           {/* ❤️ Wishlist Button */}
@@ -225,7 +227,7 @@ const Home = ({ navigation }) => {
 
   return (
     <>
-      <SafeAreaView style={{ backgroundColor: '#fff' }}>
+      <View style={{ backgroundColor: '#fff' }}>
         <StatusBar
           translucent
           backgroundColor="transparent"
@@ -496,12 +498,11 @@ const Home = ({ navigation }) => {
 
           <ImageBackground
             style={{
-              height: verticalScale(200),
               width: '100%',
-              justifyContent: 'flex-end',
-              alignItems: 'flex-end',
+              aspectRatio: 16 / 9, // change to match your image ratio
               marginTop: moderateScale(20),
             }}
+            resizeMode="cover"
             source={require('../../../assets/images/gstrate.png')}
           ></ImageBackground>
           <View
@@ -562,7 +563,7 @@ const Home = ({ navigation }) => {
             </View>
           </Section>
         </ScrollView>
-      </SafeAreaView>
+      </View>
     </>
   );
 };

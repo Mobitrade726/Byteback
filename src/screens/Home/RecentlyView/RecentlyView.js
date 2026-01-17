@@ -2,7 +2,7 @@
 // // import {
 // //   View,
 // //   Text,
-// //   SafeAreaView,
+// //   View,
 // //   Image,
 // //   TouchableOpacity,
 // //   StyleSheet,
@@ -86,7 +86,7 @@
 // //   );
 
 // //   return (
-// //     <SafeAreaView style={styles.container}>
+// //     <View style={styles.container}>
 // //       {/* Scrollable content starts here */}
 // //       <ScrollView>
 // //         <View style={{margin: 10}}>
@@ -119,7 +119,7 @@
 // //           </>
 // //         </View>
 // //       </ScrollView>
-// //     </SafeAreaView>
+// //     </View>
 // //   );
 // // };
 
@@ -475,7 +475,7 @@
 // import {
 //   View,
 //   Text,
-//   SafeAreaView,
+//   View,
 //   Image,
 //   TouchableOpacity,
 //   StyleSheet,
@@ -524,7 +524,7 @@
 //   );
 
 //   return (
-//     <SafeAreaView style={styles.container}>
+//     <View style={styles.container}>
 //       <ScrollView>
 //         <View style={{margin: 10}}>
 //           <View style={styles.header}>
@@ -553,7 +553,7 @@
 //           />
 //         </View>
 //       </ScrollView>
-//     </SafeAreaView>
+//     </View>
 //   );
 // };
 
@@ -648,7 +648,6 @@ import React, { useEffect } from 'react';
 import {
   View,
   Text,
-  SafeAreaView,
   Image,
   TouchableOpacity,
   StyleSheet,
@@ -714,14 +713,13 @@ const RecentlyView = ({ navigation }) => {
         {/* Image + Heart */}
         <View style={ProductCardStyles.imageContainerD}>
           {item && (
-            <Text style={ProductCardStyles.refurbishedLabelD}>
-              PRE-OWNED
-            </Text>
+            <Text style={ProductCardStyles.refurbishedLabelD}>PRE-OWNED</Text>
           )}
 
           <Image
             source={{ uri: item.feature_image }}
             style={ProductCardStyles.imageD}
+            resizeMode='contain'
           />
 
           {/* ❤️ Wishlist Button */}
@@ -755,7 +753,7 @@ const RecentlyView = ({ navigation }) => {
   };
 
   return (
-    <SafeAreaView style={styles.container}>
+    <View style={styles.container}>
       {/* Header */}
       <Header
         title="Recently Viewed"
@@ -763,34 +761,19 @@ const RecentlyView = ({ navigation }) => {
         showBack={true}
         showSearch
       />
-      <View style={{ marginLeft: scaleSize(10) }}>
-        <Text
-          style={{
-            fontWeight: '600',
-            fontSize: scaleFont(16),
-            marginVertical: scaleSize(10),
-          }}
-        >
-          Recently Viewed Products
-        </Text>
-
-        <FlatList
-          data={recentlyview}
-          renderItem={({ item }) => <ProductCard item={item} />}
-          keyExtractor={(item, index) =>
-            item.id ? item.id.toString() : index.toString()
-          }
-          showsHorizontalScrollIndicator={false}
-          numColumns={2}
-          contentContainerStyle={{
-            paddingHorizontal: moderateScale(5),
-            paddingBottom: moderateScale(80),
-            justifyContent:
-              recentlyview.length === 1 ? 'flex-start' : 'space-between',
-          }}
-        />
-      </View>
-    </SafeAreaView>
+      <FlatList
+        data={recentlyview}
+        renderItem={({ item }) => <ProductCard item={item} />}
+        keyExtractor={(item, index) =>
+          item.id ? item.id.toString() : index.toString()
+        }
+        showsHorizontalScrollIndicator={false}
+        numColumns={2}
+        contentContainerStyle={{
+         alignSelf:'center'
+        }}
+      />
+    </View>
   );
 };
 

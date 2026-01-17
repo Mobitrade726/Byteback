@@ -5,7 +5,7 @@
 //   StyleSheet,
 //   FlatList,
 //   TouchableOpacity,
-//   SafeAreaView,
+//   View,
 //   ActivityIndicator,
 // } from 'react-native';
 // import Ionicons from 'react-native-vector-icons/Ionicons';
@@ -108,7 +108,7 @@
 // };
 
 //   return (
-//     <SafeAreaView style={styles.container}>
+//     <View style={styles.container}>
 //       {/* Header */}
 //       <View style={styles.header}>
 //         <TouchableOpacity
@@ -146,7 +146,7 @@
 //           ItemSeparatorComponent={() => <View style={styles.separator} />}
 //         />
 //       )}
-//     </SafeAreaView>
+//     </View>
 //   );
 // }
 
@@ -248,7 +248,6 @@ import {
   StyleSheet,
   FlatList,
   TouchableOpacity,
-  SafeAreaView,
   ActivityIndicator,
 } from 'react-native';
 import Ionicons from 'react-native-vector-icons/Ionicons';
@@ -263,6 +262,7 @@ import {
 } from 'react-native-responsive-dimensions';
 import { scale, verticalScale, moderateScale } from 'react-native-size-matters';
 import { useSelector } from 'react-redux';
+import Header from '../../../../constants/Header';
 
 export default function WalletTransactions({ navigation }) {
   const [transactions, setTransactions] = useState([]);
@@ -315,7 +315,7 @@ export default function WalletTransactions({ navigation }) {
         <View style={styles.leftIconWrapper}>
           <MaterialCommunityIcons
             name={iconName}
-            size={moderateScale(26)}
+            size={moderateScale(18)}
             color={iconColor}
           />
         </View>
@@ -330,7 +330,7 @@ export default function WalletTransactions({ navigation }) {
 
         <Ionicons
           name="checkmark-circle-outline"
-          size={moderateScale(24)}
+          size={moderateScale(18)}
           color="#10B981"
         />
       </View>
@@ -338,22 +338,15 @@ export default function WalletTransactions({ navigation }) {
   };
 
   return (
-    <SafeAreaView style={styles.container}>
+    <View style={styles.container}>
       {/* Header */}
-      <View style={styles.header}>
-        <TouchableOpacity
-          onPress={() => navigation.goBack()}
-          style={styles.backButton}
-        >
-          <Ionicons name="chevron-back" size={moderateScale(22)} color="#000" />
-        </TouchableOpacity>
-        <View>
-          <Text style={styles.headerTitle}>Wallet : Transactions</Text>
-        </View>
-        <TouchableOpacity>
-          <Ionicons name="search" size={moderateScale(24)} color="#333" />
-        </TouchableOpacity>
-      </View>
+
+      <Header
+        title="Wallet : Transactions"
+        navigation={navigation}
+        showBack={true}
+      />
+      <View style={{ paddingHorizontal: moderateScale(15) }}></View>
 
       {loading ? (
         <ActivityIndicator
@@ -381,7 +374,7 @@ export default function WalletTransactions({ navigation }) {
           ItemSeparatorComponent={() => <View style={styles.separator} />}
         />
       )}
-    </SafeAreaView>
+    </View>
   );
 }
 
@@ -389,8 +382,6 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: '#fff',
-    paddingHorizontal: moderateScale(15),
-    paddingTop: verticalScale(15),
   },
   header: {
     flexDirection: 'row',
@@ -413,9 +404,9 @@ const styles = StyleSheet.create({
   txnContainer: {
     flexDirection: 'row',
     alignItems: 'center',
-    paddingVertical: verticalScale(14),
+    paddingVertical: verticalScale(5),
     paddingHorizontal: moderateScale(10),
-    backgroundColor: '#fff',
+    backgroundColor: '#fff', 
   },
   leftIconWrapper: {
     width: moderateScale(40),
@@ -423,17 +414,17 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
   },
   amountText: {
-    fontSize: responsiveFontSize(2),
+    fontSize: responsiveFontSize(1.5),
     fontWeight: '700',
   },
   titleText: {
-    fontSize: responsiveFontSize(1.8),
+    fontSize: responsiveFontSize(1.5),
     fontWeight: '500',
     color: '#111',
     marginTop: verticalScale(2),
   },
   dateText: {
-    fontSize: responsiveFontSize(1.6),
+    fontSize: responsiveFontSize(1.5),
     color: '#666',
     marginTop: verticalScale(2),
   },

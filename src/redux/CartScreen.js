@@ -5,7 +5,7 @@
 //   FlatList,
 //   TouchableOpacity,
 //   Image,
-//   SafeAreaView,
+//   View,
 //   Dimensions,
 //   ScrollView,
 //   StyleSheet,
@@ -126,7 +126,7 @@
 //   };
 
 //   return (
-//     <SafeAreaView style={styles.container}>
+//     <View style={styles.container}>
 //       <ScrollView>
 //         <Header title="Cart" navigation={navigation} showBack={true} />
 
@@ -217,7 +217,7 @@
 //           </TouchableOpacity>
 //         </View>
 //       ) : null}
-//     </SafeAreaView>
+//     </View>
 //   );
 // };
 
@@ -342,7 +342,7 @@
 //   FlatList,
 //   TouchableOpacity,
 //   Image,
-//   SafeAreaView,
+//   View,
 //   ScrollView,
 //   StyleSheet,
 //   ImageBackground,
@@ -460,7 +460,7 @@
 //   };
 
 //   return (
-//     <SafeAreaView style={styles.container}>
+//     <View style={styles.container}>
 //       <ScrollView>
 //         <Header title="Cart" navigation={navigation} showBack={true} />
 
@@ -545,7 +545,7 @@
 //       )}
 //       </ScrollView>
 
-//     </SafeAreaView>
+//     </View>
 //   );
 // };
 
@@ -659,7 +659,6 @@ import {
   FlatList,
   TouchableOpacity,
   Image,
-  SafeAreaView,
   ScrollView,
   StyleSheet,
   ImageBackground,
@@ -686,23 +685,97 @@ import {
 import { moderateScale, verticalScale, scale } from 'react-native-size-matters';
 import Toast from 'react-native-toast-message';
 import ActivityLoader from '../constants/Loader';
+import responsive from '../constants/responsive';
+import { fetchRecentlyViewed } from './slices/productSlice';
+import { ProductCardStyles } from '../constants/ProductCardStyles';
+import AntDesign from 'react-native-vector-icons/AntDesign';
+import Section from '../screens/Home/Section';
+import {
+  addToWishlistAPI,
+  removeFromWishlistAPI,
+} from './slices/wishlistSlice';
 
 const Cart = () => {
   const dispatch = useDispatch();
   const navigation = useNavigation();
   const { items: cartItems } = useSelector(state => state.cart);
+  const { recentlyview } = useSelector(state => state.product);
   const { data, loading } = useSelector(state => state.profile);
 
   const handleClear = () => {
     dispatch(clearCartAPI()).then(() => dispatch(clearCart()));
   };
+  const RecentlyView = ({ item }) => {
+    const wishlistItems = useSelector(state => state.wishlist.items);
+    // ✅ check product already in wishlist
+    const isInWishlist = wishlistItems.some(
+      w => w.barcode_id == item.barcode_id,
+    );
+    const handleWishlistToggle = () => {
+      if (isInWishlist) {
+        dispatch(removeFromWishlistAPI(item));
+      } else {
+        dispatch(addToWishlistAPI(item));
+      }
+    };
 
+    return (
+      <TouchableOpacity
+        onPress={() =>
+          navigation.navigate('ProductList', {
+            product_barcode_id: item?.barcode_id,
+          })
+        }
+        style={ProductCardStyles.cardD}
+      >
+        {/* Image + Heart */}
+        <View style={ProductCardStyles.imageContainerD}>
+          {item && (
+            <Text style={ProductCardStyles.refurbishedLabelD}>PRE-OWNED</Text>
+          )}
+
+          <Image
+            source={{ uri: item.feature_image }}
+            style={ProductCardStyles.imageD}
+            resizeMode="contain"
+          />
+
+          {/* ❤️ Wishlist Button */}
+          <TouchableOpacity
+            style={ProductCardStyles.heartIconD}
+            onPress={() => handleWishlistToggle()}
+          >
+            <AntDesign
+              name={isInWishlist ? 'heart' : 'hearto'}
+              size={moderateScale(20)}
+              color={isInWishlist ? '#E74C3C' : '#999'}
+            />
+          </TouchableOpacity>
+        </View>
+
+        {/* Grade Box */}
+        {/* <View style={ProductCardStyles.gradeBoxD}> */}
+        <Text style={ProductCardStyles.gradeTextD}>
+          Grade {item.grade_number}
+        </Text>
+        {/* </View> */}
+
+        {/* Product Info */}
+        <Text style={ProductCardStyles.productNameD}>{item.model_name}</Text>
+        <Text style={ProductCardStyles.colorTextD}>● {item.color_name}</Text>
+        <View style={ProductCardStyles.priceRowD}>
+          <Text style={ProductCardStyles.priceD}>₹ {item.price}</Text>
+        </View>
+      </TouchableOpacity>
+    );
+  };
   const isKYCIncomplete = !data?.vendordocuments?.proof_of_identity;
 
   useFocusEffect(
     useCallback(() => {
       dispatch(fetchCartAPI());
       dispatch(fetchProfile());
+      dispatch(fetchRecentlyViewed());
     }, [dispatch]),
   );
 
@@ -737,8 +810,9 @@ const Cart = () => {
 
   const renderItem = ({ item }) => (
     <View style={styles.cartItem}>
-      <Image source={{ uri: item.feature_image }} style={styles.image} />
+      {/* <Image source={{ uri: item.feature_image }} style={styles.image} /> */}
       <View style={styles.details}>
+        <Text style={styles.grade}>Grade{item.grade_number}</Text>
         <Text style={styles.name}>{item.model}</Text>
         <Text style={styles.name}>
           {
@@ -749,6 +823,35 @@ const Cart = () => {
         </Text>
 
         <Text style={styles.price}>₹{item.price.toFixed(2)}</Text>
+        <View
+          style={{
+            backgroundColor: '#EAE6E5',
+            width: responsive.width(100),
+            borderRadius: responsive.borderRadius(12),
+            marginTop: responsive.marginTop(5),
+          }}
+        >
+          <Text
+            style={{
+              fontSize: responsive.fontSize(14),
+              textAlign: 'center',
+              padding: responsive.padding(5),
+            }}
+          >
+            Save for Later
+          </Text>
+        </View>
+      </View>
+      <View style={styles.imageback}>
+        <Image
+          source={
+            item?.feature_image
+              ? { uri: item.feature_image }
+              : require('../../assets/images/empty.jpeg')
+          }
+          style={styles.image}
+          resizeMode="contain"
+        />
       </View>
       <TouchableOpacity
         // onPress={() => dispatch(removeFromCartAPI(item.barcode_id))}
@@ -771,7 +874,7 @@ const Cart = () => {
         style={styles.removeBtn}
       >
         <Ionicons name="close" size={moderateScale(22)} color="#555" />
-        <Text style={styles.quantityText}>x{item.quantity}</Text>
+        {/* <Text style={styles.quantityText}>x{item.quantity}</Text> */}
       </TouchableOpacity>
     </View>
   );
@@ -820,67 +923,168 @@ const Cart = () => {
   }
 
   return (
-    <SafeAreaView style={styles.container}>
+    <View style={styles.container}>
       <Header title="Cart" navigation={navigation} showBack showSearch />
-
-      <FlatList
-        data={cartItems}
-        renderItem={renderItem}
-        keyExtractor={item => item.barcode_id?.toString()}
-        contentContainerStyle={styles.list}
-        showsVerticalScrollIndicator={false}
-        // EMPTY CART UI
-        ListEmptyComponent={
-          <View style={styles.emptyContainer}>
-            <View style={styles.emptyCard}>
-              <View style={styles.iconCircle}>
-                <Text style={{ fontSize: responsiveFontSize(5) }}>🛒</Text>
+      <ScrollView>
+        <ImageBackground
+          source={{ uri: 'https://i.postimg.cc/d0Hky5p1/Depth-3-Frame-0.png' }}
+          style={styles.banner}
+          imageStyle={{ borderRadius: 12 }}
+        >
+          <View
+            style={{
+              flex: 1,
+              justifyContent: 'center',
+              marginTop: responsive.marginTop(30),
+            }}
+          >
+            <Text style={styles.bannerTitle}>
+              Upgrade to{'\n'}Business Account
+            </Text>
+            <View
+              style={{ flexDirection: 'row', justifyContent: 'space-between' }}
+            >
+              <View>
+                <Text style={styles.bannerSubtitle}>
+                  Unlock exclusive dealer pricing and
+                </Text>
+                <Text style={styles.bannerSubtitle}>bulk order options.</Text>
               </View>
-
-              <Text style={styles.emptyTitle}>Your Cart is Empty</Text>
-              <Text style={styles.emptySubtitle}>
-                Looks like you haven’t added anything yet.
-              </Text>
+              <View
+                onPress={() => navigation.navigate('UpgradeNow')}
+                style={styles.upgradeBtn}
+              >
+                <Text style={styles.upgradeText}>Upgrade Now</Text>
+              </View>
             </View>
           </View>
-        }
-        // TOP CONTENT (KYC, etc.)
-        ListHeaderComponent={
-          isKYCIncomplete ? (
-            <View style={{alignSelf:'center', marginBottom: moderateScale(10)}}>
-              <KYCStatusCard
-                title="Your KYC is pending"
-                subtitle="Complete your KYC to place orders and unlock business account benefits."
-                buttonText="Complete now"
-                icon="information-circle-outline"
-                bgColor="#00A9E0"
-                iconColor="#fff"
-                buttonColor="#fff"
-                textColor="#fff"
-                isDisabled={false}
-              />
-            </View>
-          ) : null
-        }
-        // BOTTOM BUTTONS
-        ListFooterComponent={
-          cartItems.length > 0 ? (
-            <View style={styles.footerContainer}>
-              <TouchableOpacity style={styles.clearBtn} onPress={handleClear}>
-                <Text style={styles.clearText}>🗑️ Clear Cart</Text>
-              </TouchableOpacity>
+        </ImageBackground>
+        <Text
+          style={{
+            fontSize: responsive.fontSize(16),
+            marginVertical: responsive.marginVertical(10),
+            marginHorizontal: moderateScale(10),
+            fontWeight: '600',
+          }}
+        >
+          Review your Order
+        </Text>
+        <FlatList
+          data={cartItems}
+          renderItem={renderItem}
+          keyExtractor={item => item.barcode_id?.toString()}
+          contentContainerStyle={styles.list}
+          showsVerticalScrollIndicator={false}
+          // EMPTY CART UI
+          ListEmptyComponent={
+            <View style={styles.emptyContainer}>
+              <View style={styles.emptyCard}>
+                <View style={styles.iconCircle}>
+                  <Text style={{ fontSize: responsiveFontSize(5) }}>🛒</Text>
+                </View>
 
-              <TouchableOpacity
+                <Text style={styles.emptyTitle}>Your Cart is Empty</Text>
+                <Text style={styles.emptySubtitle}>
+                  Looks like you haven’t added anything yet.
+                </Text>
+              </View>
+            </View>
+          }
+          // TOP CONTENT (KYC, etc.)
+          ListHeaderComponent={
+            isKYCIncomplete ? (
+              <View
+                style={{ alignSelf: 'center', marginBottom: moderateScale(10) }}
+              >
+                <KYCStatusCard
+                  title="Your KYC is pending"
+                  subtitle="Complete your KYC to place orders and unlock business account benefits."
+                  buttonText="Complete now"
+                  icon="information-circle-outline"
+                  bgColor="#00A9E0"
+                  iconColor="#fff"
+                  buttonColor="#fff"
+                  textColor="#fff"
+                  isDisabled={false}
+                />
+              </View>
+            ) : null
+          }
+          // BOTTOM BUTTONS
+          ListFooterComponent={
+            cartItems.length > 0 ? (
+              <View style={styles.footerContainer}>
+                <TouchableOpacity style={styles.clearBtn} onPress={handleClear}>
+                  <Text style={styles.clearText}>🗑️ Clear Cart</Text>
+                </TouchableOpacity>
+
+                {/* <TouchableOpacity
                 onPress={handleCheckoutPress}
                 style={[styles.footerBtn, { backgroundColor: '#1C9C48' }]}
               >
                 <Text style={styles.footerBtnText}>Proceed to Checkout</Text>
-              </TouchableOpacity>
-            </View>
-          ) : null
-        }
-      />
-    </SafeAreaView>
+              </TouchableOpacity> */}
+              </View>
+            ) : null
+          }
+        />
+        {recentlyview?.length > 0 ? (
+          <>
+            <TouchableOpacity
+              onPress={() => navigation.navigate('RecentlyView')}
+              style={{
+                flexDirection: 'row',
+                justifyContent: 'space-between',
+                marginHorizontal: responsive.width(10),
+                marginVertical: responsive.marginVertical(10),
+              }}
+            >
+              <Text style={{ fontSize: responsive.fontSize(16) }}>
+                Recently Viewed
+              </Text>
+              <Ionicons
+                name="chevron-forward"
+                size={moderateScale(16)}
+                color="#333"
+              />
+            </TouchableOpacity>
+            <FlatList
+              horizontal
+              data={recentlyview}
+              renderItem={({ item }) => <RecentlyView item={item} />}
+              keyExtractor={item => item.barcode_id?.toString()}
+              showsHorizontalScrollIndicator={false}
+              contentContainerStyle={{
+                alignItems: 'center',
+                paddingHorizontal: responsive.width(10),
+              }}
+            />
+          </>
+        ) : null}
+        {/* Footer Buttons */}
+        {cartItems.length !== 0 ? (
+          <View style={{ marginHorizontal: 10 }}>
+            <TouchableOpacity
+              disabled={isKYCIncomplete}
+              onPress={handleCheckoutPress}
+              style={[styles.footerBtn, { backgroundColor: '#666666' }]}
+            >
+              <Text style={styles.footerBtnText}>Proceed to Checkout</Text>
+            </TouchableOpacity>
+
+            <TouchableOpacity
+              onPress={() => navigation.navigate('Home')}
+              style={[
+                styles.footerBtn,
+                { backgroundColor: '#333333', marginTop: 10 },
+              ]}
+            >
+              <Text style={styles.footerBtnText}>Continue Shopping</Text>
+            </TouchableOpacity>
+          </View>
+        ) : null}
+      </ScrollView>
+    </View>
   );
 };
 
@@ -904,7 +1108,7 @@ const styles = StyleSheet.create({
   },
   bannerContent: { flex: 1, justifyContent: 'center' },
   bannerTitle: {
-    fontSize: responsiveFontSize(2.5),
+    fontSize: responsive.fontSize(20),
     fontWeight: 'bold',
     color: '#fff',
     marginTop: verticalScale(3),
@@ -914,50 +1118,60 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
     marginTop: verticalScale(2),
   },
-  bannerSubtitle: { fontSize: responsiveFontSize(1.5), color: '#fff' },
+  bannerSubtitle: { fontSize: responsive.fontSize(12), color: '#fff' },
   upgradeBtn: {
     backgroundColor: '#fff',
     alignSelf: 'flex-start',
     paddingHorizontal: moderateScale(12),
-    paddingVertical: verticalScale(1.5),
+    paddingVertical: verticalScale(5),
     borderRadius: moderateScale(8),
-    marginTop: verticalScale(1),
+    marginTop: responsive.marginTop(50),
   },
   upgradeText: {
     fontWeight: '500',
     color: '#000',
-    fontSize: responsiveFontSize(1.5),
+    fontSize: responsive.fontSize(12),
   },
   cartItem: {
     flexDirection: 'row',
-    padding: moderateScale(12),
-    borderWidth: 1,
-    borderColor: '#ccc',
-    borderRadius: moderateScale(10),
+    borderRadius: moderateScale(8),
     marginBottom: verticalScale(1.5),
-    alignItems: 'center',
     marginHorizontal: moderateScale(10),
-    marginVertical: moderateScale(5),
+    marginVertical: moderateScale(15),
+  },
+  imageback: {
+    backgroundColor: '#fff',
+    borderWidth: 1,
+    borderColor: '#f5f6f6',
+    borderRadius: responsive.borderRadius(12),
+    padding: responsive.padding(10),
   },
   image: {
     width: responsiveWidth(18),
     height: responsiveWidth(18),
-    borderRadius: moderateScale(8),
-    marginRight: responsiveWidth(3),
-    resizeMode: 'contain',
-  },
-  details: { flex: 1 },
-  name: { fontSize: responsiveFontSize(1.8), fontWeight: '600' },
-  price: {
-    color: '#444',
-    marginTop: verticalScale(0.5),
-    fontSize: responsiveFontSize(1.6),
+    borderRadius: responsive.borderRadius(12),
   },
   removeBtn: {
-    alignItems: 'center',
-    justifyContent: 'center',
+    // alignItems: 'center',
+    // justifyContent: 'center',
     marginLeft: responsiveWidth(1),
   },
+  details: { flex: 1 },
+  name: {
+    fontSize: responsive.fontSize(16),
+    fontWeight: '600',
+    marginTop: verticalScale(1),
+  },
+  price: {
+    color: '#444',
+    marginTop: verticalScale(1),
+    fontSize: responsive.fontSize(14),
+  },
+  grade: {
+    color: '#444',
+    fontSize: responsive.fontSize(12),
+  },
+
   quantityText: { fontSize: responsiveFontSize(1.5), color: '#555' },
   emptyContainer: {
     flex: 1,
@@ -1087,12 +1301,12 @@ const styles = StyleSheet.create({
   footerBtn: {
     backgroundColor: '#ffe5e5',
     borderRadius: moderateScale(8),
-    width: moderateScale(150),
+    marginTop: 10,
   },
   clearBtn: {
-    backgroundColor: '#ffe5e5',
+    backgroundColor: '#CB444B',
     borderRadius: moderateScale(8),
-    width: moderateScale(150),
+    width: responsive.width(100),
   },
   footerBtnText: {
     color: '#fff',
@@ -1102,11 +1316,10 @@ const styles = StyleSheet.create({
     padding: verticalScale(10),
   },
   clearText: {
-    color: '#cc0000',
-    fontWeight: '600',
-    fontSize: responsiveFontSize(1.5),
+    color: '#FFFBFA',
+    fontSize: responsive.fontSize(14),
     textAlign: 'center',
-    padding: verticalScale(10),
+    padding: verticalScale(5),
   },
 });
 

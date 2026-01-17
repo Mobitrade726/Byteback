@@ -29,6 +29,7 @@ import TrackOrder from './TabNavigator/Account/MyOrder/TrackOrder';
 import Myorder from './TabNavigator/Account/MyOrder/Myorder';
 import MyorderDetails from './TabNavigator/Account/MyOrder/MyorderDetails';
 import WishlistScreen from './TabNavigator/Account/Watchlist/WatchList';
+import KycCompleteStatus from './TabNavigator/Cart/Kyc/KycCompleteStatus';
 
 
 
@@ -66,6 +67,7 @@ export default function HomeStack() {
       <Stack.Screen name="Myorder" component={Myorder} />
       <Stack.Screen name="MyorderDetails" component={MyorderDetails} />
       <Stack.Screen name="WishlistScreen" component={WishlistScreen} />
+      <Stack.Screen name="KycCompleteStatus" component={KycCompleteStatus} />
       
     </Stack.Navigator>
   );

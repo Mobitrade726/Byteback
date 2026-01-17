@@ -6,7 +6,6 @@ import {
   StyleSheet,
   TouchableOpacity,
   FlatList,
-  SafeAreaView,
   Modal,
 } from 'react-native';
 import Ionicons from 'react-native-vector-icons/Ionicons';
@@ -18,6 +17,7 @@ import { useFocusEffect, useNavigation } from '@react-navigation/native';
 import AntDesign from 'react-native-vector-icons/AntDesign';
 import {
   addToWishlistAPI,
+  fetchWishlist,
   removeFromWishlistAPI,
 } from '../../../redux/slices/wishlistSlice';
 import {
@@ -31,8 +31,10 @@ import {
   responsiveHeight as RH,
   responsiveWidth as RW,
   responsiveFontSize as RF,
+  responsiveHeight,
 } from 'react-native-responsive-dimensions';
 import { ProductCardStyles } from '../../../constants/ProductCardStyles';
+import { FilterModalStyles_All } from '../../../constants/FilterModalStyles_Search';
 
 const { width } = Dimensions.get('window');
 
@@ -55,7 +57,11 @@ const Recentlyadd = ({ tabId, catName, catId }) => {
   const [selectedTab, setSelectedTab] = useState('brands');
   const [selectedBrands, setSelectedBrands] = useState([]);
   const [selectedColors, setSelectedColors] = useState([]);
-  const [selectedGrade, setSelectedGrade] = useState(null);
+  const [selectedGrades, setSelectedGrades] = useState([]);
+  const [selectedVariant, setSelectedVariant] = useState(null);
+
+  console.log('applyselectedfilters----------->', applyselectedfilters);
+  console.log('filteredProduct----------->', filteredProduct);
 
   useFocusEffect(
     useCallback(() => {
@@ -63,6 +69,8 @@ const Recentlyadd = ({ tabId, catName, catId }) => {
       dispatch(fetchProductLatestStock());
       dispatch(fetchFilterData(catId));
       dispatch(addRecentlyViewed());
+      dispatch(fetchWishlist());
+      
     }, [dispatch]),
   );
 
@@ -99,8 +107,8 @@ const Recentlyadd = ({ tabId, catName, catId }) => {
 
       // Grade filter
       if (
-        applyselectedfilters.grade &&
-        item.grade_number !== applyselectedfilters.grade.grade
+        applyselectedfilters.grade_number &&
+        item.grade_number !== applyselectedfilters.grade_number
       )
         return false;
 
@@ -137,6 +145,7 @@ const Recentlyadd = ({ tabId, catName, catId }) => {
   let COLORS = filterdata?.colors;
   let ramOptions = filterdata?.rams;
   let storageOptions = filterdata?.roms;
+  let Varients = filterdata?.variants;
 
   const sortOptions = [
     { key: 'lowToHigh', label: 'Price (Low to High)' },
@@ -150,10 +159,6 @@ const Recentlyadd = ({ tabId, catName, catId }) => {
     { key: 'grade', label: 'Grade', icon: 'shield-checkmark-outline' },
     { key: 'specs', label: 'Specific', icon: 'document-text-outline' },
   ];
-
-  const getTotalSelected = () => {
-    return [selectedRam, selectedStorage].filter(Boolean).length;
-  };
 
   const renderRamOption = (item, selectedItem, setSelectedItem) => (
     <TouchableOpacity
@@ -201,7 +206,7 @@ const Recentlyadd = ({ tabId, catName, catId }) => {
     const selectedFilters = {
       brands: selectedBrands,
       colors: selectedColors,
-      grade: selectedGrade,
+      grade: selectedGrades,
       ram: selectedRam,
       storage: selectedStorage,
     };
@@ -211,9 +216,10 @@ const Recentlyadd = ({ tabId, catName, catId }) => {
   const handleReset = () => {
     setSelectedBrands([]);
     setSelectedColors([]);
-    setSelectedGrade(null);
+    setSelectedGrades([]);
     setSelectedRam(null);
     setSelectedStorage(null);
+    setSelectedVariant(null)
     ApplyselectedFilters(null);
   };
   const toggleBrand = brand => {
@@ -233,19 +239,23 @@ const Recentlyadd = ({ tabId, catName, catId }) => {
     return (
       <TouchableOpacity
         onPress={() => toggleColor(item.color_name)}
-        style={[styles.colorItem_c, isSelected && styles.selectedWrapper_c]}
+        style={[
+          FilterModalStyles_All.colorBox,
+          isSelected && FilterModalStyles_All.selectedWrapper_c,
+        ]}
       >
-        <View style={styles.colorCircleWrapper_c}>
-          <View
-            style={[
-              styles.colorCircle_c,
-              { backgroundColor: item.hex },
-              isSelected && styles.colorCircleSelected_c,
-            ]}
-          />
-        </View>
+        <View
+          style={[
+            FilterModalStyles_All.colorCircle_c,
+            { backgroundColor: item.hex },
+            isSelected && FilterModalStyles_All.colorCircleSelected_c,
+          ]}
+        />
         <Text
-          style={[styles.colorLabel_c, { color: isSelected ? '#000' : '#555' }]}
+          style={[
+            FilterModalStyles_All.colorLabel_c,
+            { color: isSelected ? '#000' : '#555' },
+          ]}
         >
           {item.color_name}
         </Text>
@@ -257,122 +267,144 @@ const Recentlyadd = ({ tabId, catName, catId }) => {
     switch (selectedTab) {
       case 'brands':
         return (
-          <View style={styles.rightPane}>
-            <View style={styles.rightHeader}>
-              <Text style={styles.rightTitle}>Brands</Text>
-              <Text style={styles.selectedCount}>
-                {selectedBrands.length} selected
-              </Text>
-            </View>
-            <FlatList
-              key={`cat-brands`}
-              data={BRANDS}
-              keyExtractor={(item, index) =>
-                item.name?.toString() ?? index.toString()
-              }
-              renderItem={({ item }) => {
-                const selected = selectedBrands.includes(item.brand_name);
-                return (
-                  <TouchableOpacity
-                    onPress={() => toggleBrand(item.brand_name)}
+          <FlatList
+            showsVerticalScrollIndicator={false}
+            key={`cat-brands`}
+            data={BRANDS}
+            keyExtractor={(item, index) =>
+              item.name?.toString() ?? index.toString()
+            }
+            renderItem={({ item }) => {
+              const selected = selectedBrands.includes(item.brand_name);
+              return (
+                <TouchableOpacity
+                  onPress={() => toggleBrand(item.brand_name)}
+                  style={[
+                    FilterModalStyles_All.brandItem,
+                    selected && FilterModalStyles_All.brandItemSelected,
+                  ]}
+                >
+                  <Text
                     style={[
-                      styles.brandItem,
-                      selected && styles.brandItemSelected,
+                      FilterModalStyles_All.brandText,
+                      selected && { color: '#fff' },
                     ]}
                   >
-                    <Text
-                      style={[styles.brandText, selected && { color: '#fff' }]}
-                    >
-                      {item.brand_name}
-                    </Text>
-                    {/* <Text
-                       style={[styles.itemCount, selected && {color: '#fff'}]}>
-                       {item.count} Items
-                     </Text> */}
-                  </TouchableOpacity>
-                );
-              }}
-              ItemSeparatorComponent={() => <View style={styles.separator} />}
-            />
-          </View>
+                    {item.brand_name}
+                  </Text>
+                </TouchableOpacity>
+              );
+            }}
+          />
         );
 
       case 'color':
         return (
-          <View style={styles.rightPane}>
-            <View style={styles.rightHeader}>
-              <Text style={styles.rightTitle}>Colors</Text>
-              <Text style={styles.selectedCount}>
-                {selectedColors.length} selected
-              </Text>
-            </View>
-
-            <FlatList
-              key={`cat-color`}
-              data={COLORS}
-              keyExtractor={(item, index) =>
-                item.name?.toString() ?? index.toString()
-              }
-              numColumns={4}
-              columnWrapperStyle={styles.row}
-              contentContainerStyle={{ paddingTop: 10 }}
-              renderItem={renderItemColor}
-            />
-          </View>
+          <FlatList
+            key={`cat-color`}
+            data={COLORS}
+            keyExtractor={(item, index) =>
+              item.name?.toString() ?? index.toString()
+            }
+            numColumns={3}
+            showsVerticalScrollIndicator={false}
+            columnWrapperStyle={{
+              justifyContent: 'space-between',
+            }}
+            contentContainerStyle={{
+              paddingHorizontal: 10,
+              paddingTop: 10,
+              flex: 1,
+              marginBottom: responsiveHeight(10),
+            }}
+            renderItem={renderItemColor}
+          />
         );
 
       case 'grade':
         return (
-          <View style={styles.rightPane}>
-            <View style={styles.header_panel}>
-              <Text style={styles.title_c}>Grade</Text>
-              <Text style={styles.title_c}>
-                {selectedGrade ? '1 selected' : '0 selected'}{' '}
-              </Text>
-            </View>
-            <FlatList
-              key={`cat-grade`}
-              data={grades}
-              // keyExtractor={item => item}
-              keyExtractor={(item, index) =>
-                item.id?.toString() ?? index.toString()
-              }
-              renderItem={renderItemGrade}
-              contentContainerStyle={styles.listContainer}
-            />
-          </View>
+          <FlatList
+            key={`cat-grade`}
+            data={grades}
+            keyExtractor={(item, index) =>
+              item.id?.toString() ?? index.toString()
+            }
+            renderItem={renderItemGrade}
+          />
         );
 
       case 'specs':
+        const isMobile = catName === 'Mobile';
+        const isLaptop = catName === 'Laptop';
+
         return (
-          <ScrollView>
-            <View style={styles.rightPane}>
-              <View style={styles.header_panel}>
-                <Text style={styles.title_c}>Specification</Text>
-                <Text style={styles.title_c}>
-                  {getTotalSelected()} selected
-                </Text>
-              </View>
+          <>
+            {isLaptop && (
+              <>
+                <ScrollView showsVerticalScrollIndicator={false}>
+                  <Text style={FilterModalStyles_All.subHeading}>RAM</Text>
+                  <View style={FilterModalStyles_All.optionContainer}>
+                    {ramOptions.map(item =>
+                      renderRamOption(item, selectedRam, setSelectedRam),
+                    )}
+                  </View>
 
-              <Text style={styles.subHeading}>RAM</Text>
-              <View style={styles.optionContainer}>
-                {ramOptions.map(item =>
-                  renderRamOption(item, selectedRam, setSelectedRam),
-                )}
-              </View>
+                  <Text style={FilterModalStyles_All.subHeading}>Storage</Text>
+                  <View style={FilterModalStyles_All.optionContainer}>
+                    {storageOptions.map(item =>
+                      renderStorageOption(
+                        item,
+                        selectedStorage,
+                        setSelectedStorage,
+                      ),
+                    )}
+                  </View>
+                </ScrollView>
+              </>
+            )}
 
-              <Text style={styles.subHeading}>Storage</Text>
-              <View style={styles.optionContainer}>
-                {storageOptions.map(item =>
-                  renderStorageOption(
-                    item,
-                    selectedStorage,
-                    setSelectedStorage,
-                  ),
-                )}
-              </View>
-            </View>
-          </ScrollView>
+            {/* ✅ Laptop category -> Variants */}
+            {isMobile && (
+              <>
+                <ScrollView showsVerticalScrollIndicator={false}>
+                  <Text style={FilterModalStyles_All.subHeading}>Variants</Text>
+
+                  <View style={FilterModalStyles_All.optionContainer}>
+                    {Varients.map((item, index) => {
+                      const isSelected = selectedVariant === item?.id;
+
+                      return (
+                        <TouchableOpacity
+                          key={item?.id || index}
+                          style={[
+                            FilterModalStyles_All.optionButton,
+                            isSelected && FilterModalStyles_All.selectedButton,
+                          ]}
+                          onPress={() => setSelectedVariant(item?.id)}
+                        >
+                          <Text
+                            style={[
+                              FilterModalStyles_All.optionText,
+                              isSelected && { color: '#fff' },
+                            ]}
+                          >
+                            {item?.variant_name || item?.name}
+                          </Text>
+                        </TouchableOpacity>
+                      );
+                    })}
+                  </View>
+                </ScrollView>
+              </>
+            )}
+
+            {/* agar na Mobile hai na Laptop, kuch bhi show mat karo ya generic text */}
+            {!isMobile && !isLaptop && (
+              <Text style={{ marginTop: 10, color: '#555' }}>
+                No specifications available for this category.
+              </Text>
+            )}
+          </>
         );
 
       default:
@@ -384,21 +416,32 @@ const Recentlyadd = ({ tabId, catName, catId }) => {
     }
   };
 
-  const handleSelect = grade => {
-    setSelectedGrade(grade === selectedGrade ? null : grade);
+  const toggleGrade = gradeNumber => {
+    setSelectedGrades(prev =>
+      prev.includes(gradeNumber)
+        ? prev.filter(g => g !== gradeNumber)
+        : [...prev, gradeNumber],
+    );
   };
 
   const renderItemGrade = ({ item }) => {
-    const isSelected = selectedGrade === item;
+    const gradeNumber = item?.grade_number;
+    const isSelected = selectedGrades.includes(gradeNumber);
     return (
       <TouchableOpacity
-        onPress={() => handleSelect(item)}
-        style={[styles.gradeButton, isSelected && styles.gradeButtonSelected]}
+        onPress={() => toggleGrade(gradeNumber)}
+        style={[
+          FilterModalStyles_All.brandItem,
+          isSelected && FilterModalStyles_All.brandItemSelected,
+        ]}
       >
         <Text
-          style={[styles.gradeText, isSelected && styles.gradeTextSelected]}
+          style={[
+            FilterModalStyles_All.brandText,
+            isSelected && { color: '#fff' },
+          ]}
         >
-          {item?.grade || '--'}
+          {gradeNumber || '--'}
         </Text>
       </TouchableOpacity>
     );
@@ -430,14 +473,13 @@ const Recentlyadd = ({ tabId, catName, catId }) => {
         {/* Image + Heart */}
         <View style={ProductCardStyles.imageContainerD}>
           {item && (
-            <Text style={ProductCardStyles.refurbishedLabelD}>
-              PRE-OWNED
-            </Text>
+            <Text style={ProductCardStyles.refurbishedLabelD}>PRE-OWNED</Text>
           )}
 
           <Image
             source={{ uri: item.feature_image }}
             style={ProductCardStyles.imageD}
+            resizeMode='contain'
           />
 
           {/* ❤️ Wishlist Button */}
@@ -471,209 +513,204 @@ const Recentlyadd = ({ tabId, catName, catId }) => {
   };
 
   return (
-    <SafeAreaView style={styles.container}>
-
-        <View style={styles.headerButtons}>
-          <TouchableOpacity
-            onPress={() => setShowSortModal(true)}
-            style={styles.sortButton}
-          >
-            <Icon name="grid" size={moderateScale(16)} color="#000" />
-            <Text style={styles.sortText}>Sort By</Text>
-          </TouchableOpacity>
-          <TouchableOpacity
-            onPress={() => setFilterSortModal(true)}
-            style={styles.filterButton}
-          >
-            <Icon name="sliders" size={moderateScale(16)} color="#000" />
-            <Text style={styles.sortText}>Filter</Text>
-          </TouchableOpacity>
-        </View>
-        <FlatList showsVerticalScrollIndicator={false}
-          data={filteredProduct}
-          renderItem={({ item }) => <ProductCard item={item} />}
-          keyExtractor={(item, index) =>
-            item.id?.toString() ?? index.toString()
-          }
-          showsHorizontalScrollIndicator={false}
-          numColumns={2}
-          contentContainerStyle={{
-            paddingBottom: moderateScale(80), marginHorizontal:10,
-            justifyContent:
-              filteredProduct.length === 1 ? 'flex-start' : 'space-between',
-          }}
-          ListEmptyComponent={
-            !loading && (
-              <View
-                style={{ alignItems: 'center', marginTop: verticalScale(20) }}
-              >
-                <Image
-                  source={require('../../../../assets/images/emptyproduct.png')}
-                  style={{
-                    resizeMode: 'contain',
-                    height: verticalScale(120), // responsive
-                    width: scale(150), // responsive
-                  }}
-                />
-
-                <Text
-                  style={{
-                    textAlign: 'center',
-                    marginTop: verticalScale(10),
-                    fontSize: moderateScale(18), // responsive font
-                    fontWeight: 'bold',
-                    color: '#000',
-                  }}
-                >
-                  Oops
-                </Text>
-
-                <Text
-                  style={{
-                    textAlign: 'center',
-                    marginTop: verticalScale(10),
-                    color: '#000',
-                    fontSize: moderateScale(16),
-                    paddingHorizontal: scale(20),
-                  }}
-                >
-                  Can’t find what you’re looking for?
-                </Text>
-
-                <Text
-                  style={{
-                    textAlign: 'center',
-                    marginTop: verticalScale(10),
-                    color: '#777',
-                    fontSize: moderateScale(14),
-                    paddingHorizontal: scale(20),
-                  }}
-                >
-                  Try adjusting your filters or browsing all products.
-                </Text>
-              </View>
-            )
-          }
-        />
-
-        {/* Sort Modal */}
-        <Modal
-          visible={showSortModal}
-          transparent={false}
-          animationType="slide"
+    <View style={styles.container}>
+      <View style={styles.headerButtons}>
+        <TouchableOpacity
+          onPress={() => setShowSortModal(true)}
+          style={styles.sortButton}
         >
-          <SafeAreaView style={styles.modalContainer}>
-            <View style={{ margin: 20, flex: 1 }}>
-              {/* Modal Header */}
-              <View style={styles.modalHeader}>
-                <TouchableOpacity onPress={() => setShowSortModal(false)}>
-                  <Ionicons
-                    name="close"
-                    size={moderateScale(24)}
-                    color="#000"
-                  />
-                </TouchableOpacity>
-                <Text style={styles.modalTitle}>Sort by</Text>
-                <Ionicons
-                  name="grid-outline"
-                  size={moderateScale(20)}
-                  color="#000"
-                />
-              </View>
-
-              {/* Sort Options */}
-              <View style={styles.optionList}>
-                {sortOptions.map(option => (
-                  <TouchableOpacity
-                    key={option.key}
-                    style={styles.optionRow}
-                    onPress={() => setSelectedOption(option.key)}
-                  >
-                    <Text style={styles.optionText}>{option.label}</Text>
-                    <View
-                      style={[
-                        styles.radioOuter,
-                        selectedOption === option.key &&
-                          styles.radioOuterSelected,
-                      ]}
-                    >
-                      {selectedOption === option.key && (
-                        <View style={styles.radioInner} />
-                      )}
-                    </View>
-                  </TouchableOpacity>
-                ))}
-              </View>
-            </View>
-            {/* Apply Button */}
-            <View style={styles.applyWrapper}>
-              <TouchableOpacity
-                style={styles.applyButton}
-                onPress={handleApply}
-              >
-                <Text style={styles.applyText}>Apply</Text>
-              </TouchableOpacity>
-            </View>
-          </SafeAreaView>
-        </Modal>
-
-        {/* Filter Modal */}
-        <Modal
-          visible={showFilterModal}
-          animationType="slide"
-          transparent={false}
+          <Icon name="grid" size={moderateScale(16)} color="#000" />
+          <Text style={styles.sortText}>Sort By</Text>
+        </TouchableOpacity>
+        <TouchableOpacity
+          onPress={() => setFilterSortModal(true)}
+          style={styles.filterButton}
         >
-          <SafeAreaView style={styles.modalContainer}>
-            <View style={styles.header}>
-              <TouchableOpacity onPress={() => setFilterSortModal(false)}>
-                <Ionicons name="close" size={moderateScale(24)} />
+          <Icon name="sliders" size={moderateScale(16)} color="#000" />
+          <Text style={styles.sortText}>Filter</Text>
+        </TouchableOpacity>
+      </View>
+      <FlatList
+        showsVerticalScrollIndicator={false}
+        data={filteredProduct}
+        renderItem={({ item }) => <ProductCard item={item} />}
+        keyExtractor={(item, index) => item.id?.toString() ?? index.toString()}
+        showsHorizontalScrollIndicator={false}
+        numColumns={2}
+        contentContainerStyle={{
+          paddingBottom: moderateScale(80),
+          marginHorizontal: 10,
+          justifyContent:
+            filteredProduct.length === 1 ? 'flex-start' : 'space-between',
+        }}
+        ListEmptyComponent={
+          !loading && (
+            <View
+              style={{ alignItems: 'center', marginTop: verticalScale(20) }}
+            >
+              <Image
+                source={require('../../../../assets/images/emptyproduct.png')}
+                style={{
+                  resizeMode: 'contain',
+                  height: verticalScale(120), // responsive
+                  width: scale(150), // responsive
+                }}
+              />
+
+              <Text
+                style={{
+                  textAlign: 'center',
+                  marginTop: verticalScale(10),
+                  fontSize: moderateScale(18), // responsive font
+                  fontWeight: 'bold',
+                  color: '#000',
+                }}
+              >
+                Oops
+              </Text>
+
+              <Text
+                style={{
+                  textAlign: 'center',
+                  marginTop: verticalScale(10),
+                  color: '#000',
+                  fontSize: moderateScale(16),
+                  paddingHorizontal: scale(20),
+                }}
+              >
+                Can’t find what you’re looking for?
+              </Text>
+
+              <Text
+                style={{
+                  textAlign: 'center',
+                  marginTop: verticalScale(10),
+                  color: '#777',
+                  fontSize: moderateScale(14),
+                  paddingHorizontal: scale(20),
+                }}
+              >
+                Try adjusting your filters or browsing all products.
+              </Text>
+            </View>
+          )
+        }
+      />
+
+      {/* Sort Modal */}
+      <Modal visible={showSortModal} transparent={false} animationType="slide">
+        <View style={styles.modalContainer}>
+          <View style={{ margin: 20, flex: 1 }}>
+            {/* Modal Header */}
+            <View style={styles.modalHeader}>
+              <TouchableOpacity onPress={() => setShowSortModal(false)}>
+                <Ionicons name="close" size={moderateScale(24)} color="#000" />
               </TouchableOpacity>
-              <Text style={styles.headerTitle}>Filter</Text>
-              <Ionicons name="options-outline" size={moderateScale(20)} />
+              <Text style={styles.modalTitle}>Sort by</Text>
+              <Ionicons
+                name="grid-outline"
+                size={moderateScale(20)}
+                color="#000"
+              />
             </View>
 
-            <View style={styles.body}>
-              <View style={styles.leftPane}>
-                {FILTER_TABS.map(tab => (
-                  <TouchableOpacity
-                    key={tab.key}
+            {/* Sort Options */}
+            <View style={styles.optionList}>
+              {sortOptions.map(option => (
+                <TouchableOpacity
+                  key={option.key}
+                  style={styles.optionRow}
+                  onPress={() => setSelectedOption(option.key)}
+                >
+                  <Text style={styles.optionText}>{option.label}</Text>
+                  <View
                     style={[
-                      styles.tabItem,
-                      selectedTab === tab.key && styles.tabItemSelected,
+                      styles.radioOuter,
+                      selectedOption === option.key &&
+                        styles.radioOuterSelected,
                     ]}
-                    onPress={() => setSelectedTab(tab.key)}
                   >
-                    <Ionicons
-                      name={tab.icon}
-                      size={moderateScale(18)}
-                      color={selectedTab === tab.key ? '#000' : '#555'}
-                    />
-                    <Text
-                      style={[
-                        styles.tabLabel,
-                        selectedTab === tab.key && { fontWeight: '600' },
-                      ]}
-                    >
-                      {tab.label}
-                    </Text>
-                  </TouchableOpacity>
-                ))}
-              </View>
+                    {selectedOption === option.key && (
+                      <View style={styles.radioInner} />
+                    )}
+                  </View>
+                </TouchableOpacity>
+              ))}
+            </View>
+          </View>
+          {/* Apply Button */}
+          <View style={styles.applyWrapper}>
+            <TouchableOpacity style={styles.applyButton} onPress={handleApply}>
+              <Text style={styles.applyText}>Apply</Text>
+            </TouchableOpacity>
+          </View>
+        </View>
+      </Modal>
 
-              {renderRightPane()}
+      {/* Filter Modal */}
+      <Modal
+        visible={showFilterModal}
+        animationType="slide"
+        transparent={false}
+      >
+        <View style={FilterModalStyles_All.modalContainer}>
+          <View style={FilterModalStyles_All.header1}>
+            <TouchableOpacity onPress={() => setFilterSortModal(false)}>
+              <Ionicons name="close" size={moderateScale(24)} />
+            </TouchableOpacity>
+            <Text style={FilterModalStyles_All.headerTitle1}>Filter</Text>
+            <Ionicons name="options-outline" size={moderateScale(20)} />
+          </View>
+
+          <View style={FilterModalStyles_All.body}>
+            <View style={FilterModalStyles_All.leftPane}>
+              {FILTER_TABS.map(tab => (
+                <TouchableOpacity
+                  key={tab.key}
+                  style={[
+                    FilterModalStyles_All.tabItem,
+                    selectedTab === tab.key &&
+                      FilterModalStyles_All.tabItemSelected,
+                  ]}
+                  onPress={() => setSelectedTab(tab.key)}
+                >
+                  <Ionicons
+                    name={tab.icon}
+                    size={moderateScale(18)}
+                    color={selectedTab === tab.key ? '#000' : '#555'}
+                  />
+                  <Text
+                    style={[
+                      FilterModalStyles_All.tabLabel,
+                      selectedTab === tab.key && { fontWeight: '600' },
+                    ]}
+                  >
+                    {tab.label}
+                  </Text>
+                </TouchableOpacity>
+              ))}
             </View>
 
-            <View style={styles.footer}>
-              <TouchableOpacity style={styles.resetBtn} onPress={handleReset}>
-                <Text style={styles.resetText}>Reset</Text>
-              </TouchableOpacity>
-              <TouchableOpacity style={styles.applyBtn} onPress={handleApply}>
-                <Text style={styles.applyText}>Apply</Text>
-              </TouchableOpacity>
-            </View>
-          </SafeAreaView>
-        </Modal>
-    </SafeAreaView>
+            {renderRightPane()}
+          </View>
+
+          <View style={FilterModalStyles_All.footer}>
+            <TouchableOpacity
+              style={FilterModalStyles_All.resetBtn}
+              onPress={handleReset}
+            >
+              <Text style={FilterModalStyles_All.resetText}>Reset</Text>
+            </TouchableOpacity>
+            <TouchableOpacity
+              style={FilterModalStyles_All.applyBtn}
+              onPress={handleApply}
+            >
+              <Text style={FilterModalStyles_All.applyText}>Apply</Text>
+            </TouchableOpacity>
+          </View>
+        </View>
+      </Modal>
+    </View>
   );
 };
 

@@ -5,7 +5,7 @@
 //   StyleSheet,
 //   TouchableOpacity,
 //   Image,
-//   ScrollView, SafeAreaView
+//   ScrollView, View
 // } from 'react-native';
 // import Icon from 'react-native-vector-icons/Ionicons';
 // import Ionicons from 'react-native-vector-icons/Ionicons';
@@ -101,7 +101,7 @@
 //   };
 
 //   return (
-//     <SafeAreaView style={{flex: 1, backgroundColor: '#fff'}}>
+//     <View style={{flex: 1, backgroundColor: '#fff'}}>
 //       <Header title="Profile info" navigation={navigation} showBack={true} />
 
 //       <ScrollView
@@ -148,7 +148,7 @@
 //           </TouchableOpacity>
 //         ))}
 //       </ScrollView>
-//     </SafeAreaView>
+//     </View>
 //   );
 // };
 
@@ -245,7 +245,6 @@ import {
   TouchableOpacity,
   Image,
   ScrollView,
-  SafeAreaView,
 } from 'react-native';
 import Icon from 'react-native-vector-icons/Ionicons';
 import DeviceInfo from 'react-native-device-info';
@@ -405,16 +404,43 @@ const ProfileScreen = ({ navigation }) => {
   };
 
   return (
-    <SafeAreaView style={{ flex: 1, backgroundColor: '#fff' }}>
+    <View style={{ flex: 1, backgroundColor: '#fff' }}>
       <Header title="Profile info" navigation={navigation} showBack={true} />
 
       <ScrollView
         contentContainerStyle={styles.container}
         showsVerticalScrollIndicator={false}
       >
-        <View style={styles.profileContainer}>
+        {/* <View style={styles.profileContainer}>
           <Text style={styles.name}>{data?.customer_name || ''}</Text>
           <Text style={styles.email}>{data?.email || ''}</Text>
+        </View> */}
+
+        <View style={styles.profileCard}>
+          <View style={styles.avatarWrapper}>
+            {data?.profile_image ? (
+              <Image
+                source={{ uri: data.profile_image }}
+                style={styles.avatar}
+              />
+            ) : (
+              <View style={styles.initialAvatar}>
+                <Text style={styles.initialText}>
+                  {data?.customer_name
+                    ? data.customer_name.charAt(0).toUpperCase()
+                    : 'U'}
+                </Text>
+              </View>
+            )}
+          </View>
+
+          <Text style={styles.profileName}>
+            {data?.customer_name || 'User Name'}
+          </Text>
+
+          <Text style={styles.profileEmail}>
+            {data?.email || 'example@email.com'}
+          </Text>
         </View>
 
         {options.map((item, index) => (
@@ -465,7 +491,7 @@ const ProfileScreen = ({ navigation }) => {
           </TouchableOpacity>
         ))}
       </ScrollView>
-    </SafeAreaView>
+    </View>
   );
 };
 
@@ -478,21 +504,66 @@ const styles = StyleSheet.create({
     flexGrow: 1,
     paddingBottom: hp('2%'),
   },
-  profileContainer: {
+  // profileContainer: {
+  //   alignItems: 'center',
+  //   marginBottom: hp('2%'),
+  // },
+  // name: {
+  //   fontSize: wp('5.5%'),
+  //   fontWeight: '700',
+  //   marginTop: hp('1%'),
+  //   color: '#333',
+  // },
+  // email: {
+  //   fontSize: wp('3.8%'),
+  //   color: '#999',
+  //   marginBottom: hp('1%'),
+  // },
+  profileCard: {
     alignItems: 'center',
-    marginBottom: hp('2%'),
+    // marginBottom: hp('2%'),
+    backgroundColor: '#fff',
+    borderRadius: wp('4%'),
   },
-  name: {
+
+  avatarWrapper: {
+    marginBottom: hp('0.1%'),
+  },
+
+  avatar: {
+    width: wp('20%'),
+    height: wp('20%'),
+    borderRadius: wp('12%'),
+    resizeMode: 'cover',
+  },
+
+  initialAvatar: {
+    width: wp('20%'),
+    height: wp('20%'),
+    borderRadius: wp('12%'),
+    backgroundColor: '#E3F2FD',
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+
+  initialText: {
+    fontSize: wp('10%'),
+    fontWeight: '700',
+    color: '#1976D2',
+  },
+
+  profileName: {
     fontSize: wp('5.5%'),
     fontWeight: '700',
-    marginTop: hp('1%'),
-    color: '#333',
+    color: '#222',
   },
-  email: {
+
+  profileEmail: {
     fontSize: wp('3.8%'),
-    color: '#999',
-    marginBottom: hp('1%'),
+    color: '#777',
+    marginTop: hp('0.4%'),
   },
+
   optionRow: {
     flexDirection: 'row',
     alignItems: 'center',
@@ -545,4 +616,3 @@ const styles = StyleSheet.create({
     marginRight: wp('2%'),
   },
 });
-

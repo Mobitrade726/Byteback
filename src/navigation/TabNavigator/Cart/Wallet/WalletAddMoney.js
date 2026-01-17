@@ -2,17 +2,14 @@ import React, { useState, useEffect } from 'react';
 import {
   View,
   Text,
-  SafeAreaView,
   TouchableOpacity,
   TextInput,
   StyleSheet,
   Alert,
-  ScrollView,
   ActivityIndicator,
   FlatList,
 } from 'react-native';
 import RazorpayCheckout from 'react-native-razorpay';
-import AsyncStorage from '@react-native-async-storage/async-storage';
 import axios from 'axios';
 import Toast from 'react-native-toast-message';
 import { API_BASE_URL } from '../../../../utils/utils';
@@ -127,15 +124,18 @@ const WalletAddMoney = ({ navigation }) => {
 
       // ✅ NEFT / IMPS / RTGS handled manually (offline)
       if (['neft', 'imps', 'rtgs'].includes(selectedMethod)) {
+        setIsProcessing(false);
         Alert.alert(
           `${selectedMethod.toUpperCase()} Selected`,
           'Please complete this transfer using your bank app or contact support.',
         );
         return;
       }
+      setIsProcessing(false);
       // ✅ Launch Razorpay checkout
       RazorpayCheckout.open(options)
         .then(async data => {
+          setIsProcessing(true);
           // SUCCESS
           const verifyResponse = await axios.post(
             `${API_BASE_URL}/wallet/verify`,
@@ -159,16 +159,11 @@ const WalletAddMoney = ({ navigation }) => {
             text2: verifyResponse.data.message,
           });
           setAmount('');
+          // ✅ REFRESH BOTH
           dispatch(fetchWalletBalance());
+          await fetchTransactions(); // 🔥 THIS WAS MISSING
           setIsProcessing(false); // 🔓 Unlock
         })
-        // .catch(err => {
-        //   Alert.alert(
-        //     'Payment Failed',
-        //     err.description || 'Transaction cancelled.',
-        //   );
-        //   setIsProcessing(false); // 🔓 Unlock even if Razorpay closed
-        // });
         .catch(async err => {
           Toast.show({
             type: 'error',
@@ -196,6 +191,7 @@ const WalletAddMoney = ({ navigation }) => {
           setIsProcessing(false);
         });
     } catch (error) {
+      setIsProcessing(false);
       Alert.alert('Error', 'Something went wrong! Please try again.');
     }
   };
@@ -273,104 +269,7 @@ const WalletAddMoney = ({ navigation }) => {
   };
 
   return (
-    // <SafeAreaView style={styles.container}>
-    //   <Header
-    //     title="Wallet : Add Money"
-    //     navigation={navigation}
-    //     showBack={true}
-    //   />
-    //   <ScrollView
-    //     contentContainerStyle={{ padding: 20 }}
-    //     showsVerticalScrollIndicator={false}
-    //   >
-    //     <View style={styles.balanceContainer}>
-    //       <Text style={styles.balanceLabel}>Wallet Balance</Text>
-    //       {loading ? (
-    //         <ActivityIndicator color="#14AE5C" />
-    //       ) : (
-    //         <Text style={styles.balanceValue}>₹{balance}</Text>
-    //       )}
-    //     </View>
-
-    //     <TextInput
-    //       style={styles.input}
-    //       placeholder="Enter amount"
-    //       keyboardType="numeric"
-    //       value={amount}
-    //       onChangeText={setAmount}
-    //     />
-
-    //     <Text style={styles.subHeader}>Select Payment Method</Text>
-    //     <View style={styles.methodContainer}>
-    //       {['upi', 'rtgs', 'card'].map(method => (
-    //         <TouchableOpacity
-    //           key={method}
-    //           style={[
-    //             styles.methodButton,
-    //             selectedMethod === method && styles.methodButtonActive,
-    //           ]}
-    //           onPress={() => setSelectedMethod(method)}
-    //         >
-    //           <Text
-    //             style={[
-    //               styles.methodText,
-    //               selectedMethod === method && styles.methodTextActive,
-    //             ]}
-    //           >
-    //             {method.toUpperCase()}
-    //           </Text>
-    //         </TouchableOpacity>
-    //       ))}
-    //     </View>
-
-    //     <TouchableOpacity
-    //       style={styles.payButton}
-    //       onPress={handleAddMoney}
-    //       disabled={isProcessing} // ❌ disable double press
-    //     >
-    //       <Text style={styles.payButtonText}>Add Money</Text>
-    //     </TouchableOpacity>
-
-    //     <View style={styles.historyCard}>
-    //       <Text style={{ fontSize: moderateScale(12) }}>
-    //         History
-    //         <Text style={{ fontSize: moderateScale(12) }}>
-    //           (Showing only Add Money)
-    //         </Text>
-    //       </Text>
-    //       {loading ? (
-    //         <ActivityIndicator
-    //           size="large"
-    //           color="#1A9E41"
-    //           style={{ marginTop: moderateScale(40) }}
-    //         />
-    //       ) : transactions.length === 0 ? (
-    //         <View style={{ alignItems: 'center', marginTop: 40 }}>
-    //           <Ionicons
-    //             name="wallet-outline"
-    //             size={moderateScale(50)}
-    //             color="#bbb"
-    //           />
-    //           <Text style={{ color: '#888', marginTop: moderateScale(10) }}>
-    //             No transactions found
-    //           </Text>
-    //         </View>
-    //       ) : (
-    //         <FlatList
-    //           data={transactions}
-    //           renderItem={renderTransaction}
-    //           showsVerticalScrollIndicator={false}
-    //           keyExtractor={item =>
-    //             item.id?.toString() || Math.random().toString()
-    //           }
-    //           ItemSeparatorComponent={() => <View style={styles.separator} />}
-    //         />
-    //       )}
-    //     </View>
-    //   </ScrollView>
-    //   <Toast />
-    // </SafeAreaView>
-    <SafeAreaView style={styles.container}>
+    <View style={styles.container}>
       <Header title="Wallet : Add Money" navigation={navigation} showBack />
 
       <FlatList
@@ -397,6 +296,7 @@ const WalletAddMoney = ({ navigation }) => {
               keyboardType="numeric"
               value={amount}
               onChangeText={setAmount}
+              placeholderTextColor={'#000'}
             />
 
             <Text style={styles.subHeader}>Select Payment Method</Text>
@@ -428,7 +328,12 @@ const WalletAddMoney = ({ navigation }) => {
               onPress={handleAddMoney}
               disabled={isProcessing}
             >
-              <Text style={styles.payButtonText}>Add Money</Text>
+              {/* <Text style={styles.payButtonText}> { isProcessing ? <ActivityIndicator size="large" color="#fff" /> : Add Money}</Text> */}
+              {isProcessing ? (
+                <ActivityIndicator size="small" color="#fff" />
+              ) : (
+                <Text style={styles.payButtonText}>Add Money</Text>
+              )}
             </TouchableOpacity>
 
             <Text style={styles.historyTitle}>
@@ -463,122 +368,11 @@ const WalletAddMoney = ({ navigation }) => {
       )}
 
       <Toast />
-    </SafeAreaView>
+    </View>
   );
 };
 
 export default WalletAddMoney;
-
-// const styles = StyleSheet.create({
-//   container: {flex: 1, backgroundColor: '#FBFEFC'},
-//   header: {
-//     fontSize: 22,
-//     fontWeight: 'bold',
-//     textAlign: 'center',
-//     color: '#000',
-//     marginVertical: 10,
-//   },
-//   balanceContainer: {
-//     backgroundColor: '#fff',
-//     borderRadius: 10,
-//     padding: 15,
-//     alignItems: 'center',
-//     marginBottom: 20,
-//     elevation: 2,
-//   },
-//   balanceLabel: {fontSize: 16, color: '#888'},
-//   balanceValue: {fontSize: 28, fontWeight: 'bold', color: '#14AE5C'},
-//   input: {
-//     backgroundColor: '#fff',
-//     borderRadius: 10,
-//     padding: 15,
-//     fontSize: 16,
-//     marginBottom: 20,
-//     elevation: 2,
-//   },
-//   subHeader: {
-//     fontSize: 18,
-//     fontWeight: '600',
-//     color: '#333',
-//     marginBottom: 10,
-//   },
-//   methodContainer: {
-//     flexDirection: 'row',
-//     flexWrap: 'wrap',
-//     justifyContent: 'center',
-//     marginBottom: 20,
-//   },
-//   methodButton: {
-//     borderWidth: 1,
-//     borderColor: '#ccc',
-//     paddingVertical: 10,
-//     paddingHorizontal: 20,
-//     borderRadius: 25,
-//     margin: 5,
-//     backgroundColor: '#fff',
-//   },
-//   methodButtonActive: {
-//     backgroundColor: '#14AE5C',
-//     borderColor: '#14AE5C',
-//   },
-//   methodText: {color: '#333', fontWeight: '500'},
-//   methodTextActive: {color: '#fff'},
-//   payButton: {
-//     backgroundColor: '#14AE5C',
-//     paddingVertical: 15,
-//     borderRadius: 10,
-//     alignItems: 'center',
-//   },
-//   payButtonText: {color: '#fff', fontSize: 18, fontWeight: 'bold'},
-//   recentTitle: {
-//     textAlign: 'center',
-//     fontSize: 14,
-//     color: '#111',
-//     marginVertical: 8,
-//   },
-//   transactionRow: {
-//     flexDirection: 'row',
-//     alignItems: 'center',
-//     paddingVertical: 12,
-//     paddingHorizontal: 15,
-//   },
-//   transactionIcon: {
-//     marginRight: 12,
-//   },
-//   amount: {
-//     fontSize: 16,
-//     fontWeight: 'bold',
-//   },
-//   label: {
-//     fontSize: 14,
-//     color: '#000',
-//   },
-//   date: {
-//     fontSize: 12,
-//     color: 'gray',
-//   },
-//   separator: {
-//     // height: 1,
-//     backgroundColor: '#eee',
-//   },
-//   historyCard: {
-//     backgroundColor: '#fff',
-//     borderRadius: 12,
-//     padding: 16,
-//     elevation: 3,
-//     marginVertical: 10,
-//   },
-//   historyRow: {
-//     flexDirection: 'row',
-//     justifyContent: 'space-between',
-//     marginBottom: 8,
-//   },
-//   historyText: {color: '#333', fontSize: 15},
-//   historyStatusSuccess: {color: 'green', fontWeight: '600'},
-//   historyStatusPending: {color: '#f39c12', fontWeight: '600'},
-//   historyStatusFailed: {color: '#e74c3c', fontWeight: '600'},
-
-// });
 
 import { scale, verticalScale, moderateScale } from 'react-native-size-matters';
 import { responsiveFontSize as RF } from 'react-native-responsive-dimensions';

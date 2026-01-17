@@ -261,7 +261,6 @@
 // // export const { toggleWishlist } = homeSlice.actions;
 // // export default homeSlice.reducer;
 
-
 // import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 // import axios from 'axios';
 // import { API_BASE_URL } from '../../utils/utils';
@@ -530,7 +529,6 @@
 // export const { toggleWishlist } = homeSlice.actions;
 // export default homeSlice.reducer;
 
-
 // import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 // import axios from 'axios';
 // import AsyncStorage from '@react-native-async-storage/async-storage';
@@ -794,9 +792,8 @@
 // export const { toggleWishlist } = homeSlice.actions;
 // export default homeSlice.reducer;
 
-
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
-import axios from '../../constants/axiosInstance'
+import axios from '../../constants/axiosInstance';
 // ----------------------------
 // 🔥 FETCH BANNERS
 // ----------------------------
@@ -815,9 +812,10 @@ export const fetchBanners = createAsyncThunk(
 
       return response.data.data;
     } catch (error) {
+      console.log('API ERROR STATUS 👉', error?.response?.status);
       return rejectWithValue(error.response?.data || error.message);
     }
-  }
+  },
 );
 
 // ----------------------------
@@ -838,9 +836,10 @@ export const fetchOsList = createAsyncThunk(
 
       return response.data.data;
     } catch (error) {
+      console.log('API ERROR STATUS 👉', error?.response?.status);
       return rejectWithValue(error.response?.data || error.message);
     }
-  }
+  },
 );
 
 // ----------------------------
@@ -861,9 +860,10 @@ export const fetchCatList = createAsyncThunk(
 
       return response.data.data;
     } catch (error) {
+      console.log('API ERROR STATUS 👉', error?.response?.status);
       return rejectWithValue(error.response?.data || error.message);
     }
-  }
+  },
 );
 
 // ----------------------------
@@ -876,9 +876,11 @@ export const fetchBrands = createAsyncThunk(
       const response = await axios.get(`/brand`);
       return response.data.data;
     } catch (error) {
+      console.log('API ERROR STATUS 👉', error?.response?.status);
+
       return rejectWithValue(error.response?.data || error.message);
     }
-  }
+  },
 );
 
 // ----------------------------
@@ -892,34 +894,54 @@ const initialState = {
   status: 'idle',
   error: [],
   categories: [
-    { id: '1', title: 'Android', image: 'https://i.postimg.cc/bvfB5mLG/Product-Image-2x.png' },
-    { id: '2', title: 'iOS', image: 'https://i.postimg.cc/T1K01bCM/Product-Image-1.png' },
-    { id: '3', title: 'Windows OS', image: 'https://i.postimg.cc/66419sS7/Product-Image-2.png' },
-    { id: '4', title: 'MacOS', image: 'https://i.postimg.cc/Jht5PZCy/Product-Image-3.png' },
+    {
+      id: '1',
+      title: 'Android',
+      image: 'https://i.postimg.cc/bvfB5mLG/Product-Image-2x.png',
+    },
+    {
+      id: '2',
+      title: 'iOS',
+      image: 'https://i.postimg.cc/T1K01bCM/Product-Image-1.png',
+    },
+    {
+      id: '3',
+      title: 'Windows OS',
+      image: 'https://i.postimg.cc/66419sS7/Product-Image-2.png',
+    },
+    {
+      id: '4',
+      title: 'MacOS',
+      image: 'https://i.postimg.cc/Jht5PZCy/Product-Image-3.png',
+    },
   ],
   uri: { url: 'https://i.postimg.cc/3wdk2CDW/Banner-Background-1.png' },
   mobileBudget: [
     {
       id: '1',
-      image: 'https://i.postimg.cc/B6HGCYW5/A-sleek-smartphone-with-a-modern-design-resting-on-a-wooden-table-surrounded-by-small-decorative-pla.png',
+      image:
+        'https://i.postimg.cc/B6HGCYW5/A-sleek-smartphone-with-a-modern-design-resting-on-a-wooden-table-surrounded-by-small-decorative-pla.png',
       label: 'Under ₹10,000',
       subname: 'Great for budget buyers',
     },
     {
       id: '2',
-      image: 'https://i.postimg.cc/B6HGCYW5/A-sleek-smartphone-with-a-modern-design-resting-on-a-wooden-table-surrounded-by-small-decorative-pla.png',
+      image:
+        'https://i.postimg.cc/B6HGCYW5/A-sleek-smartphone-with-a-modern-design-resting-on-a-wooden-table-surrounded-by-small-decorative-pla.png',
       label: '₹10,000 - ₹20,000',
       subname: 'Ideal for beginners ',
     },
     {
       id: '3',
-      image: 'https://i.postimg.cc/B6HGCYW5/A-sleek-smartphone-with-a-modern-design-resting-on-a-wooden-table-surrounded-by-small-decorative-pla.png',
+      image:
+        'https://i.postimg.cc/B6HGCYW5/A-sleek-smartphone-with-a-modern-design-resting-on-a-wooden-table-surrounded-by-small-decorative-pla.png',
       label: '₹20,000 - ₹30,000',
       subname: 'Premium selections ',
     },
     {
       id: '4',
-      image: 'https://i.postimg.cc/B6HGCYW5/A-sleek-smartphone-with-a-modern-design-resting-on-a-wooden-table-surrounded-by-small-decorative-pla.png',
+      image:
+        'https://i.postimg.cc/B6HGCYW5/A-sleek-smartphone-with-a-modern-design-resting-on-a-wooden-table-surrounded-by-small-decorative-pla.png',
       label: 'Above ₹30,000',
       subname: 'Premium selections ',
     },
@@ -927,25 +949,29 @@ const initialState = {
   LaptopBudget: [
     {
       id: '1',
-      image: 'https://i.postimg.cc/T3pKjD0d/A-sleek-modern-chair-with-a-minimalist-design-placed-in-a-well-lit-room-with-elegant-decor.png',
+      image:
+        'https://i.postimg.cc/T3pKjD0d/A-sleek-modern-chair-with-a-minimalist-design-placed-in-a-well-lit-room-with-elegant-decor.png',
       label: 'Under ₹10,000',
       subname: 'Ideal for savvy students',
     },
     {
       id: '2',
-      image: 'https://i.postimg.cc/nrFzXjMt/A-sleek-smartphone-with-a-modern-design-resting-on-a-wooden-table-surrounded-by-small-decorative-pla.png',
+      image:
+        'https://i.postimg.cc/nrFzXjMt/A-sleek-smartphone-with-a-modern-design-resting-on-a-wooden-table-surrounded-by-small-decorative-pla.png',
       label: '₹10,000 - ₹20,000',
       subname: 'Premium selections ',
     },
     {
       id: '3',
-      image: 'https://i.postimg.cc/DZgf3v6p/A-sleek-modern-laptop-placed-on-a-wooden-desk-with-a-potted-plant-beside-it.png',
+      image:
+        'https://i.postimg.cc/DZgf3v6p/A-sleek-modern-laptop-placed-on-a-wooden-desk-with-a-potted-plant-beside-it.png',
       label: '₹20,000 - ₹30,000',
       subname: 'Luxury Macbooks & Windows PC',
     },
     {
       id: '4',
-      image: 'https://i.postimg.cc/DZgf3v6p/A-sleek-modern-laptop-placed-on-a-wooden-desk-with-a-potted-plant-beside-it.png',
+      image:
+        'https://i.postimg.cc/DZgf3v6p/A-sleek-modern-laptop-placed-on-a-wooden-desk-with-a-potted-plant-beside-it.png',
       label: 'Above ₹30,000',
       subname: 'Luxury Macbooks & Windows PC',
     },
@@ -1060,4 +1086,3 @@ const homeSlice = createSlice({
 
 export const { toggleWishlist } = homeSlice.actions;
 export default homeSlice.reducer;
-

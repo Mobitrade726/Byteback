@@ -2,7 +2,7 @@
 // // import {
 // //   View,
 // //   FlatList,
-// //   SafeAreaView,
+// //   View,
 // //   StyleSheet,
 // //   Text,
 // //   StatusBar,
@@ -89,7 +89,7 @@
 // //   );
 
 // //   return (
-// //     <SafeAreaView style={styles.container}>
+// //     <View style={styles.container}>
 // //       {/* Header */}
 // //       <View style={styles.header}>
 // //         <TouchableOpacity
@@ -126,7 +126,7 @@
 // //         style={styles.bottomButton}>
 // //         <Text style={styles.continueText}>Continue Shopping</Text>
 // //       </TouchableOpacity> */}
-// //     </SafeAreaView>
+// //     </View>
 // //   );
 // // };
 
@@ -276,7 +276,7 @@
 // import {
 //   View,
 //   FlatList,
-//   SafeAreaView,
+//   View,
 //   StyleSheet,
 //   Text,
 //   StatusBar,
@@ -354,7 +354,7 @@
 //   );
 
 //   return (
-//     <SafeAreaView style={styles.container}>
+//     <View style={styles.container}>
 //       {/* Header */}
 //       <Header title="My Wishlist" navigation={navigation} showBack={true} showSearch={true} />
 
@@ -388,7 +388,7 @@
 //           contentContainerStyle={{paddingBottom: 80}}
 //         />
 //       )}
-//     </SafeAreaView>
+//     </View>
 //   );
 // };
 
@@ -583,7 +583,6 @@ import React, { useCallback, useEffect } from 'react';
 import {
   View,
   FlatList,
-  SafeAreaView,
   StyleSheet,
   Text,
   TouchableOpacity,
@@ -610,6 +609,7 @@ import ActivityLoader from '../../../../constants/Loader';
 import { addToCartAPI, fetchCartAPI } from '../../../../redux/slices/cartSlice';
 import Toast from 'react-native-toast-message';
 import { useFocusEffect } from '@react-navigation/native';
+import responsive from '../../../../constants/responsive';
 
 const WishlistScreen = ({ navigation }) => {
   const { items, loading } = useSelector(state => state.wishlist);
@@ -634,116 +634,124 @@ const WishlistScreen = ({ navigation }) => {
   };
 
   const renderItem = ({ item }) => (
-    (
-      <>
-        <View style={styles.card}>
-          <View style={styles.row}>
-            {/* Image */}
-            <View style={styles.imageContainer}>
-              <Image
-                source={{ uri: item.feature_image }}
-                style={styles.image}
-              />
-              <View style={styles.gradeTag}>
-                <Text style={styles.gradeText}>
-                  {item.grade_number ? item.grade_number : 'N/A'}
-                </Text>
-              </View>
+    <>
+      <View style={styles.card}>
+        <View style={styles.row}>
+          {/* Image */}
+          <View style={styles.imageContainer}>
+            <Image
+              source={
+                item?.feature_image
+                  ? { uri: item.feature_image }
+                  : require('../../../../../assets/images/empty.jpeg')
+              }
+              style={styles.image}
+              resizeMode="contain"
+            />
+            <View style={styles.gradeTag}>
+              <Text style={styles.gradeText}>
+                <Text style={{ color: '#666666' }}>Grade</Text>{' '}
+                {item.grade_number ? item.grade_number : 'N/A'}
+              </Text>
+            </View>
+          </View>
+
+          {/* Details */}
+          <View style={styles.detailsContainer}>
+            <View style={styles.titleRow}>
+              <Text style={styles.title}>{item.model_name}</Text>
+
+              {/* ❤️ Remove From Wishlist */}
+              <TouchableOpacity
+                style={styles.heartBtn}
+                onPress={() => handleRemove(item)}
+              >
+                <AntDesign
+                  name="heart"
+                  size={moderateScale(16)}
+                  color="#E74C3C"
+                />
+              </TouchableOpacity>
             </View>
 
-            {/* Details */}
-            <View style={styles.detailsContainer}>
-              <View style={styles.titleRow}>
-                <Text style={styles.title}>{item.model_name}</Text>
+            <Text style={styles.preowned}>(PRE-OWNED)</Text>
+            <Text style={styles.specs}>
+              {item?.variant_name ? item.variant_name : item?.storage} ●{' '}
+              {item?.color_name ? item.color_name : '--'}
+            </Text>
 
-                {/* ❤️ Remove From Wishlist */}
-                <TouchableOpacity
-                  style={styles.heartBtn}
-                  onPress={() => handleRemove(item)}
-                >
-                  <AntDesign
-                    name="heart"
-                    size={moderateScale(16)}
-                    color="#E74C3C"
-                  />
-                </TouchableOpacity>
-              </View>
+            <Text style={styles.price}>₹ {item.price}</Text>
+            <Text style={styles.warrenty}>30-day warranty</Text>
 
-              <Text style={styles.subtitle}>PRE-OWNED</Text>
-              <Text style={styles.specs}>
-                {item?.variant_name ? item.variant_name : item?.storage} ●
-                {item?.color_name ? item.color_name : '--'}
-              </Text>
-              {/* <Text style={styles.specs}>
-                {
-                  item?.category?.toLowerCase() === 'laptop'
-                    ? item?.storage || 'N/A' // Laptop → storage
-                    : item?.variant_name || 'N/A' // Mobile → variant
-                }
-                {'  ●  '}
-                {item?.color_name || 'N/A'}
-              </Text> */}
-
-              <View style={styles.priceRow}>
-                <Text style={styles.price}>₹ {item.price}</Text>
-              </View>
-
-              {/* Move to Cart */}
-              <TouchableOpacity
-                onPress={() => {
-                  const wishlistproduct = {
-                    barcode_id: item.barcode_id,
-                    user_id: item?.user_id,
-                    quantity: 1,
-                    price: item.price,
-                  };
-
-                  const exists = cartItems.some(
-                    c => String(c.barcode_id) === String(item.barcode_id),
-                  );
-
-                  if (exists) {
-                    Toast.show({
-                      type: 'error',
-                      text1: 'Already in Cart',
-                      text2: `${item.model_name} is already added.`,
-                    });
-                    return; // ❌ DO NOT NAVIGATE
-                  }
-                  dispatch(
-                    addToCartAPI({
-                      product: null, // product screen se nhi
-                      wishlistproduct: wishlistproduct, // yahi wishlist ka data hai
-                      navigation, // agar chaiye
-                    }),
-                  );
+            {/*  Campare */}
+            <View style={{marginTop: responsive.marginTop(10)}}>
+              <View
+                style={{
+                  flexDirection: 'row',
+                  backgroundColor: '#fff',
+                  borderWidth: moderateScale(1),
+                  paddingVertical: moderateScale(3),
+                  paddingHorizontal: moderateScale(10),
+                  borderRadius: moderateScale(10), borderColor:"#666666", alignItems:'center', justifyContent:'center'
                 }}
               >
-                <View
-                  style={{
-                    flexDirection: 'row',
-                    alignItems: 'center',
-                    backgroundColor: '#fff',
-                    borderWidth: moderateScale(1),
-                    paddingVertical: moderateScale(6),
-                    paddingHorizontal: moderateScale(10),
-                    borderRadius: moderateScale(10),
-                    alignSelf: 'flex-start', // 👈 jitna content utna width
-                  }}
-                >
-                  <Ionicons name="cart-outline" size={14} color="#333" />
-                  <Text style={styles.compareText}>Move to Cart</Text>
-                </View>
-              </TouchableOpacity>
+                <Ionicons name="swap-horizontal" size={moderateScale(10)} color="#666666" />
+                <Text style={styles.compareText}>Compare</Text>
+              </View>
             </View>
           </View>
         </View>
-      </>
-    )
+        {/* Move to Cart */}
+        <TouchableOpacity style={{marginTop: responsive.marginTop(3)}}
+          onPress={() => {
+            const wishlistproduct = {
+              barcode_id: item.barcode_id,
+              user_id: item?.user_id,
+              quantity: 1,
+              price: item.price,
+            };
+
+            const exists = cartItems.some(
+              c => String(c.barcode_id) === String(item.barcode_id),
+            );
+
+            if (exists) {
+              Toast.show({
+                type: 'error',
+                text1: 'Already in Cart',
+                text2: `${item.model_name} is already added.`,
+              });
+              return; // ❌ DO NOT NAVIGATE
+            }
+            dispatch(
+              addToCartAPI({
+                product: null, // product screen se nhi
+                wishlistproduct: wishlistproduct, // yahi wishlist ka data hai
+                navigation, // agar chaiye
+              }),
+            );
+          }}
+        >
+          <View
+            style={{
+              flexDirection: 'row',
+              backgroundColor: '#333333',
+              borderWidth: moderateScale(1),
+              paddingVertical: moderateScale(5),
+              paddingHorizontal: moderateScale(10),
+              borderRadius: moderateScale(10), justifyContent:'center'
+            }}
+          >
+            <Ionicons name="cart-outline" size={moderateScale(10)} color="#FFFBFA" />
+            <Text style={styles.movetocart}>Move to Cart</Text>
+          </View>
+        </TouchableOpacity>
+      </View>
+    </>
   );
 
   return (
-    <SafeAreaView style={styles.container}>
+    <View style={styles.container}>
       {/* Header */}
       <Header
         title="My Wishlist"
@@ -776,7 +784,7 @@ const WishlistScreen = ({ navigation }) => {
       )}
       {/* Loader */}
       {loading && <ActivityLoader />}
-    </SafeAreaView>
+    </View>
   );
 };
 
@@ -785,7 +793,7 @@ export default WishlistScreen;
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#fff',
+    backgroundColor: '#FFFBFA',
   },
   emptyCard: {
     margin: responsiveWidth(5),
@@ -815,51 +823,77 @@ const styles = StyleSheet.create({
     width: '80%',
   },
   card: {
-    backgroundColor: '#fff',
+    backgroundColor: '#FFFBFA',
     marginHorizontal: responsiveWidth(3.5),
     marginVertical: verticalScale(6),
-    padding: moderateScale(10),
-    borderRadius: moderateScale(16),
-    elevation: 4,
-    shadowColor: '#000',
-    shadowOpacity: 0.1,
-    shadowRadius: 8,
-    borderWidth: 0.5,
-  },
-  row: { flexDirection: 'row' },
-  imageContainer: {
-    width: responsiveWidth(35),
-    height: responsiveWidth(35),
+    padding: moderateScale(8),
     borderRadius: moderateScale(8),
-    overflow: 'hidden',
-    position: 'relative',
+
+    // iOS shadow
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 4 },
+    shadowOpacity: 0.15,
+    shadowRadius: 6,
+
+    // Android shadow
+    elevation: 8,
+
+    // Optional (clean look)
+    borderWidth: 1,
+    borderColor: '#eee',
   },
-  image: { width: '100%', height: '100%', resizeMode: 'stretch' },
+
+  row: {
+    flexDirection: 'row',
+    marginBottom: responsive.marginBottom(5),
+    backgroundColor: '#FFFBFA',
+  },
+  imageContainer: {
+    borderRadius: responsive.borderRadius(8),
+    overflow: 'hidden',
+    position: 'relative', // 🔥 required for overlay
+    borderWidth: 0,
+    borderColor: '#f1f1f1',
+
+    // iOS shadow
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 4 },
+    shadowOpacity: 0.15,
+    shadowRadius: 6,
+
+    // Android shadow
+    elevation: 8,
+  },
+
+  image: {
+    width: responsiveWidth(30),
+    height: responsiveWidth(30),
+  },
   gradeTag: {
     position: 'absolute',
-    bottom: verticalScale(2),
+    bottom: verticalScale(0),
     alignSelf: 'center',
-    backgroundColor: '#fff',
-    borderRadius: moderateScale(7),
-    paddingHorizontal: moderateScale(12),
-    paddingVertical: verticalScale(2),
-    elevation: 2,
-    width: '98%',
+    backgroundColor: '#FFFBFA',
+    width: '100%',
+    borderWidth: 0.5,
+    borderRadius: responsive.borderRadius(8),
+    padding: responsive.padding(1),
+    borderColor: '#FFFBFA',
   },
   gradeText: {
     fontWeight: '600',
-    fontSize: responsiveFontSize(1.5),
+    fontSize: responsive.fontSize(10),
     textAlign: 'center',
   },
   detailsContainer: {
     flex: 1,
     paddingLeft: responsiveWidth(3),
-    justifyContent: 'space-between',
+    marginTop: responsive.marginTop(10),
   },
-  titleRow: { flexDirection: 'row', justifyContent: 'space-between' },
+  titleRow: { flexDirection: 'row' },
   title: {
     fontWeight: 'bold',
-    fontSize: responsiveFontSize(1.8),
+    fontSize: responsive.fontSize(14),
     flex: 1,
     paddingRight: responsiveWidth(3),
   },
@@ -873,33 +907,40 @@ const styles = StyleSheet.create({
     elevation: 6,
   },
   subtitle: {
-    fontSize: responsiveFontSize(1.4),
+    fontSize: responsive.fontSize(8),
     color: '#777',
-    marginTop: verticalScale(2),
   },
-  specs: { fontSize: responsiveFontSize(1.4), marginTop: verticalScale(1.5) },
+  preowned: {
+    fontSize: responsive.fontSize(8),
+    color: '#777',
+    marginBottom: responsive.marginBottom(8), marginTop: responsive.marginTop(3)
+  },
+  specs: {
+    fontSize: responsive.fontSize(11),
+    marginBottom: responsive.marginBottom(5),
+  },
   priceRow: {
     flexDirection: 'row',
     alignItems: 'center',
-    gap: responsiveWidth(2),
-    marginTop: verticalScale(1),
   },
   price: {
     fontWeight: 'bold',
-    fontSize: responsiveFontSize(1.8),
+    fontSize: responsive.fontSize(16),
     color: '#000',
+    marginBottom: responsive.marginBottom(5),
   },
-  compareBtn: {
-    flexDirection: 'row',
-    borderColor: '#666',
-    borderWidth: 2,
-    borderRadius: moderateScale(20),
-    paddingVertical: verticalScale(1.5),
-    paddingHorizontal: responsiveWidth(4),
-    marginTop: verticalScale(1.5),
-    gap: responsiveWidth(2),
-    justifyContent: 'center',
-    width: '70%',
+  warrenty: {
+    fontSize: responsive.fontSize(10),
+    color: '#666666',
   },
-  compareText: { fontSize: responsiveFontSize(1.4), color: '#333' },
+  movetocart: {
+    fontSize: responsive.fontSize(11),
+    color: '#FFFBFA',
+    textAlign: 'center', marginLeft:5, 
+  },
+  compareText: {
+    fontSize: responsive.fontSize(11),
+    color: '#666666',
+    textAlign: 'center',  marginLeft:5
+  },
 });

@@ -151,6 +151,7 @@ export const fetchWishlist = createAsyncThunk(
 export const addToWishlistAPI = createAsyncThunk(
   'wishlist/addToWishlistAPI',
   async (item, { getState, rejectWithValue }) => {
+    console.log('item-----------checked----------->', item)
     try {
       const { token, userId } = getState().auth;
 
@@ -180,6 +181,7 @@ export const addToWishlistAPI = createAsyncThunk(
 export const removeFromWishlistAPI = createAsyncThunk(
   'wishlist/removeFromWishlistAPI',
   async (item, { getState, rejectWithValue }) => {
+     console.log('item-----------checked removed----------->', item)
     try {
       const { token, userId } = getState().auth;
 

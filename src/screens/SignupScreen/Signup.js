@@ -5,7 +5,7 @@
 //   TextInput,
 //   TouchableOpacity,
 //   StyleSheet,
-//   SafeAreaView,
+//   View,
 //   ScrollView,
 //   useColorScheme,
 //   ActivityIndicator,
@@ -437,14 +437,14 @@
 //   };
 
 //   return (
-//     <SafeAreaView style={styles.container}>
+//     <View style={styles.container}>
 //       <ScrollView contentContainerStyle={styles.formContainer}>
 //         {renderForm()}
 //         <TouchableOpacity style={styles.nextButton} onPress={handleNext}>
 //           <Text style={styles.nextButtonText}>Next</Text>
 //         </TouchableOpacity>
 //       </ScrollView>
-//     </SafeAreaView>
+//     </View>
 //   );
 // };
 
@@ -597,7 +597,6 @@ import {
   TextInput,
   TouchableOpacity,
   StyleSheet,
-  SafeAreaView,
   ScrollView,
   useColorScheme,
   ActivityIndicator,
@@ -1070,7 +1069,7 @@ const RegisterAsDealer = ({ navigation }) => {
   };
 
   return (
-    <SafeAreaView style={styles.container}>
+    <View style={styles.container}>
       <ScrollView contentContainerStyle={styles.formContainer}>
         {renderForm()}
         <TouchableOpacity style={styles.nextButton} onPress={handleNext}>
@@ -1087,7 +1086,7 @@ const RegisterAsDealer = ({ navigation }) => {
           onClose={() => setAlertVisible(false)}
         />
       </ScrollView>
-    </SafeAreaView>
+    </View>
   );
 };
 

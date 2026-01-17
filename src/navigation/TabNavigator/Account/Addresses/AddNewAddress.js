@@ -6,20 +6,23 @@ import {
   TouchableOpacity,
   ScrollView,
   StyleSheet,
-  SafeAreaView,
   Alert,
+  Platform,
+  ActivityIndicator,
 } from 'react-native';
 import CheckBox from '@react-native-community/checkbox';
-import Ionicons from 'react-native-vector-icons/Ionicons';
 import axios from 'axios';
-import AsyncStorage from '@react-native-async-storage/async-storage';
 import { API_BASE_URL } from '../../../../utils/utils';
 import { useRoute } from '@react-navigation/native';
 import Header from '../../../../constants/Header';
+import { scale, verticalScale, moderateScale } from 'react-native-size-matters';
+import { responsiveFontSize } from 'react-native-responsive-dimensions';
+import { useSelector } from 'react-redux';
 
 const AddNewAddress = ({ navigation }) => {
   const token = useSelector(state => state.auth.token);
   const userId = useSelector(state => state.auth.userId);
+  const [zipLoading, setZipLoading] = useState(false);
 
   const route = useRoute();
   const { editNewAddress, addNewAddress, type, user_address_id } =
@@ -50,10 +53,20 @@ const AddNewAddress = ({ navigation }) => {
   const handleShippingChange = (key, value) =>
     setShipping({ ...shipping, [key]: value });
 
-  // Auto copy billing to shipping
   useEffect(() => {
-    if (sameAsBilling) setShipping(billing);
-  }, [billing, sameAsBilling]);
+    if (sameAsBilling) {
+      // ✅ checkbox ON → copy billing to shipping
+      setShipping(billing);
+    } else {
+      // ❌ checkbox OFF → clear shipping fields
+      setShipping({
+        address: '',
+        zip: '',
+        city: '',
+        state: '',
+      });
+    }
+  }, [sameAsBilling, billing]);
 
   // Fetch existing address only if editing
   useEffect(() => {
@@ -117,7 +130,6 @@ const AddNewAddress = ({ navigation }) => {
 
     setLoading(true);
 
-
     try {
       setLoading(true);
 
@@ -172,8 +184,172 @@ const AddNewAddress = ({ navigation }) => {
     }
   };
 
+  // useEffect(() => {
+  //   const fetchPostalDetails = async (zip, type) => {
+  //     try {
+  //       setZipLoading(true);
+
+  //       const res = await axios.get(`${API_BASE_URL}/get-postal/${zip}`);
+
+  //       console.log('res++++++++++++++++++++++++++==', res?.data?.data);
+
+  //       if (
+  //         res.data?.status === 'success' &&
+  //         res.data?.data?.PostOffice?.length > 0
+  //       ) {
+  //         const postOffice = res.data.data.PostOffice[0];
+
+  //         if (type === 'billing') {
+  //           setBilling(prev => ({
+  //             ...prev,
+  //             city: postOffice.District || '',
+  //             state: postOffice.State || '',
+  //           }));
+  //         } else {
+  //           setShipping(prev => ({
+  //             ...prev,
+  //             city: postOffice.District || '',
+  //             state: postOffice.State || '',
+  //           }));
+  //         }
+  //       } else {
+  //         handleInvalidZip(type);
+  //       }
+  //     } catch (error) {
+  //       handleInvalidZip(type);
+  //     } finally {
+  //       setZipLoading(false);
+  //     }
+  //   };
+
+  //   const handleInvalidZip = type => {
+  //     if (type === 'billing') {
+  //       setBilling(prev => ({
+  //         ...prev,
+  //         city: '',
+  //         state: '',
+  //       }));
+  //       setErrors(prev => ({
+  //         ...prev,
+  //         billingZip: 'Invalid ZIP code',
+  //       }));
+  //     } else {
+  //       setShipping(prev => ({
+  //         ...prev,
+  //         city: '',
+  //         state: '',
+  //       }));
+  //       setErrors(prev => ({
+  //         ...prev,
+  //         shippingZip: 'Invalid ZIP code',
+  //       }));
+  //     }
+  //   };
+
+  //   // 🔥 Billing ZIP
+  //   if (billing.zip.length === 6) {
+  //     fetchPostalDetails(billing.zip, 'billing');
+  //   }
+
+  //   // 🔥 Shipping ZIP (only when not sameAsBilling)
+  //   if (!sameAsBilling && shipping.zip.length === 6) {
+  //     fetchPostalDetails(shipping.zip, 'shipping');
+  //   }
+  // }, [billing.zip, shipping.zip, sameAsBilling]);
+
+  useEffect(() => {
+    const fetchPostalDetails = async (zip, type) => {
+      try {
+        setZipLoading(true);
+
+        const res = await axios.get(`${API_BASE_URL}/get-postal/${zip}`);
+
+        if (
+          res.data?.status === 'success' &&
+          res.data?.data?.PostOffice?.length > 0
+        ) {
+          const postOffice = res.data.data.PostOffice[0];
+
+          if (type === 'billing') {
+            setBilling(prev => ({
+              ...prev,
+              city: postOffice.District || '',
+              state: postOffice.State || '',
+            }));
+
+            // ✅ clear error on success
+            setErrors(prev => ({
+              ...prev,
+              billingZip: '',
+            }));
+          } else {
+            setShipping(prev => ({
+              ...prev,
+              city: postOffice.District || '',
+              state: postOffice.State || '',
+            }));
+
+            setErrors(prev => ({
+              ...prev,
+              shippingZip: '',
+            }));
+          }
+        } else {
+          handleInvalidZip(type, res.data?.message || 'Invalid ZIP code');
+        }
+      } catch (error) {
+        handleInvalidZip(
+          type,
+          error.response?.data?.message || 'Invalid ZIP code',
+        );
+      } finally {
+        setZipLoading(false);
+      }
+    };
+
+    const handleInvalidZip = (type, message) => {
+      if (type === 'billing') {
+        setBilling(prev => ({
+          ...prev,
+          city: '',
+          state: '',
+        }));
+
+        setErrors(prev => ({
+          ...prev,
+          billingZip: message, // 🔴 API MESSAGE
+        }));
+      } else {
+        setShipping(prev => ({
+          ...prev,
+          city: '',
+          state: '',
+        }));
+
+        setErrors(prev => ({
+          ...prev,
+          shippingZip: message, // 🔴 API MESSAGE
+        }));
+      }
+    };
+
+    // 🔥 Billing ZIP
+    if (billing.zip.length === 6) {
+      fetchPostalDetails(billing.zip, 'billing');
+    } else {
+      setErrors(prev => ({ ...prev, billingZip: '' }));
+    }
+
+    // 🔥 Shipping ZIP
+    if (!sameAsBilling && shipping.zip.length === 6) {
+      fetchPostalDetails(shipping.zip, 'shipping');
+    } else {
+      setErrors(prev => ({ ...prev, shippingZip: '' }));
+    }
+  }, [billing.zip, shipping.zip, sameAsBilling]);
+
   return (
-    <SafeAreaView style={{ flex: 1, backgroundColor: '#fff' }}>
+    <View style={{ flex: 1, backgroundColor: '#fff' }}>
       <Header
         title={editNewAddress ? 'Update Address' : 'Saved Address'}
         navigation={navigation}
@@ -202,71 +378,187 @@ const AddNewAddress = ({ navigation }) => {
             </TouchableOpacity>
           ))}
         </View>
-
         {/* Billing */}
         <Text style={styles.heading}>Billing Address</Text>
         <TextInput
-          style={styles.input}
+          style={[styles.input, errors.billingAddress && styles.inputError]}
           placeholder="Address"
           value={billing.address}
           onChangeText={text => handleBillingChange('address', text)}
+          placeholderTextColor={'#000'}
         />
-        <TextInput
-          style={styles.input}
+        {errors.billingAddress && (
+          <Text style={styles.errorText}>{errors.billingAddress}</Text>
+        )}
+        {/* <TextInput
+          style={[styles.input, errors.billingZip && styles.inputError]}
           placeholder="ZIP"
           value={billing.zip}
           onChangeText={text => handleBillingChange('zip', text)}
+          placeholderTextColor={'#000'}
+        /> */}
+        {/* <TextInput
+          style={[styles.input, errors.billingZip && styles.inputError]}
+          placeholder="ZIP"
+          value={billing.zip}
+          keyboardType="number-pad"
+          maxLength={6}
+          onChangeText={text =>
+            handleBillingChange('zip', text.replace(/[^0-9]/g, ''))
+          }
+          placeholderTextColor="#000"
         />
+
+        {errors.billingZip && (
+          <Text style={styles.errorText}>{errors.billingZip}</Text>
+        )} */}
+
+        {/* <View style={styles.zipRow}> */}
+          <TextInput
+            style={[
+              styles.input,
+              styles.zipInput,
+              errors.billingZip && styles.inputError,
+            ]}
+            placeholder="ZIP"
+            value={billing.zip}
+            keyboardType="number-pad"
+            maxLength={6}
+            onChangeText={text =>
+              handleBillingChange('zip', text.replace(/[^0-9]/g, ''))
+            }
+            placeholderTextColor="#000"
+          />
+
+          {zipLoading && billing.zip.length === 6 && (
+            <ActivityIndicator size="small" color="#29A9E0" />
+          )}
+          {/* {errors.billingCity && (
+            <Text style={styles.errorText}>{errors.billingCity}</Text>
+          )} */}
+          {errors.billingZip && (
+            <Text style={styles.errorText}>{errors.billingZip}</Text>
+          )}
+        {/* </View> */}
+
         <TextInput
-          style={styles.input}
+          style={[styles.input, errors.billingCity && styles.inputError]}
           placeholder="City"
           value={billing.city}
           onChangeText={text => handleBillingChange('city', text)}
+          placeholderTextColor={'#000'}
+          editable={false}
         />
+        {errors.billingCity && (
+          <Text style={styles.errorText}>{errors.billingCity}</Text>
+        )}
         <TextInput
-          style={styles.input}
+          style={[styles.input, errors.billingState && styles.inputError]}
           placeholder="State"
           value={billing.state}
           onChangeText={text => handleBillingChange('state', text)}
+          placeholderTextColor={'#000'}
+          editable={false}
         />
-
+        {errors.billingState && (
+          <Text style={styles.errorText}>{errors.billingState}</Text>
+        )}
         {/* Same as Billing */}
         <View style={styles.checkboxRow}>
-          <CheckBox value={sameAsBilling} onValueChange={setSameAsBilling} />
+          {/* <CheckBox value={sameAsBilling} onValueChange={setSameAsBilling} /> */}
+          <CheckBox
+            value={sameAsBilling}
+            onValueChange={setSameAsBilling}
+            tintColors={{
+              true: '#14AE5C', // checked color
+              false: '#999', // unchecked border
+            }}
+            onCheckColor="#fff" // iOS
+            onFillColor="#14AE5C" // iOS
+            onTintColor="#14AE5C" // iOS
+            boxType="square" // iOS (optional)
+            style={{
+              transform:
+                Platform.OS === 'ios' ? [{ scaleX: 0.9 }, { scaleY: 0.9 }] : [],
+            }}
+          />
           <Text style={styles.checkboxLabel}>Same as Billing Address</Text>
         </View>
-
         {/* Shipping */}
         <Text style={styles.heading}>Shipping Address</Text>
         <TextInput
-          style={styles.input}
+          style={[styles.input, errors.shippingAddress && styles.inputError]}
           placeholder="Address"
           value={shipping.address}
           editable={!sameAsBilling}
           onChangeText={text => handleShippingChange('address', text)}
+          placeholderTextColor={'#000'}
         />
-        <TextInput
-          style={styles.input}
+        {errors.shippingAddress && (
+          <Text style={styles.errorText}>{errors.shippingAddress}</Text>
+        )}
+        {/* <TextInput
+          style={[styles.input, errors.shippingZip && styles.inputError]}
           placeholder="ZIP"
           value={shipping.zip}
           editable={!sameAsBilling}
-          onChangeText={text => handleShippingChange('zip', text)}
-        />
-        <TextInput
-          style={styles.input}
-          placeholder="City"
-          value={shipping.city}
-          editable={!sameAsBilling}
-          onChangeText={text => handleShippingChange('city', text)}
-        />
-        <TextInput
-          style={styles.input}
-          placeholder="State"
-          value={shipping.state}
-          editable={!sameAsBilling}
-          onChangeText={text => handleShippingChange('state', text)}
+          keyboardType="number-pad"
+          maxLength={6}
+          onChangeText={text =>
+            handleShippingChange('zip', text.replace(/[^0-9]/g, ''))
+          }
+          placeholderTextColor="#000"
         />
 
+        {errors.shippingZip && (
+          <Text style={styles.errorText}>{errors.shippingZip}</Text>
+        )} */}
+        <View style={styles.zipRow}>
+          <TextInput
+            style={[
+              styles.input,
+              styles.zipInput,
+              errors.shippingZip && styles.inputError,
+            ]}
+            placeholder="ZIP"
+            value={shipping.zip}
+            editable={!sameAsBilling}
+            keyboardType="number-pad"
+            maxLength={6}
+            onChangeText={text =>
+              handleShippingChange('zip', text.replace(/[^0-9]/g, ''))
+            }
+            placeholderTextColor="#000"
+          />
+
+          {zipLoading && shipping.zip.length === 6 && !sameAsBilling && (
+            <ActivityIndicator size="small" color="#29A9E0" />
+          )}
+        </View>
+
+        <TextInput
+          style={[styles.input, errors.shippingCity && styles.inputError]}
+          placeholder="City"
+          value={shipping.city}
+          editable={false}
+          onChangeText={text => handleShippingChange('city', text)}
+          placeholderTextColor={'#000'}
+        />
+        {errors.shippingCity && (
+          <Text style={styles.errorText}>{errors.shippingCity}</Text>
+        )}
+
+        <TextInput
+          style={[styles.input, errors.shippingState && styles.inputError]}
+          placeholder="State"
+          value={shipping.state}
+          editable={false}
+          onChangeText={text => handleShippingChange('state', text)}
+          placeholderTextColor={'#000'}
+        />
+        {errors.shippingState && (
+          <Text style={styles.errorText}>{errors.shippingState}</Text>
+        )}
         {/* Save Button */}
         <TouchableOpacity
           style={styles.saveBtn}
@@ -284,74 +576,11 @@ const AddNewAddress = ({ navigation }) => {
           )}
         </TouchableOpacity>
       </ScrollView>
-    </SafeAreaView>
+    </View>
   );
 };
 
 export default AddNewAddress;
-
-// const styles = StyleSheet.create({
-//   container: {padding: 0, paddingBottom: 0, marginHorizontal:10},
-//   heading: {fontSize: 16, fontWeight: '600', marginTop: 20},
-//   input: {
-//     borderWidth: 1,
-//     borderColor: '#888',
-//     borderRadius: 8,
-//     padding: 10,
-//     marginTop: 10,
-//   },
-//   saveBtn: {
-//     backgroundColor: '#29A9E0',
-//     padding: 12,
-//     borderRadius: 8,
-//     marginTop: 20,
-//     alignItems: 'center',
-//   },
-//   saveText: {color: '#fff', fontWeight: '600'},
-//   header: {
-//     flexDirection: 'row',
-//     alignItems: 'center',
-//     paddingVertical: 10,
-//     justifyContent: 'space-between',
-//     marginHorizontal: 10,
-//   },
-//   backButton: {
-//     backgroundColor: '#f5f5f5',
-//     borderRadius: 20,
-//     padding: 6,
-//     left: 0,
-//   },
-//   headerTitle: {
-//     fontSize: 16,
-//     fontWeight: '500',
-//     color: '#000',
-//     textAlign: 'center',
-//   },
-//   checkboxRow: {flexDirection: 'row', alignItems: 'center', marginTop: 10},
-//   checkboxLabel: {marginLeft: 8},
-//   tagContainer: {
-//     flexDirection: 'row',
-//     justifyContent: 'space-between',
-//     marginTop: 16,
-//   },
-//   tagButton: {
-//     flex: 1,
-//     borderWidth: 1,
-//     borderColor: '#888',
-//     borderRadius: 8,
-//     paddingVertical: 8,
-//     marginHorizontal: 4,
-//     alignItems: 'center',
-//     backgroundColor: '#fff',
-//   },
-//   tagButtonSelected: {backgroundColor: '#29A9E0', borderColor: '#29A9E0'},
-//   tagText: {color: '#000', fontWeight: '500'},
-//   tagTextSelected: {color: '#fff'},
-// });
-
-import { scale, verticalScale, moderateScale } from 'react-native-size-matters';
-import { responsiveFontSize } from 'react-native-responsive-dimensions';
-import { useSelector } from 'react-redux';
 
 const styles = StyleSheet.create({
   container: {
@@ -438,5 +667,23 @@ const styles = StyleSheet.create({
   tagTextSelected: {
     color: '#fff',
     fontSize: responsiveFontSize(1.8),
+  },
+  inputError: {
+    borderColor: 'red',
+  },
+
+  errorText: {
+    color: 'red',
+    fontSize: responsiveFontSize(1.6),
+    marginTop: verticalScale(4),
+  },
+  zipRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+  },
+
+  zipInput: {
+    flex: 1,
+    marginRight: moderateScale(10),
   },
 });

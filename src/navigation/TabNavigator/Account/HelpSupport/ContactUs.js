@@ -2,7 +2,6 @@ import React, {useEffect, useState} from 'react';
 import {
   View,
   Text,
-  SafeAreaView,
   StyleSheet,
   TouchableOpacity,
   ActivityIndicator,
@@ -34,14 +33,14 @@ const ContactUs = ({navigation}) => {
 
   if (loading) {
     return (
-      <SafeAreaView style={styles.container}>
+      <View style={styles.container}>
         <ActivityIndicator size="large" color="#000" style={{marginTop: 50}} />
-      </SafeAreaView>
+      </View>
     );
   }
 
   return (
-    <SafeAreaView style={styles.container}>
+    <View style={styles.container}>
       {/* Header */}
       <Header
         title="Contact Us"
@@ -86,7 +85,7 @@ const ContactUs = ({navigation}) => {
           <Text style={styles.contactText}>10 AM – 7 PM</Text>
         </View>
       </View>
-    </SafeAreaView>
+    </View>
   );
 };
 

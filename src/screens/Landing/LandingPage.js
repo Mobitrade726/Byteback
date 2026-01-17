@@ -5,7 +5,6 @@ import {
   Text,
   TouchableOpacity,
   Image,
-  SafeAreaView,
   StatusBar,
   ScrollView,
 } from 'react-native';
@@ -37,7 +36,7 @@ const LandingPage = () => {
         showBack={true}
         showSearch={false}
       />
-      <SafeAreaView style={styles.container}>
+      <View style={styles.container}>
         <ScrollView>
           {options.map(option => (
             <TouchableOpacity
@@ -63,7 +62,7 @@ const LandingPage = () => {
           style={styles.button}>
           <Text style={styles.buttonText}>Continue</Text>
         </TouchableOpacity>
-      </SafeAreaView>
+      </View>
     </>
   );
 };

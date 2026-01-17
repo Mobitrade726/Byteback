@@ -3,7 +3,7 @@
 //   View,
 //   StyleSheet,
 //   TouchableOpacity,
-//   SafeAreaView,
+//   View,
 // } from 'react-native';
 // import {createMaterialTopTabNavigator} from '@react-navigation/material-top-tabs';
 // import Ionicons from 'react-native-vector-icons/Ionicons';
@@ -30,7 +30,7 @@
 //   };
 
 //   return (
-//     <SafeAreaView style={styles.container}>
+//     <View style={styles.container}>
 //       <Header title="Recently added" navigation={navigation} showBack={true} />
 //       <Tab.Navigator
 //         initialRouteName={initialTab || osList[0]?.os_name || 'Default'}
@@ -53,7 +53,7 @@
 //           />
 //         ))}
 //       </Tab.Navigator>
-//     </SafeAreaView>
+//     </View>
 //   );
 // };
 
@@ -87,7 +87,6 @@ import {
   View,
   StyleSheet,
   TouchableOpacity,
-  SafeAreaView,
 } from 'react-native';
 import { createMaterialTopTabNavigator } from '@react-navigation/material-top-tabs';
 import Ionicons from 'react-native-vector-icons/Ionicons';
@@ -100,6 +99,12 @@ import {
   responsiveFontSize as RF,
   responsiveHeight as RH,
   responsiveWidth as RW,
+} from 'react-native-responsive-dimensions';
+
+import {
+  responsiveFontSize,
+  responsiveHeight,
+  responsiveWidth,
 } from 'react-native-responsive-dimensions';
 
 const Tab = createMaterialTopTabNavigator();
@@ -119,7 +124,7 @@ const RecentlyAddedTab = ({ navigation, route }) => {
   };
 
   return (
-    <SafeAreaView style={styles.container}>
+    <View style={styles.container}>
       <Header
         title="Recently added"
         navigation={navigation}
@@ -131,18 +136,26 @@ const RecentlyAddedTab = ({ navigation, route }) => {
         // initialRouteName={initialTab || osList[0]?.os_name || 'Default'}
         initialRouteName={initialTab || catList[0]?.category_name || 'Default'}
         screenOptions={{
-          tabBarLabelStyle: {
-            fontSize: RF(1.6), // responsive 12–14
-            fontWeight: '500',
+          tabBarScrollEnabled: true,
+
+          tabBarItemStyle: {
+            width: responsiveWidth(25),
+            paddingHorizontal: responsiveWidth(2), // 👈 width control
           },
-          tabBarActiveTintColor: '#2E8BFF',
-          tabBarInactiveTintColor: '#aaa',
+
+          tabBarLabelStyle: {
+            fontSize: responsiveFontSize(1.5),
+            paddingHorizontal: 0, // 👈 extra padding remove
+          },
 
           tabBarIndicatorStyle: {
-            backgroundColor: '#2E8BFF',
-            height: verticalScale(2),
+            backgroundColor: '#478F4E',
+            height: responsiveHeight(0.3),
           },
-          lazy: true,
+
+          tabBarStyle: {
+            height: responsiveHeight(4.8),
+          },
         }}
       >
         {catList.map(tab => (
@@ -158,7 +171,7 @@ const RecentlyAddedTab = ({ navigation, route }) => {
           />
         ))}
       </Tab.Navigator>
-    </SafeAreaView>
+    </View>
   );
 };
 

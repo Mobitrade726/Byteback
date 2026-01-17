@@ -2635,37 +2635,34 @@ const styles = StyleSheet.create({
     height: width * 0.3,
   },
 
-  // Swiper / Hero
-  // swiper: {height: verticalScale(220), borderWidth: 1},
+   swiper: {
+    height: moderateScale(150),
+    // marginTop: moderateScale(5),
+  },
   // card_Top: {
-  //   width: width * 0.5,
-  //   marginHorizontal: scale(20),
-  //   height: verticalScale(200),
-  //   borderRadius: moderateScale(16),
+  //   width: width,
+  //   // marginHorizontal: moderateScale(20),
+  //   height: moderateScale(150),
+  //   // borderRadius: moderateScale(16),
   //   overflow: 'hidden',
   //   alignSelf: 'center',
   // },
-
-  swiper: {
-    height: moderateScale(200),
-    // marginTop: moderateScale(5),
-  },
-  card_Top: {
-    width: width,
-    marginHorizontal: moderateScale(20),
-    height: moderateScale(200),
-    // borderRadius: moderateScale(16),
-    overflow: 'hidden',
-    alignSelf: 'center',
-  },
   image1: {
     resizeMode: 'stretch',
     // borderRadius: 16,
   },
 
-  textContainer: { flex: 1 },
-  titleT: { fontSize: moderateScale(12), color: '#fff' },
-  subtitleT: { fontSize: moderateScale(14), color: '#fff', fontWeight: '600' },
+
+  card_Top: {
+    width: width,
+    height: moderateScale(150),
+    overflow: 'hidden',
+    alignSelf: 'center',
+  },
+
+  textContainer: { flex: 1, justifyContent:'center', },
+  titleT: { fontSize: moderateScale(12), color: '#fff',  fontWeight: '600', marginLeft:10 },
+  subtitleT: { fontSize: moderateScale(12), color: '#fff', fontWeight: '600', marginLeft:10},
   dot: {
     backgroundColor: '#aaa',
     width: scale(6),

@@ -4,7 +4,7 @@
 //   Text,
 //   TextInput,
 //   TouchableOpacity,
-//   SafeAreaView,
+//   View,
 //   StyleSheet,
 //   Alert,
 // } from 'react-native';
@@ -74,7 +74,7 @@
 //   };
 
 //   return (
-//     <SafeAreaView style={styles.container}>
+//     <View style={styles.container}>
 //       {/* Header */}
 //       <View style={styles.header}>
 //         <TouchableOpacity
@@ -165,7 +165,7 @@
 //           {loading ? 'Saving...' : 'Save Password'}
 //         </Text>
 //       </TouchableOpacity>
-//     </SafeAreaView>
+//     </View>
 //   );
 // };
 
@@ -223,7 +223,6 @@ import {
   Text,
   TextInput,
   TouchableOpacity,
-  SafeAreaView,
   StyleSheet,
   Alert,
 } from 'react-native';
@@ -315,7 +314,7 @@ const ChangePassword = ({ navigation }) => {
   };
 
   return (
-    <SafeAreaView style={styles.container}>
+    <View style={styles.container}>
       <Header title="Change Password" navigation={navigation} showBack={true} />
 
       <View style={styles.bodyContainer}>
@@ -339,7 +338,7 @@ const ChangePassword = ({ navigation }) => {
             <TouchableOpacity onPress={toggleCurrent}>
               <Ionicons
                 name={showCurrent ? 'eye-off-outline' : 'eye-outline'}
-                size={scale(22)}
+                size={scale(18)}
                 color="#777"
               />
             </TouchableOpacity>
@@ -359,7 +358,7 @@ const ChangePassword = ({ navigation }) => {
             <TouchableOpacity onPress={toggleNew}>
               <Ionicons
                 name={showNew ? 'eye-off-outline' : 'eye-outline'}
-                size={scale(22)}
+                size={scale(18)}
                 color="#777"
               />
             </TouchableOpacity>
@@ -379,24 +378,24 @@ const ChangePassword = ({ navigation }) => {
             <TouchableOpacity onPress={toggleConfirm}>
               <Ionicons
                 name={showConfirm ? 'eye-off-outline' : 'eye-outline'}
-                size={scale(22)}
+                size={scale(18)}
                 color="#777"
               />
             </TouchableOpacity>
           </View>
+
+          <TouchableOpacity
+            style={[styles.saveButton, loading && { opacity: 0.5 }]}
+            onPress={handleChangePassword}
+            disabled={loading}
+          >
+            <Text style={styles.saveText}>
+              {loading ? 'Saving...' : 'Save Password'}
+            </Text>
+          </TouchableOpacity>
         </View>
       </View>
-
-      <TouchableOpacity
-        style={[styles.saveButton, loading && { opacity: 0.5 }]}
-        onPress={handleChangePassword}
-        disabled={loading}
-      >
-        <Text style={styles.saveText}>
-          {loading ? 'Saving...' : 'Save Password'}
-        </Text>
-      </TouchableOpacity>
-    </SafeAreaView>
+    </View>
   );
 };
 
@@ -415,27 +414,25 @@ const styles = StyleSheet.create({
   },
 
   subtitle: {
-    fontSize: RF(2),
+    fontSize: RF(1.5),
     color: '#555',
-    marginBottom: RH(2.2),
+    marginBottom: RH(1),
     fontWeight: '400',
   },
 
   /* Card Box */
   cardBox: {
     backgroundColor: '#FFFFFF',
-    borderRadius: moderateScale(16),
+    borderRadius: moderateScale(8),
     padding: RW(4),
-    paddingVertical: RH(3),
+    // paddingVertical: RH(3),
     shadowColor: '#000',
-    shadowOpacity: 0.08,
-    shadowOffset: { width: 0, height: 3 },
-    shadowRadius: 10,
-    elevation: 4,
+    borderWidth: 1,
+    borderColor: '#f1f1f1',
   },
 
   label: {
-    fontSize: RF(1.9),
+    fontSize: RF(1.5),
     color: '#111',
     marginBottom: RH(0.8),
     marginTop: RH(1),
@@ -446,36 +443,29 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     backgroundColor: '#F3F4F6',
-    borderRadius: moderateScale(12),
+    borderRadius: moderateScale(5),
     paddingHorizontal: RW(3),
-    paddingVertical: RH(1.4),
+    // paddingVertical: RH(1.4),
     marginBottom: RH(1.5),
   },
 
   input: {
     flex: 1,
-    fontSize: RF(1.9),
+    fontSize: RF(1.5),
     color: '#111',
   },
 
   saveButton: {
-    backgroundColor: '#0A8FDC',
-    paddingVertical: RH(2),
-    borderRadius: moderateScale(14),
+    backgroundColor: '#478F4E',
+    borderRadius: moderateScale(5),
     alignItems: 'center',
     marginHorizontal: RW(5),
-    marginBottom: RH(5),
-    shadowColor: '#0A8FDC',
-    shadowOpacity: 0.3,
-    shadowOffset: { width: 0, height: 4 },
-    shadowRadius: 10,
-    elevation: 5,
+    padding: moderateScale(10), width: RW(50), alignSelf:'center'
   },
 
   saveText: {
     color: '#fff',
-    fontSize: RF(2),
+    fontSize: RF(1.5),
     fontWeight: '600',
-    letterSpacing: 0.5,
   },
 });

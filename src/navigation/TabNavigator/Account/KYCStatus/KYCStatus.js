@@ -2,7 +2,6 @@ import React, { useEffect, useState } from 'react';
 import {
   View,
   Text,
-  SafeAreaView,
   StyleSheet,
   ScrollView,
   TouchableOpacity,
@@ -143,7 +142,7 @@ const KycStatusScreen = ({ navigation }) => {
   );
 
   return (
-    <SafeAreaView style={styles.safe}>
+    <View style={styles.safe}>
       <Header title="KYC Status" navigation={navigation} showBack={true} />
       <ScrollView contentContainerStyle={styles.scroll}>
         {/* Banner */}
@@ -275,7 +274,7 @@ const KycStatusScreen = ({ navigation }) => {
           </>
         )}
       </ScrollView>
-    </SafeAreaView>
+    </View>
   );
 };
 

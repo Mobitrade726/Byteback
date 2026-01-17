@@ -7,7 +7,6 @@ import {
   StyleSheet,
   TouchableOpacity,
   FlatList,
-  SafeAreaView,
   Modal,
   Dimensions,
 } from 'react-native';
@@ -16,7 +15,7 @@ import { useNavigation, useRoute } from '@react-navigation/native';
 import Header from '../../../constants/Header';
 import {
   addToWishlistAPI,
-  removeFromWishlistAPI,
+  removeFromWishlistAPI, fetchWishlist
 } from '../../../redux/slices/wishlistSlice';
 import {
   fetchProductList,
@@ -30,9 +29,11 @@ import {
   responsiveHeight as RH,
   responsiveWidth as RW,
   responsiveFontSize as RF,
+  responsiveHeight,
 } from 'react-native-responsive-dimensions';
 import { ProductCardStyles } from '../../../constants/ProductCardStyles';
 import Loader from '../../../constants/Loader';
+import { FilterModalStyles_All } from '../../../constants/FilterModalStyles_Search';
 
 const { width } = Dimensions.get('window');
 
@@ -47,6 +48,8 @@ const Cat_OS_Product = ({}) => {
   const { productData, filterdata, loading } = useSelector(
     state => state.product,
   );
+  console.log('productData------------------->', productData);
+
   // state
   const [applyselectedfilters, ApplyselectedFilters] = useState();
   const [filteredProduct, setFilteredProducts] = useState([]);
@@ -58,11 +61,21 @@ const Cat_OS_Product = ({}) => {
   const [selectedTab, setSelectedTab] = useState('brands');
   const [selectedBrands, setSelectedBrands] = useState([]);
   const [selectedColors, setSelectedColors] = useState([]);
-  const [selectedGrade, setSelectedGrade] = useState(null);
+  const [selectedGrades, setSelectedGrades] = useState([]);
+  const [selectedVariant, setSelectedVariant] = useState(null);
+
+  const toggleGrade = gradeNumber => {
+    setSelectedGrades(prev =>
+      prev.includes(gradeNumber)
+        ? prev.filter(g => g !== gradeNumber)
+        : [...prev, gradeNumber],
+    );
+  };
 
   useEffect(() => {
     dispatch(fetchProductList());
     dispatch(fetchFilterData(catId));
+    dispatch(fetchWishlist(catId));
   }, [dispatch]);
 
   useEffect(() => {
@@ -124,10 +137,9 @@ const Cat_OS_Product = ({}) => {
       }
 
       // grade (supports either object or primitive)
-      if (applyselectedfilters.grade) {
-        const targetGrade =
-          applyselectedfilters.grade.grade_number ?? applyselectedfilters.grade;
-        if (String(item.grade_number) !== String(targetGrade)) return false;
+      if (applyselectedfilters.grade?.length > 0) {
+        if (!applyselectedfilters.grade.includes(item.grade_number))
+          return false;
       }
 
       // ram (compare by id or primitive)
@@ -180,23 +192,19 @@ const Cat_OS_Product = ({}) => {
     { key: 'specs', label: 'Specific', icon: 'document-text-outline' },
   ];
 
-  const getTotalSelected = () => {
-    return [selectedRam, selectedStorage].filter(Boolean).length;
-  };
-
   const renderRamOption = (item, selectedItem, setSelectedItem) => (
     <TouchableOpacity
       key={item}
       style={[
-        styles.optionButton,
-        selectedItem === item && styles.selectedButton,
+        FilterModalStyles_All.optionButton,
+        selectedItem === item && FilterModalStyles_All.selectedButton,
       ]}
       onPress={() => setSelectedItem(item)}
     >
       <Text
         style={[
-          styles.optionText,
-          selectedItem === item && styles.selectedText,
+          FilterModalStyles_All.optionText,
+          selectedItem === item && FilterModalStyles_All.selectedText,
         ]}
       >
         {item?.ram_name}
@@ -207,15 +215,15 @@ const Cat_OS_Product = ({}) => {
     <TouchableOpacity
       key={item}
       style={[
-        styles.optionButton,
-        selectedItem === item && styles.selectedButton,
+        FilterModalStyles_All.optionButton,
+        selectedItem === item && FilterModalStyles_All.selectedButton,
       ]}
       onPress={() => setSelectedItem(item)}
     >
       <Text
         style={[
-          styles.optionText,
-          selectedItem === item && styles.selectedText,
+          FilterModalStyles_All.optionText,
+          selectedItem === item && FilterModalStyles_All.selectedText,
         ]}
       >
         {item?.rom_name}
@@ -224,24 +232,25 @@ const Cat_OS_Product = ({}) => {
   );
 
   const handleApply = () => {
-    setShowSortModal(false);
-    setFilterSortModal(false);
-    // Combine all selected filters into an object
     const selectedFilters = {
       brands: selectedBrands,
       colors: selectedColors,
-      grade: selectedGrade,
+      grade: selectedGrades,
       ram: selectedRam,
       storage: selectedStorage,
     };
     ApplyselectedFilters(selectedFilters);
+    setFilterSortModal(false);
+    setShowSortModal(false);
   };
+
   const handleReset = () => {
     setSelectedBrands([]);
     setSelectedColors([]);
-    setSelectedGrade(null);
+    setSelectedGrades([]);
     setSelectedRam(null);
     setSelectedStorage(null);
+    setSelectedVariant(null);
     ApplyselectedFilters(null);
   };
   const toggleBrand = brand => {
@@ -261,19 +270,23 @@ const Cat_OS_Product = ({}) => {
     return (
       <TouchableOpacity
         onPress={() => toggleColor(item.color_name)}
-        style={[styles.colorItem_c, isSelected && styles.selectedWrapper_c]}
+        style={[
+          FilterModalStyles_All.colorBox,
+          isSelected && FilterModalStyles_All.selectedWrapper_c,
+        ]}
       >
-        <View style={styles.colorCircleWrapper_c}>
-          <View
-            style={[
-              styles.colorCircle_c,
-              { backgroundColor: item.hex },
-              isSelected && styles.colorCircleSelected_c,
-            ]}
-          />
-        </View>
+        <View
+          style={[
+            FilterModalStyles_All.colorCircle_c,
+            { backgroundColor: item.hex },
+            isSelected && FilterModalStyles_All.colorCircleSelected_c,
+          ]}
+        />
         <Text
-          style={[styles.colorLabel_c, { color: isSelected ? '#000' : '#555' }]}
+          style={[
+            FilterModalStyles_All.colorLabel_c,
+            { color: isSelected ? '#000' : '#555' },
+          ]}
         >
           {item.color_name}
         </Text>
@@ -285,85 +298,72 @@ const Cat_OS_Product = ({}) => {
     switch (selectedTab) {
       case 'brands':
         return (
-          <View style={styles.rightPane}>
-            <View style={styles.rightHeader}>
-              <Text style={styles.rightTitle}>Brands</Text>
-              <Text style={styles.selectedCount}>
-                {selectedBrands.length} selected
-              </Text>
-            </View>
-            <FlatList
-              key={`cat-brands`}
-              data={BRANDS}
-              keyExtractor={(item, index) =>
-                item.name?.toString() ?? index.toString()
-              }
-              renderItem={({ item }) => {
-                const selected = selectedBrands.includes(item.brand_name);
-                return (
-                  <TouchableOpacity
-                    onPress={() => toggleBrand(item.brand_name)}
+          <FlatList
+            showsVerticalScrollIndicator={false}
+            key={`cat-brands`}
+            data={BRANDS}
+            keyExtractor={(item, index) =>
+              item.name?.toString() ?? index.toString()
+            }
+            renderItem={({ item }) => {
+              const selected = selectedBrands.includes(item.brand_name);
+              return (
+                <TouchableOpacity
+                  onPress={() => toggleBrand(item.brand_name)}
+                  style={[
+                    FilterModalStyles_All.brandItem,
+                    selected && FilterModalStyles_All.brandItemSelected,
+                  ]}
+                >
+                  <Text
                     style={[
-                      styles.brandItem,
-                      selected && styles.brandItemSelected,
+                      FilterModalStyles_All.brandText,
+                      selected && { color: '#fff' },
                     ]}
                   >
-                    <Text
-                      style={[styles.brandText, selected && { color: '#fff' }]}
-                    >
-                      {item.brand_name}
-                    </Text>
-                    {/* <Text
-                        style={[styles.itemCount, selected && {color: '#fff'}]}>
-                        {item.count} Items
-                      </Text> */}
-                  </TouchableOpacity>
-                );
-              }}
-              ItemSeparatorComponent={() => <View style={styles.separator} />}
-            />
-          </View>
+                    {item.brand_name}
+                  </Text>
+                </TouchableOpacity>
+              );
+            }}
+          />
         );
 
       case 'color':
         return (
-          <View>
-            <View style={styles.headerRow_C}>
-              <Text style={styles.title_c}>Color</Text>
-              <Text style={styles.selectedCount_c}>
-                {selectedColors.length} selected
-              </Text>
-            </View>
-
-            <FlatList
-              key={`cat-color`}
-              data={COLORS}
-              keyExtractor={item => item.name}
-              numColumns={4}
-              columnWrapperStyle={styles.row}
-              contentContainerStyle={{ paddingTop: 10 }}
-              renderItem={renderItemColor}
-            />
-          </View>
+          <FlatList
+            key={`cat-color`}
+            data={COLORS}
+            keyExtractor={(item, index) =>
+              item?.color_id ? `color-${item.color_id}` : `color-index-${index}`
+            }
+            numColumns={3}
+            showsVerticalScrollIndicator={false}
+            columnWrapperStyle={{
+              justifyContent: 'space-between',
+            }}
+            contentContainerStyle={{
+              paddingHorizontal: 10,
+              paddingTop: 10,
+              flex: 1,
+              marginBottom: responsiveHeight(10),
+            }}
+            renderItem={renderItemColor}
+          />
         );
 
       case 'grade':
         return (
-          <View style={styles.rightPane}>
-            <View style={styles.header_panel}>
-              <Text style={styles.title_c}>Grade</Text>
-              <Text style={styles.title_c}>
-                {selectedGrade ? '1 selected' : 'None selected'}
-              </Text>
-            </View>
+          <>
             <FlatList
               key={`cat-grade`}
               data={grades}
-              keyExtractor={item => item}
+              keyExtractor={(item, index) =>
+                item.name?.toString() ?? index.toString()
+              }
               renderItem={renderItemGrade}
-              contentContainerStyle={styles.listContainer}
             />
-          </View>
+          </>
         );
 
       case 'specs':
@@ -371,25 +371,19 @@ const Cat_OS_Product = ({}) => {
         const isLaptop = catName === 'Laptop';
 
         return (
-          <View style={styles.rightPane}>
-            <View style={styles.header_panel}>
-              <Text style={styles.title_c}>Specification</Text>
-              <Text style={styles.title_c}>{getTotalSelected()} selected</Text>
-            </View>
-
-            {/* ✅ Mobile category -> RAM + Storage */}
+          <>
             {isLaptop && (
               <>
-                <ScrollView>
-                  <Text style={styles.subHeading}>RAM</Text>
-                  <View style={styles.optionContainer}>
+                <ScrollView showsVerticalScrollIndicator={false}>
+                  <Text style={FilterModalStyles_All.subHeading}>RAM</Text>
+                  <View style={FilterModalStyles_All.optionContainer}>
                     {ramOptions.map(item =>
                       renderRamOption(item, selectedRam, setSelectedRam),
                     )}
                   </View>
 
-                  <Text style={styles.subHeading}>Storage</Text>
-                  <View style={styles.optionContainer}>
+                  <Text style={FilterModalStyles_All.subHeading}>Storage</Text>
+                  <View style={FilterModalStyles_All.optionContainer}>
                     {storageOptions.map(item =>
                       renderStorageOption(
                         item,
@@ -405,24 +399,33 @@ const Cat_OS_Product = ({}) => {
             {/* ✅ Laptop category -> Variants */}
             {isMobile && (
               <>
-                <ScrollView>
-                  <Text style={styles.subHeading}>Variants</Text>
-                  <View style={styles.optionContainer}>
-                    {Varients.map((item, index) => (
-                      <TouchableOpacity
-                        key={index}
-                        style={styles.optionButton}
-                        // yahan baad me selectedVariant ka state bana ke use kar sakte ho
-                        onPress={() => {
-                          // TODO: yahan apna variant select logic lagana
-                          console.log('Selected Variant: ', item);
-                        }}
-                      >
-                        <Text style={styles.optionText}>
-                          {item?.variant_name || item?.name || 'Variant'}
-                        </Text>
-                      </TouchableOpacity>
-                    ))}
+                <ScrollView showsVerticalScrollIndicator={false}>
+                  <Text style={FilterModalStyles_All.subHeading}>Variants</Text>
+
+                  <View style={FilterModalStyles_All.optionContainer}>
+                    {Varients.map((item, index) => {
+                      const isSelected = selectedVariant === item?.id;
+
+                      return (
+                        <TouchableOpacity
+                          key={item?.id || index}
+                          style={[
+                            FilterModalStyles_All.optionButton,
+                            isSelected && FilterModalStyles_All.selectedButton,
+                          ]}
+                          onPress={() => setSelectedVariant(item?.id)}
+                        >
+                          <Text
+                            style={[
+                              FilterModalStyles_All.optionText,
+                              isSelected && { color: '#fff' },
+                            ]}
+                          >
+                            {item?.variant_name || item?.name}
+                          </Text>
+                        </TouchableOpacity>
+                      );
+                    })}
                   </View>
                 </ScrollView>
               </>
@@ -434,7 +437,7 @@ const Cat_OS_Product = ({}) => {
                 No specifications available for this category.
               </Text>
             )}
-          </View>
+          </>
         );
 
       default:
@@ -446,23 +449,29 @@ const Cat_OS_Product = ({}) => {
     }
   };
 
-  const handleSelect = grade => {
-    setSelectedGrade(grade === selectedGrade ? null : grade);
-  };
-
   const renderItemGrade = ({ item }) => {
-    const isSelected = selectedGrade === item?.grade_number;
+    const gradeNumber = item?.grade_number;
+    const isSelected = selectedGrades.includes(gradeNumber);
+
     return (
-      <TouchableOpacity
-        onPress={() => handleSelect(item)}
-        style={[styles.gradeButton, isSelected && styles.gradeButtonSelected]}
-      >
-        <Text
-          style={[styles.gradeText, isSelected && styles.gradeTextSelected]}
+      <>
+        <TouchableOpacity
+          onPress={() => toggleGrade(gradeNumber)}
+          style={[
+            FilterModalStyles_All.brandItem,
+            isSelected && FilterModalStyles_All.brandItemSelected,
+          ]}
         >
-          {item?.grade_number || '--'}
-        </Text>
-      </TouchableOpacity>
+          <Text
+            style={[
+              FilterModalStyles_All.brandText,
+              isSelected && { color: '#fff' },
+            ]}
+          >
+            {gradeNumber || '--'}
+          </Text>
+        </TouchableOpacity>
+      </>
     );
   };
 
@@ -492,14 +501,22 @@ const Cat_OS_Product = ({}) => {
         {/* Image + Heart */}
         <View style={ProductCardStyles.imageContainerD}>
           {item && (
-            <Text style={ProductCardStyles.refurbishedLabelD}>
-              PRE-OWNED
-            </Text>
+            <Text style={ProductCardStyles.refurbishedLabelD}>PRE-OWNED</Text>
           )}
 
-          <Image
+          {/* <Image
             source={{ uri: item.feature_image }}
             style={ProductCardStyles.imageD}
+          /> */}
+
+          <Image
+            source={
+              item?.feature_image
+                ? { uri: item.feature_image }
+                : require('../../../../assets/images/empty.jpeg')
+            }
+            style={ProductCardStyles.imageD}
+            resizeMode='contain'
           />
 
           {/* ❤️ Wishlist Button */}
@@ -530,8 +547,9 @@ const Cat_OS_Product = ({}) => {
       </TouchableOpacity>
     );
   };
+
   return (
-    <SafeAreaView style={styles.container}>
+    <View style={styles.container}>
       <Header title={osName} navigation={navigation} showBack={true} />
       <View style={styles.headerButtons}>
         <TouchableOpacity
@@ -587,7 +605,7 @@ const Cat_OS_Product = ({}) => {
 
       {/* Sort Modal */}
       <Modal visible={showSortModal} transparent animationType="slide">
-        <SafeAreaView style={styles.modalContainer}>
+        <View style={styles.modalContainer}>
           <View style={{ margin: 20, flex: 1 }}>
             {/* Modal Header */}
             <View style={styles.modalHeader}>
@@ -628,29 +646,30 @@ const Cat_OS_Product = ({}) => {
               <Text style={styles.applyText}>Apply</Text>
             </TouchableOpacity>
           </View>
-        </SafeAreaView>
+        </View>
       </Modal>
 
       {/* Filter Modal */}
       <Modal visible={showFilterModal} animationType="slide" transparent>
-        <SafeAreaView style={styles.modalContainer}>
+        <View style={FilterModalStyles_All.modalContainer}>
           {/* Header */}
-          <View style={styles.header}>
+          <View style={FilterModalStyles_All.header1}>
             <TouchableOpacity onPress={() => setFilterSortModal(false)}>
               <Ionicons name="close" size={24} />
             </TouchableOpacity>
-            <Text style={styles.headerTitle}>Filter</Text>
+            <Text style={FilterModalStyles_All.headerTitle1}>Filter</Text>
             <Ionicons name="options-outline" size={20} />
           </View>
 
-          <View style={styles.body}>
-            <View style={styles.leftPane}>
+          <View style={FilterModalStyles_All.body}>
+            <View style={FilterModalStyles_All.leftPane}>
               {FILTER_TABS.map(tab => (
                 <TouchableOpacity
                   key={tab.key}
                   style={[
-                    styles.tabItem,
-                    selectedTab === tab.key && styles.tabItemSelected,
+                    FilterModalStyles_All.tabItem,
+                    selectedTab === tab.key &&
+                      FilterModalStyles_All.tabItemSelected,
                   ]}
                   onPress={() => setSelectedTab(tab.key)}
                 >
@@ -661,7 +680,7 @@ const Cat_OS_Product = ({}) => {
                   />
                   <Text
                     style={[
-                      styles.tabLabel,
+                      FilterModalStyles_All.tabLabel,
                       selectedTab === tab.key && { fontWeight: '600' },
                     ]}
                   >
@@ -670,23 +689,30 @@ const Cat_OS_Product = ({}) => {
                 </TouchableOpacity>
               ))}
             </View>
-
-            {/* Right Pane */}
-            {renderRightPane()}
+            <ScrollView showsVerticalScrollIndicator={false}>
+              {/* Right Pane */}
+              {renderRightPane()}
+            </ScrollView>
           </View>
 
           {/* Footer */}
-          <View style={styles.footer}>
-            <TouchableOpacity style={styles.resetBtn} onPress={handleReset}>
-              <Text style={styles.resetText}>Reset</Text>
+          <View style={FilterModalStyles_All.footer}>
+            <TouchableOpacity
+              style={FilterModalStyles_All.resetBtn}
+              onPress={handleReset}
+            >
+              <Text style={FilterModalStyles_All.resetText}>Reset</Text>
             </TouchableOpacity>
-            <TouchableOpacity style={styles.applyBtn} onPress={handleApply}>
-              <Text style={styles.applyText}>Apply</Text>
+            <TouchableOpacity
+              style={FilterModalStyles_All.applyBtn}
+              onPress={handleApply}
+            >
+              <Text style={FilterModalStyles_All.applyText}>Apply</Text>
             </TouchableOpacity>
           </View>
-        </SafeAreaView>
+        </View>
       </Modal>
-    </SafeAreaView>
+    </View>
   );
 };
 

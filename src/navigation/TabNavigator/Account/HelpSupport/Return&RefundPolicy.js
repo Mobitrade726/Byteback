@@ -2,7 +2,6 @@ import React from 'react';
 import {
   View,
   Text,
-  SafeAreaView,
   ScrollView,
   StyleSheet,
   TouchableOpacity,
@@ -11,7 +10,7 @@ import Ionicons from 'react-native-vector-icons/Ionicons';
 
 const ReturnRefundPolicy = ({navigation}) => {
   return (
-    <SafeAreaView style={styles.container}>
+    <View style={styles.container}>
       {/* Header */}
 
       <Header
@@ -98,7 +97,7 @@ const ReturnRefundPolicy = ({navigation}) => {
           </Text>
         </View>
       </ScrollView>
-    </SafeAreaView>
+    </View>
   );
 };
 

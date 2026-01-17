@@ -6,7 +6,6 @@ import {
   StyleSheet,
   TouchableOpacity,
   FlatList,
-  SafeAreaView,
   Modal,
   ActivityIndicator,
   ImageBackground,
@@ -161,13 +160,39 @@ const CatPage = ({ catName, osName, catId }) => {
     },
   ];
 
+  console.log('categoryOSList------------------>', categoryOSList);
+
   return (
-    <SafeAreaView style={styles.container}>
-      <ScrollView contentContainerStyle={{ paddingBottom: moderateScale(40) }} showsVerticalScrollIndicator={false}>
-        <View style={styles.osContainer}>
-          {categoryOSList.length > 0
-            ? categoryOSList.map((item, index) => (
+    <View style={styles.container}>
+      <ScrollView
+        contentContainerStyle={{ paddingBottom: moderateScale(40) }}
+        showsVerticalScrollIndicator={false}
+      >
+        {categoryOSList.length > 0 ? (
+          <Section
+            title="Shop by operating system"
+            onPress={() => navigation.navigate('ShopbybrandsTab')}
+          >
+            <FlatList
+              data={categoryOSList}
+              keyExtractor={item => item.id}
+              horizontal={true}
+              showsHorizontalScrollIndicator={false}
+              renderItem={({ item }) => (
                 <TouchableOpacity
+                  style={{
+                    // width: cardSize,
+                    margin: moderateScale(4),
+                    // alignItems: 'center',
+                    width: moderateScale(150),
+                    marginHorizontal: moderateScale(10),
+                    alignItems: 'center',
+                    backgroundColor: '#fff',
+                    borderRadius: moderateScale(20),
+                    paddingBottom: moderateScale(12),
+                    borderWidth: 1,
+                    borderColor: '#ccc',
+                  }}
                   onPress={() =>
                     navigation.navigate('Cat_OS_Product', {
                       osName: item.os_name,
@@ -175,31 +200,143 @@ const CatPage = ({ catName, osName, catId }) => {
                       catName: catName,
                     })
                   }
-                  key={index}
-                  style={styles.osCard}
                 >
-                  <ImageBackground
-                    source={{ uri: item.image_url }}
-                    style={styles.osImage}
-                    imageStyle={styles.osImageStyle}
+
+                  <View
+                    style={{
+                      width: '100%',
+                      height: cardSize,
+                      borderTopLeftRadius: moderateScale(20),
+                      borderTopRightRadius: moderateScale(20),
+                      overflow: 'hidden', // 🔴 MOST IMPORTANT
+                    }}
                   >
-                    <LinearGradient
-                      colors={[
-                        'rgba(0,0,0,0.6)',
-                        'rgba(0,0,0,0.2)',
-                        'transparent',
-                      ]}
-                      style={styles.osGradient}
+                    <ImageBackground
+                      source={{ uri: item.image_url }}
+                      style={{
+                        width: '100%',
+                        height: '100%',
+                        justifyContent: 'flex-end',
+                        alignItems: 'center',
+                      }}
+                      resizeMode='contain' // 🔴 REQUIRED
                     >
-                      <Text style={styles.osTitle}>{item.os_name}</Text>
-                    </LinearGradient>
-                  </ImageBackground>
+                      <LinearGradient
+                        colors={['transparent', 'rgba(0,0,0,0.45)']}
+                        style={{
+                          position: 'absolute',
+                          bottom: 0,
+                          width: '100%',
+                          height: '45%',
+                        }}
+                      />
+                    </ImageBackground>
+                  </View>
+
+                  {/* BRAND NAME BELOW IMAGE */}
+                  <Text
+                    style={{
+                      // marginTop: moderateScale(6),
+                      // fontSize: moderateScale(11),
+                      // fontWeight: '600',
+                      // textAlign: 'center',
+                      // color: '#000',
+                      marginTop: moderateScale(10),
+                      fontSize: moderateScale(14),
+                      fontWeight: '700',
+                      color: '#333',
+                      textAlign: 'center',
+                    }}
+                    // numberOfLines={1}
+                  >
+                    {item.os_name}
+                  </Text>
                 </TouchableOpacity>
-              ))
-            : null}
-        </View>
+              )}
+              scrollEnabled={true}
+            />
+          </Section>
+        ) : null}
         {categoryOSList?.length > 0 ? (
           <>
+            <View
+              style={{
+                backgroundColor: '#f1f1f1',
+                marginTop: moderateScale(20),
+                paddingVertical: 15,
+              }}
+            >
+              <Text
+                style={{
+                  fontSize: moderateScale(20),
+                  marginVertical: moderateScale(10),
+                  marginHorizontal: moderateScale(15),
+                  fontWeight: '600',
+                  color: '#222',
+                }}
+              >
+                Shop by Budget
+              </Text>
+              {/* <View style={styles.grid}>
+              {budgetOptions.map((item, index) => (
+                <TouchableOpacity
+                  onPress={() =>
+                    navigation.navigate('ShopByBudget', {
+                      osName: osName,
+                      catName: catName,
+                      priceId: item.id,
+                    })
+                  }
+                  key={index}
+                  style={styles.budgetCard}
+                >
+                  <View style={styles.imageWrapper}>
+                    <Image
+                      source={{ uri: item.image }}
+                      style={styles.budgetImage}
+                    />
+                    <Text style={styles.budgetLabel}>{item.label}</Text>
+                  </View>
+                </TouchableOpacity>
+              ))}
+            </View> */}
+              <View style={styles.grid}>
+                {budgetOptions.map((item, index) => (
+                  <TouchableOpacity
+                    onPress={() =>
+                      navigation.navigate('ShopByBudget', {
+                        osName: osName,
+                        catName: catName,
+                        priceId: item.id,
+                        rangeLabel: item.label,
+                      })
+                    }
+                    key={index}
+                    style={styles.budgetCard}
+                    activeOpacity={0.8}
+                  >
+                    <View style={styles.cardContent}>
+                      <LinearGradient
+                        colors={['#3d8e2a', '#b4ffa5']}
+                        start={{ x: 0, y: 0 }}
+                        end={{ x: 1, y: 1 }}
+                        style={styles.gradientCircle}
+                      >
+                        <Ionicons
+                          name="pricetag-outline"
+                          size={28}
+                          color="#fff"
+                        />
+                      </LinearGradient>
+
+                      <Text style={styles.budgetTitle}>{item.label}</Text>
+
+                      <Text style={styles.budgetSubText}>Tap to Explore</Text>
+                    </View>
+                  </TouchableOpacity>
+                ))}
+              </View>
+            </View>
             <Section
               title="Shop by brands"
               onPress={() => navigation.navigate('ShopbybrandsTab')}
@@ -282,89 +419,9 @@ const CatPage = ({ catName, osName, catId }) => {
                     </Text>
                   </TouchableOpacity>
                 )}
-                scrollEnabled={false}
+                scrollEnabled={true}
               />
             </Section>
-
-            {/* Shop by Budget */}
-            <View
-              style={{
-                backgroundColor: '#f1f1f1',
-                marginTop: moderateScale(20),
-                paddingVertical: 15,
-              }}
-            >
-              <Text
-                style={{
-                  fontSize: moderateScale(20),
-                  marginVertical: moderateScale(10),
-                  marginHorizontal: moderateScale(15),
-                  fontWeight: '600',
-                  color: '#222',
-                }}
-              >
-                Shop by Budget
-              </Text>
-              {/* <View style={styles.grid}>
-              {budgetOptions.map((item, index) => (
-                <TouchableOpacity
-                  onPress={() =>
-                    navigation.navigate('ShopByBudget', {
-                      osName: osName,
-                      catName: catName,
-                      priceId: item.id,
-                    })
-                  }
-                  key={index}
-                  style={styles.budgetCard}
-                >
-                  <View style={styles.imageWrapper}>
-                    <Image
-                      source={{ uri: item.image }}
-                      style={styles.budgetImage}
-                    />
-                    <Text style={styles.budgetLabel}>{item.label}</Text>
-                  </View>
-                </TouchableOpacity>
-              ))}
-            </View> */}
-              <View style={styles.grid}>
-                {budgetOptions.map((item, index) => (
-                  <TouchableOpacity
-                    onPress={() =>
-                      navigation.navigate('ShopByBudget', {
-                        osName: osName,
-                        catName: catName,
-                        priceId: item.id,
-                        rangeLabel: item.label,
-                      })
-                    }
-                    key={index}
-                    style={styles.budgetCard}
-                    activeOpacity={0.8}
-                  >
-                    <View style={styles.cardContent}>
-                      <LinearGradient
-                        colors={['#3d8e2a', '#b4ffa5']}
-                        start={{ x: 0, y: 0 }}
-                        end={{ x: 1, y: 1 }}
-                        style={styles.gradientCircle}
-                      >
-                        <Ionicons
-                          name="pricetag-outline"
-                          size={28}
-                          color="#fff"
-                        />
-                      </LinearGradient>
-
-                      <Text style={styles.budgetTitle}>{item.label}</Text>
-
-                      <Text style={styles.budgetSubText}>Tap to Explore</Text>
-                    </View>
-                  </TouchableOpacity>
-                ))}
-              </View>
-            </View>
           </>
         ) : (
           <View
@@ -412,7 +469,7 @@ const CatPage = ({ catName, osName, catId }) => {
           </View>
         )}
       </ScrollView>
-    </SafeAreaView>
+    </View>
   );
 };
 
@@ -439,8 +496,7 @@ const styles = StyleSheet.create({
   },
   osContainer: {
     flexDirection: 'row',
-    marginTop: responsiveHeight(1),
-    marginHorizontal: moderateScale(10),
+    marginTop: responsiveHeight(0),
   },
 
   osCard: {

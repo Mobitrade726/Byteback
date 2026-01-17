@@ -3,7 +3,7 @@
 //   View,
 //   StyleSheet,
 //   TouchableOpacity,
-//   SafeAreaView,
+//   View,
 // } from 'react-native';
 // import {createMaterialTopTabNavigator} from '@react-navigation/material-top-tabs';
 // import Ionicons from 'react-native-vector-icons/Ionicons';
@@ -30,7 +30,7 @@
 //   };
 
 //   return (
-//     <SafeAreaView style={styles.container}>
+//     <View style={styles.container}>
 //       {/* Header */}
 
 //       <Header title="Shop by brands" navigation={navigation} showBack={true} />
@@ -56,7 +56,7 @@
 //           />
 //         ))}
 //       </Tab.Navigator>
-//     </SafeAreaView>
+//     </View>
 //   );
 // };
 
@@ -91,7 +91,6 @@ import {
   View,
   StyleSheet,
   TouchableOpacity,
-  SafeAreaView,
 } from 'react-native';
 import { createMaterialTopTabNavigator } from '@react-navigation/material-top-tabs';
 import Ionicons from 'react-native-vector-icons/Ionicons';
@@ -123,7 +122,7 @@ const ShopbybrandsTab = ({ navigation, route }) => {
   };
 
   return (
-    <SafeAreaView style={styles.container}>
+    <View style={styles.container}>
       {/* Header */}
       <Header
         title="Shop by brands"
@@ -134,22 +133,27 @@ const ShopbybrandsTab = ({ navigation, route }) => {
 
       <Tab.Navigator
         initialRouteName={initialTab || catList[0]?.category_name || 'Default'}
-        screenOptions={{
+         screenOptions={{
+          tabBarScrollEnabled: true,
+
+          tabBarItemStyle: {
+            width: responsiveWidth(25),
+            paddingHorizontal: responsiveWidth(2), // 👈 width control
+          },
+
           tabBarLabelStyle: {
-            fontSize: responsiveFontSize(1.6),
-            fontWeight: '600',
+            fontSize: responsiveFontSize(1.5),
+            paddingHorizontal: 0, // 👈 extra padding remove
           },
-          tabBarActiveTintColor: '#2E8BFF',
-          tabBarInactiveTintColor: '#888',
+
           tabBarIndicatorStyle: {
-            backgroundColor: '#2E8BFF',
-            height: verticalScale(3),
-            borderRadius: scale(10),
+            backgroundColor: '#478F4E',
+            height: responsiveHeight(0.3),
           },
+
           tabBarStyle: {
-            height: verticalScale(45),
+            height: responsiveHeight(4.8),
           },
-          lazy: true,
         }}
       >
         {catList.map(tab => (
@@ -165,7 +169,7 @@ const ShopbybrandsTab = ({ navigation, route }) => {
           />
         ))}
       </Tab.Navigator>
-    </SafeAreaView>
+    </View>
   );
 };
 

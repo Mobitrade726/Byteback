@@ -9,15 +9,15 @@ const { width } = Dimensions.get('window');
 import { scale, verticalScale, moderateScale } from 'react-native-size-matters';
 
 const ProductCardStyles = StyleSheet.create({
-  gradeBoxD: {
-    paddingVertical: verticalScale(2),
-    position: 'absolute',
-    marginTop: verticalScale(230),
-    alignSelf: 'center',
-    backgroundColor: '#fff',
-    width: '100%',
-    borderRadius: moderateScale(10),
-    borderWidth: scale(0.2),
+  cardD: {
+    width: width / 2.3,
+    borderRadius: moderateScale(8),
+    overflow: 'hidden',
+    shadowRadius: moderateScale(4),
+    marginHorizontal: moderateScale(5),
+    marginVertical: moderateScale(5),
+    borderWidth: moderateScale(1),
+    borderColor: '#ccc',
   },
 
   gradeTextD: {
@@ -28,33 +28,25 @@ const ProductCardStyles = StyleSheet.create({
   },
 
   productNameD: {
-    fontSize: responsiveFontSize(1.6),
-    fontWeight: 'bold',
-    marginTop: verticalScale(0),
-    marginHorizontal: scale(10),
+    fontSize: responsiveFontSize(1.5), // RF(1.4) ko RFValue use kar ke adjust kiya
+    fontWeight: '500',
     color: '#000',
+    marginHorizontal: scale(10),
   },
 
   colorTextD: {
-    fontSize: responsiveFontSize(1.5),
+    fontSize: responsiveFontSize(1.5), // RF(1.4) ko RFValue use kar ke adjust kiya
+    fontWeight: '500',
     color: '#000',
     marginHorizontal: scale(10),
-    marginTop: verticalScale(2),
-  },
-
-  priceRowD: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    marginHorizontal: scale(10),
-    marginTop: verticalScale(4),
-    marginBottom: verticalScale(5),
   },
 
   priceD: {
-    fontSize: responsiveFontSize(1.5),
-    fontWeight: 'bold',
+    fontSize: responsiveFontSize(1.5), // RF(1.4) ko RFValue use kar ke adjust kiya
+    fontWeight: '500',
     color: '#000',
-    marginRight: scale(6),
+    marginHorizontal: scale(10),
+    marginBottom: moderateScale(5)
   },
 
   refurbishedLabelD: {
@@ -77,28 +69,13 @@ const ProductCardStyles = StyleSheet.create({
     elevation: 2,
   },
 
-  imageContainerD: { position: 'relative' },
-
   imageD: {
     width: '100%',
-    height: responsiveHeight(10),
-    marginTop: moderateScale(5),
-    resizeMode: 'contain',
+    height: responsiveHeight(10), 
   },
 
   listContainerD: {
     padding: scale(10),
-  },
-
-  cardD: {
-    width: width / 2.3,
-    borderRadius: moderateScale(8),
-    overflow: 'hidden',
-    shadowRadius: moderateScale(4),
-    marginHorizontal: moderateScale(5),
-    marginVertical: moderateScale(5),
-    borderWidth: moderateScale(1),
-    borderColor: '#ccc',
   },
 });
 export { ProductCardStyles };

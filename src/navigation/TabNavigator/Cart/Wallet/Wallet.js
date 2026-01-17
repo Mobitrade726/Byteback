@@ -5,7 +5,6 @@ import {
   StyleSheet,
   TouchableOpacity,
   FlatList,
-  SafeAreaView,
 } from 'react-native';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
@@ -74,7 +73,7 @@ export default function Wallet({ navigation }) {
       <View style={styles.transactionRow}>
         <MaterialCommunityIcons
           name="cash-multiple"
-          size={24}
+          size={moderateScale(18)}
           color={iconColor}
           style={styles.transactionIcon}
         />
@@ -94,7 +93,7 @@ export default function Wallet({ navigation }) {
 
         <Ionicons
           name="checkmark-circle-outline"
-          size={moderateScale(22)}
+          size={moderateScale(18)}
           color={checkmarkColor}
         />
       </View>
@@ -102,7 +101,7 @@ export default function Wallet({ navigation }) {
   };
 
   return (
-    <SafeAreaView style={styles.container}>
+    <View style={styles.container}>
       <Header title="Wallet" navigation={navigation} showBack={true} />
 
       {/* Balance Card */}
@@ -133,7 +132,7 @@ export default function Wallet({ navigation }) {
 
       {/* Recent Transactions */}
       <Text style={styles.recentTitle}>Recent Transactions</Text>
-      <FlatList
+      <FlatList showsVerticalScrollIndicator={false}
         data={ledgerbalance}
         renderItem={renderTransaction}
         keyExtractor={(item, index) =>
@@ -205,7 +204,7 @@ export default function Wallet({ navigation }) {
           </View>
         }
       />
-    </SafeAreaView>
+    </View>
   );
 }
 import { scale, verticalScale, moderateScale } from 'react-native-size-matters';
@@ -214,7 +213,7 @@ import { responsiveFontSize as RF } from 'react-native-responsive-dimensions';
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#FAFEFC',
+    backgroundColor: '#fff',
   },
   header: {
     flexDirection: 'row',
@@ -236,55 +235,57 @@ const styles = StyleSheet.create({
     textAlign: 'center',
   },
   balanceCard: {
-    backgroundColor: '#F9F9F9',
-    padding: scale(20),
-    borderRadius: scale(12),
-    marginBottom: verticalScale(20),
-    borderWidth: 0.2,
+    backgroundColor: '#fff',
+    padding: scale(15),
+    borderRadius: scale(5),
+    borderWidth: 1,
     overflow: 'hidden',
-    shadowColor: '#000',
-    shadowOpacity: 0.1,
-    shadowOffset: { width: 0, height: 2 },
-    shadowRadius: scale(4),
-    elevation: 3,
-    marginVertical: verticalScale(10),
-    marginHorizontal: scale(15),
+    marginVertical: verticalScale(5),
+    marginHorizontal: scale(10), borderColor:"#f1f1f1"
   },
   balanceLabel: {
-    fontSize: RF(1.8),
+    fontSize: RF(1.5),
     color: 'gray',
   },
   balanceAmount: {
-    fontSize: RF(3.5),
+    fontSize: RF(2),
     fontWeight: 'bold',
-    marginVertical: verticalScale(10),
+    marginVertical: verticalScale(5),
   },
   buttonRow: {
-    flexDirection: 'row',
-    gap: scale(10),
+    gap: scale(1),
     marginBottom: verticalScale(10),
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
   },
   addMoneyBtn: {
     backgroundColor: 'green',
     paddingVertical: verticalScale(8),
-    paddingHorizontal: scale(40),
+    // paddingHorizontal: scale(10),
     borderRadius: scale(8),
+    flex: 1,
+    alignItems: 'center',
+    marginRight: 5,
   },
   addMoneyText: {
     color: '#fff',
     fontWeight: 'bold',
-    fontSize: RF(1.7),
+    fontSize: RF(1.5),
   },
   withdrawBtn: {
     backgroundColor: '#444',
     paddingVertical: verticalScale(8),
-    paddingHorizontal: scale(40),
+    // paddingHorizontal: scale(10),
     borderRadius: scale(8),
+    flex: 1,
+    alignItems: 'center',
+    marginLeft: 5,
   },
   withdrawText: {
     color: '#fff',
     fontWeight: 'bold',
-    fontSize: RF(1.7),
+    fontSize: RF(1.5),
   },
   allTransactionsBtn: {
     backgroundColor: '#222',
@@ -295,7 +296,7 @@ const styles = StyleSheet.create({
   allTransactionsText: {
     color: '#fff',
     fontWeight: 'bold',
-    fontSize: RF(1.7),
+    fontSize: RF(1.5),
     textAlign: 'center',
   },
   recentTitle: {
@@ -308,7 +309,7 @@ const styles = StyleSheet.create({
   transactionRow: {
     flexDirection: 'row',
     alignItems: 'center',
-    paddingVertical: verticalScale(12),
+    paddingVertical: verticalScale(5),
     borderBottomWidth: 1,
     borderBottomColor: '#eee',
     marginHorizontal: scale(15),
@@ -317,11 +318,11 @@ const styles = StyleSheet.create({
     marginRight: scale(10),
   },
   amount: {
-    fontSize: RF(2),
+    fontSize: RF(1.5),
     fontWeight: 'bold',
   },
   label: {
-    fontSize: RF(1.7),
+    fontSize: RF(1.5),
     color: '#000',
   },
   date: {

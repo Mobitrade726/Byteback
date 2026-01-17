@@ -4,13 +4,12 @@ import {
   Text,
   TouchableOpacity,
   StyleSheet,
-  SafeAreaView,
 } from 'react-native';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 
 const SubWatchList = ({navigation}) => {
   return (
-    <SafeAreaView style={styles.container}>
+    <View style={styles.container}>
       {/* Header */}
       <View style={styles.header}>
         <TouchableOpacity
@@ -29,7 +28,7 @@ const SubWatchList = ({navigation}) => {
       <TouchableOpacity style={styles.button}>
         <Text style={styles.buttonText}>Start Shopping</Text>
       </TouchableOpacity>
-    </SafeAreaView>
+    </View>
   );
 };
 

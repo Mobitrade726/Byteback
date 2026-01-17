@@ -4,8 +4,7 @@ import {
   Text,
   StyleSheet,
   FlatList,
-  TouchableOpacity,
-  SafeAreaView, Dimensions
+  TouchableOpacity, Dimensions
 } from 'react-native';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import Header from '../../../../constants/Header';
@@ -48,7 +47,7 @@ const TrackOrder = ({navigation, route}) => {
   );
 
   return (
-    <SafeAreaView style={styles.container}>
+    <View style={styles.container}>
       <Header
         title={`#${order_id_Number}`}
         navigation={navigation}
@@ -79,7 +78,7 @@ const TrackOrder = ({navigation, route}) => {
         style={styles.continueBtn}>
         <Text style={styles.continueText}>Continue shopping</Text>
       </TouchableOpacity>
-    </SafeAreaView>
+    </View>
   );
 };
 
@@ -209,7 +208,7 @@ const styles = StyleSheet.create({
     paddingVertical: hp(1.6),
     borderRadius: wp(2.2),
     alignItems: 'center',
-    marginBottom: hp(6),
+    marginBottom: hp(1),
   },
 
   continueText: {

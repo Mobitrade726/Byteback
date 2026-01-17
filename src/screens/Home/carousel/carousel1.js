@@ -2,7 +2,6 @@ import React, { useState } from 'react';
 import {
   View,
   Text,
-  SafeAreaView,
   Image,
   TouchableOpacity,
   StyleSheet,
@@ -579,7 +578,7 @@ const Carousel1 = ({ navigation, visible, onClose, item }) => {
   };
 
   return (
-    <SafeAreaView style={styles.container}>
+    <View style={styles.container}>
       {/* Scrollable content starts here */}
       <ScrollView>
         <View style={{ margin: 10 }}>
@@ -647,7 +646,7 @@ const Carousel1 = ({ navigation, visible, onClose, item }) => {
 
           {/* Sort Modal */}
           <Modal visible={showSortModal} transparent animationType="slide">
-            <SafeAreaView style={styles.modalContainer}>
+            <View style={styles.modalContainer}>
               <View style={{ margin: 20, flex: 1 }}>
                 {/* Modal Header */}
                 <View style={styles.modalHeader}>
@@ -691,12 +690,12 @@ const Carousel1 = ({ navigation, visible, onClose, item }) => {
                   <Text style={styles.applyText}>Apply</Text>
                 </TouchableOpacity>
               </View>
-            </SafeAreaView>
+            </View>
           </Modal>
 
           {/* Filter Modal */}
           <Modal visible={showFilterModal} animationType="slide" transparent>
-            <SafeAreaView style={styles.modalContainer}>
+            <View style={styles.modalContainer}>
               {/* Header */}
               <View style={styles.header}>
                 <TouchableOpacity onPress={() => setFilterSortModal(false)}>
@@ -747,7 +746,7 @@ const Carousel1 = ({ navigation, visible, onClose, item }) => {
                   <Text style={styles.applyText}>Apply</Text>
                 </TouchableOpacity>
               </View>
-            </SafeAreaView>
+            </View>
           </Modal>
 
           <TouchableOpacity
@@ -764,7 +763,7 @@ const Carousel1 = ({ navigation, visible, onClose, item }) => {
           </TouchableOpacity>
         </View>
       </ScrollView>
-    </SafeAreaView>
+    </View>
   );
 };
 

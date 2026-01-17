@@ -2,7 +2,6 @@ import React from 'react';
 import {
   View,
   Text,
-  SafeAreaView,
   TouchableOpacity,
   StyleSheet,
   Image,
@@ -13,7 +12,7 @@ import Ionicons from 'react-native-vector-icons/Ionicons';
 
 const KycConfirmation = ({navigation}) => {
   return (
-    <SafeAreaView style={styles.container}>
+    <View style={styles.container}>
       <ScrollView contentContainerStyle={{paddingBottom: 30}}>
         {/* Header */}
         <View style={styles.header}>
@@ -71,7 +70,7 @@ const KycConfirmation = ({navigation}) => {
       <TouchableOpacity style={styles.trackBtn}>
         <Text style={styles.trackBtnText}>Track KYC Status</Text>
       </TouchableOpacity>
-    </SafeAreaView>
+    </View>
   );
 };
 

@@ -43,17 +43,17 @@ import CartStack from './CartStack';
 import AccountStack from './AccountStack';
 import CategoriesStack from './CategoriesStack';
 import WishlistStack from './WishlistStack';
+import responsive from '../constants/responsive';
 
 const Tab = createBottomTabNavigator();
 
 const BottomNavigator = () => {
-  const insets = useSafeAreaInsets(); // ✅ Safe area support
 
   return (
     <Tab.Navigator
       screenOptions={({ route }) => ({
         tabBarIcon: ({ color }) => {
-          const iconSize = moderateScale(22);
+          const iconSize = moderateScale(18);
 
           switch (route.name) {
             case 'Home':
@@ -86,17 +86,12 @@ const BottomNavigator = () => {
         },
 
         tabBarLabelStyle: {
-          fontSize: moderateScale(12),
-          marginBottom: verticalScale(2),
+          fontSize: responsive.fontSize(10),
         },
 
         tabBarStyle: {
-          height: verticalScale(55) + insets.bottom, // ✅ Add safe area padding
-          paddingBottom: insets.bottom > 0 ? insets.bottom : verticalScale(5),
-          paddingTop: verticalScale(5),
-          backgroundColor: '#fff',
-          borderTopWidth: 0.5,
-          borderTopColor: '#ccc',
+          height: responsive.height(60),
+          backgroundColor: '#FFFBFA',
         },
 
         tabBarActiveTintColor: '#478F4E',

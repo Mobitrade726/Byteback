@@ -8,7 +8,6 @@ import React, {
 import {
   View,
   Text,
-  SafeAreaView,
   TouchableOpacity,
   TextInput,
   StyleSheet,
@@ -44,6 +43,7 @@ import {
   responsiveWidth,
   responsiveFontSize as RF,
 } from 'react-native-responsive-dimensions';
+import FilterModalStyles_Search from '../../constants/FilterModalStyles_Search';
 
 const PER_PAGE = 6; // frontend pagination: 6 items per page
 
@@ -80,13 +80,12 @@ const ProductCard = React.memo(
       >
         <View style={ProductCardStyles.imageContainerD}>
           {item && (
-            <Text style={ProductCardStyles.refurbishedLabelD}>
-              PRE-OWNED
-            </Text>
+            <Text style={ProductCardStyles.refurbishedLabelD}>PRE-OWNED</Text>
           )}
           <Image
             source={{ uri: item.feature_image }}
             style={ProductCardStyles.imageD}
+            resizeMode='contain'
           />
           <TouchableOpacity
             style={ProductCardStyles.heartIconD}
@@ -123,6 +122,8 @@ const SearchRefactored = ({ navigation }) => {
   const wishlistItems = useSelector(state => state.wishlist.items || []);
   const { catList = [] } = useSelector(state => state.home || {});
 
+  console.log('nocartidfilterdata---------------->', nocartidfilterdata)
+
   // UI state
   const [searchText, setSearchText] = useState('');
   const [displayText, setDisplayText] = useState('');
@@ -146,7 +147,6 @@ const SearchRefactored = ({ navigation }) => {
   const [selectedGrade, setSelectedGrade] = useState(null);
   const [selectedRam, setSelectedRam] = useState(null);
   const [selectedStorage, setSelectedStorage] = useState(null);
-
 
   // debounce ref
   const searchDebounceRef = useRef(null);
@@ -180,6 +180,9 @@ const SearchRefactored = ({ navigation }) => {
       selectedRam ||
       selectedStorage;
     if (!anyFilters) return filteredData;
+
+    console.log('filteredDatatesting--------------------------------->',filteredData);
+    console.log('selectedGrade--------------------------------->',selectedGrade);
 
     return filteredData.filter(item => {
       if (selectedBrands.length && !selectedBrands.includes(item.brand_name))
@@ -354,7 +357,7 @@ const SearchRefactored = ({ navigation }) => {
     (!productLoading && (!productData || productData.length === 0));
 
   return (
-    <SafeAreaView style={styles.container}>
+    <View style={styles.container}>
       <Header
         title="Search"
         navigation={navigation}
@@ -449,17 +452,17 @@ const SearchRefactored = ({ navigation }) => {
 
       {/* Filter Modal (kept simple) */}
       <Modal visible={showFilterModal} animationType="slide">
-        <SafeAreaView style={styles.modalContainer}>
-          <View style={styles.header1}>
+        <View style={FilterModalStyles_Search.modalContainer}>
+          <View style={FilterModalStyles_Search.header1}>
             <TouchableOpacity onPress={() => setShowFilterModal(false)}>
               <Ionicons name="close" size={moderateScale(24)} />
             </TouchableOpacity>
-            <Text style={styles.headerTitle1}>Filters</Text>
+            <Text style={FilterModalStyles_Search.headerTitle1}>Filters</Text>
             <Ionicons name="options-outline" size={moderateScale(20)} />
           </View>
 
-          <View style={styles.body}>
-            <View style={styles.leftPane}>
+          <View style={FilterModalStyles_Search.body}>
+            <View style={FilterModalStyles_Search.leftPane}>
               {[
                 { key: 'brands', label: 'Brands', icon: 'pricetags-outline' },
                 { key: 'color', label: 'Color', icon: 'color-palette-outline' },
@@ -477,8 +480,9 @@ const SearchRefactored = ({ navigation }) => {
                 <TouchableOpacity
                   key={tab.key}
                   style={[
-                    styles.tabItem,
-                    selectedTab === tab.key && styles.tabItemSelected,
+                    FilterModalStyles_Search.tabItem,
+                    selectedTab === tab.key &&
+                      FilterModalStyles_Search.tabItemSelected,
                   ]}
                   onPress={() => setSelectedTab(tab.key)}
                 >
@@ -489,7 +493,7 @@ const SearchRefactored = ({ navigation }) => {
                   />
                   <Text
                     style={[
-                      styles.tabLabel,
+                      FilterModalStyles_Search.tabLabel,
                       selectedTab === tab.key && { fontWeight: '600' },
                     ]}
                   >
@@ -500,23 +504,23 @@ const SearchRefactored = ({ navigation }) => {
             </View>
 
             <ScrollView
-              style={styles.rightPane}
+              style={FilterModalStyles_Search.rightPane}
               showsVerticalScrollIndicator={false}
             >
               {selectedTab === 'brands' &&
-                (nocartidfilterdata.brands || []).map(b => (
+                (nocartidfilterdata.brands || []).map((b, index) => (
                   <TouchableOpacity
-                    key={b.brand_id}
+                    key={b.brand_id ? String(b.brand_id) : `brand-${index}`}
                     style={[
-                      styles.brandItem,
+                      FilterModalStyles_Search.brandItem,
                       selectedBrands.includes(b.brand_name) &&
-                        styles.brandItemSelected,
+                        FilterModalStyles_Search.brandItemSelected,
                     ]}
                     onPress={() => toggleBrand(b.brand_name)}
                   >
                     <Text
                       style={[
-                        styles.brandText,
+                        FilterModalStyles_Search.brandText,
                         selectedBrands.includes(b.brand_name) && {
                           color: '#fff',
                         },
@@ -526,44 +530,23 @@ const SearchRefactored = ({ navigation }) => {
                     </Text>
                   </TouchableOpacity>
                 ))}
-              {/* {selectedTab === 'color' &&
-                (nocartidfilterdata.colors || []).map(c => (
-                    <TouchableOpacity
-                      key={c.color_id}
-                      style={[
-                        styles.colorItem_c,
-                        selectedColors.includes(c.color_name) &&
-                          styles.selectedWrapper_c,
-                      ]}
-                      onPress={() => toggleColor(c.color_name)}
-                    >
-                      <View style={styles.colorCircleWrapper_c}>
-                        <View
-                          style={[
-                            styles.colorCircle_c,
-                            { backgroundColor: c.hex },
-                            selectedColors.includes(c.color_name) &&
-                              styles.colorCircleSelected_c,
-                          ]}
-                        />
-                        <Text style={styles.colorLabel_c}>{c.color_name}</Text>
-                      </View>
-                    </TouchableOpacity>
-                ))} */}
 
               {selectedTab === 'color' && (
                 <FlatList
                   data={nocartidfilterdata.colors || []}
-                  keyExtractor={item => item.color_id}
+                  keyExtractor={(item, index) =>
+                    item?.color_id
+                      ? `color-${item.color_id}`
+                      : `color-index-${index}`
+                  }
                   numColumns={3}
                   showsVerticalScrollIndicator={false}
                   columnWrapperStyle={{
                     justifyContent: 'space-between',
-                    marginBottom: 20,
                   }}
                   contentContainerStyle={{
                     paddingHorizontal: 10,
-                    paddingTop: 10,
+                    paddingTop: 10, flex:1, marginBottom:responsiveHeight(3)
                   }}
                   renderItem={({ item }) => {
                     const selected = selectedColors.includes(item.color_name);
@@ -571,18 +554,21 @@ const SearchRefactored = ({ navigation }) => {
                       <TouchableOpacity
                         onPress={() => toggleColor(item.color_name)}
                         style={[
-                          styles.colorBox,
-                          selected && styles.selectedWrapper_c,
+                          FilterModalStyles_Search.colorBox,
+                          selected && FilterModalStyles_Search.selectedWrapper_c,
                         ]}
                       >
                         <View
                           style={[
-                            styles.colorCircle_c,
+                            FilterModalStyles_Search.colorCircle_c,
                             { backgroundColor: item.hex },
-                            selected && styles.colorCircleSelected_c,
+                            selected && FilterModalStyles_Search.colorCircleSelected_c,
                           ]}
                         />
-                        <Text style={styles.colorLabel_c} numberOfLines={1}>
+                        <Text
+                          style={FilterModalStyles_Search.colorLabel_c}
+                          numberOfLines={1}
+                        >
                           {item.color_name}
                         </Text>
                       </TouchableOpacity>
@@ -592,19 +578,21 @@ const SearchRefactored = ({ navigation }) => {
               )}
 
               {selectedTab === 'grade' &&
-                (nocartidfilterdata.grades || []).map(g => (
+                (nocartidfilterdata.grades || []).map((g, index) => (
                   <TouchableOpacity
-                    key={`grade-${g}`}
-                    onPress={() => setSelectedGrade(g)}
+                    key={g.id ? String(g.id) : `grade-${index}`}
+                    onPress={() => setSelectedGrade(g?.grade)}
                     style={[
-                      styles.gradeButton,
-                      selectedGrade === g && styles.gradeButtonSelected,
+                      FilterModalStyles_Search.gradeButton,
+                      selectedGrade === g?.grade &&
+                        FilterModalStyles_Search.gradeButtonSelected,
                     ]}
                   >
                     <Text
                       style={[
-                        styles.gradeText,
-                        selectedGrade === g && styles.gradeTextSelected,
+                        FilterModalStyles_Search.gradeText,
+                        selectedGrade === g?.grade &&
+                          FilterModalStyles_Search.gradeTextSelected,
                       ]}
                     >
                       {g.grade}
@@ -613,21 +601,21 @@ const SearchRefactored = ({ navigation }) => {
                 ))}
               {selectedTab === 'specs' && (
                 <>
-                  <Text style={styles.subHeading}>RAM</Text>
-                  <View style={styles.optionContainer}>
-                    {(nocartidfilterdata.rams || []).map(r => (
+                  <Text style={FilterModalStyles_Search.subHeading}>RAM</Text>
+                  <View style={FilterModalStyles_Search.optionContainer}>
+                    {(nocartidfilterdata.rams || []).map((r, index) => (
                       <TouchableOpacity
-                        key={r.ram_id}
+                        key={r.ram_id ? String(r.ram_id) : `ram-${index}`}
                         style={[
-                          styles.optionButton,
-                          selectedRam === r && styles.selectedButton,
+                          FilterModalStyles_Search.optionButton,
+                          selectedRam === r && FilterModalStyles_Search.selectedButton,
                         ]}
                         onPress={() => setSelectedRam(r)}
                       >
                         <Text
                           style={[
-                            styles.optionText,
-                            selectedRam === r && styles.selectedText,
+                            FilterModalStyles_Search.optionText,
+                            selectedRam === r && FilterModalStyles_Search.selectedText,
                           ]}
                         >
                           {r.ram_name}
@@ -636,21 +624,23 @@ const SearchRefactored = ({ navigation }) => {
                     ))}
                   </View>
 
-                  <Text style={styles.subHeading}>Storage</Text>
-                  <View style={styles.optionContainer}>
-                    {(nocartidfilterdata.roms || []).map(s => (
+                  <Text style={FilterModalStyles_Search.subHeading}>Storage</Text>
+                  <View style={FilterModalStyles_Search.optionContainer}>
+                    {(nocartidfilterdata.roms || []).map((s, index) => (
                       <TouchableOpacity
-                        key={s.rom_id}
+                        key={s.rom_id ? String(s.rom_id) : `rom-${index}`}
                         style={[
-                          styles.optionButton,
-                          selectedStorage === s && styles.selectedButton,
+                          FilterModalStyles_Search.optionButton,
+                          selectedStorage === s &&
+                            FilterModalStyles_Search.selectedButton,
                         ]}
                         onPress={() => setSelectedStorage(s)}
                       >
                         <Text
                           style={[
-                            styles.optionText,
-                            selectedStorage === s && styles.selectedText,
+                            FilterModalStyles_Search.optionText,
+                            selectedStorage === s &&
+                              FilterModalStyles_Search.selectedText,
                           ]}
                         >
                           {s.rom_name}
@@ -663,21 +653,21 @@ const SearchRefactored = ({ navigation }) => {
             </ScrollView>
           </View>
 
-          <View style={styles.footer}>
+          <View style={FilterModalStyles_Search.footer}>
             <TouchableOpacity
-              style={styles.resetBtn}
+              style={FilterModalStyles_Search.resetBtn}
               onPress={handleResetFilters}
             >
-              <Text style={styles.resetText}>Reset</Text>
+              <Text style={FilterModalStyles_Search.resetText}>Reset</Text>
             </TouchableOpacity>
             <TouchableOpacity
-              style={styles.applyBtn}
+              style={FilterModalStyles_Search.applyBtn}
               onPress={handleApplyFilters}
             >
-              <Text style={styles.applyText}>Apply</Text>
+              <Text style={FilterModalStyles_Search.applyText}>Apply</Text>
             </TouchableOpacity>
           </View>
-        </SafeAreaView>
+        </View>
       </Modal>
 
       {/* Main content: show loading spinner until we have initial data */}
@@ -689,7 +679,8 @@ const SearchRefactored = ({ navigation }) => {
           </Text>
         </View>
       ) : (
-        <FlatList showsVerticalScrollIndicator={false}
+        <FlatList
+          showsVerticalScrollIndicator={false}
           data={listData}
           renderItem={({ item }) => (
             <ProductCard
@@ -746,7 +737,7 @@ const SearchRefactored = ({ navigation }) => {
           )}
         />
       )}
-    </SafeAreaView>
+    </View>
   );
 };
 
@@ -794,7 +785,7 @@ const styles = StyleSheet.create({
     borderColor: 'green',
     borderTopWidth: 0,
     paddingVertical: verticalScale(5),
-    width: '95%',
+    width: '100%',
     alignSelf: 'center',
     borderBottomRightRadius: scale(12),
     borderBottomLeftRadius: scale(12),

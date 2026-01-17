@@ -6,7 +6,6 @@ import {
   Switch,
   TouchableOpacity,
   ScrollView,
-  SafeAreaView,
 } from 'react-native';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import SimpleLineIcons from 'react-native-vector-icons/SimpleLineIcons';
@@ -21,7 +20,7 @@ const Settings = ({navigation}) => {
   const {cat, profileEdit} = route.params || [];
 
   return (
-    <SafeAreaView style={styles.container}>
+    <View style={styles.container}>
       {/* Header */}
 
       <Header title="Settings" navigation={navigation} showBack={true} />
@@ -148,7 +147,7 @@ const Settings = ({navigation}) => {
           <Text style={styles.logoutText}>Logout from all devices</Text>
         </TouchableOpacity>
       </ScrollView>
-    </SafeAreaView>
+    </View>
   );
 };
 

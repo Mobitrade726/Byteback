@@ -4,7 +4,6 @@ import {
   Text,
   TouchableOpacity,
   StyleSheet,
-  SafeAreaView,
   Linking,
 } from 'react-native';
 import Ionicons from 'react-native-vector-icons/Ionicons';
@@ -52,7 +51,7 @@ const DialerScreen = ({ route, navigation }) => {
   ];
 
   return (
-    <SafeAreaView style={styles.container}>
+    <View style={styles.container}>
       
       {/* Number Display */}
       <View style={styles.displayContainer}>
@@ -85,7 +84,7 @@ const DialerScreen = ({ route, navigation }) => {
       <TouchableOpacity style={styles.callButton} onPress={handleCall}>
         <Ionicons name="call" size={28} color="#fff" />
       </TouchableOpacity>
-    </SafeAreaView>
+    </View>
   );
 };
 

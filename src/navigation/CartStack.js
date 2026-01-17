@@ -20,6 +20,7 @@ import ShopbybrandsTab from '../screens/Home/ShopByBrand/ShopbybrandsTab';
 import TrackOrder from './TabNavigator/Account/MyOrder/TrackOrder';
 import Myorder from './TabNavigator/Account/MyOrder/Myorder';
 import MyorderDetails from './TabNavigator/Account/MyOrder/MyorderDetails';
+import Search from '../screens/Home/Search';
 
 const Stack = createNativeStackNavigator();
 
@@ -46,6 +47,8 @@ export default function CartStack() {
       <Stack.Screen name="TrackOrder" component={TrackOrder} />
       <Stack.Screen name="Myorder" component={Myorder} />
       <Stack.Screen name="MyorderDetails" component={MyorderDetails} />
+      <Stack.Screen name="Search" component={Search} />
+      
     </Stack.Navigator>
   );
 }

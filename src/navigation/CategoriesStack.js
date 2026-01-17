@@ -27,6 +27,8 @@ import Withdraw from './TabNavigator/Cart/Wallet/Withdraw';
 import TrackOrder from './TabNavigator/Account/MyOrder/TrackOrder';
 import Myorder from './TabNavigator/Account/MyOrder/Myorder';
 import MyorderDetails from './TabNavigator/Account/MyOrder/MyorderDetails';
+import KycCompleteStatus from './TabNavigator/Cart/Kyc/KycCompleteStatus';
+
 
 const Stack = createNativeStackNavigator();
 
@@ -63,6 +65,7 @@ export default function AccountStack() {
       <Stack.Screen name="TrackOrder" component={TrackOrder} />
       <Stack.Screen name="Myorder" component={Myorder} />
       <Stack.Screen name="MyorderDetails" component={MyorderDetails} />
+      <Stack.Screen name="KycCompleteStatus" component={KycCompleteStatus} />
     </Stack.Navigator>
   );
 }

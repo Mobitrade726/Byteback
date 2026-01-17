@@ -3,7 +3,6 @@ import {
   View,
   Text,
   StyleSheet,
-  SafeAreaView,
   TouchableOpacity,
   ScrollView,
   Image,
@@ -48,7 +47,7 @@ const ProcessToPay = ({ navigation, route }) => {
   );
 
   return (
-    <SafeAreaView style={styles.container}>
+    <View style={styles.container}>
       <ScrollView contentContainerStyle={{ paddingBottom: 20 }}>
         <Header
           title="Order Confirmed!"
@@ -127,7 +126,7 @@ const ProcessToPay = ({ navigation, route }) => {
       >
         <Text style={styles.greenButtonText}>Continue Shopping</Text>
       </TouchableOpacity>
-    </SafeAreaView>
+    </View>
   );
 };
 
@@ -439,7 +438,7 @@ const styles = StyleSheet.create({
     padding: hp(2),
     borderRadius: wp(3),
     alignItems: 'center',
-    marginBottom: hp(6),
+    marginBottom: hp(1),
     marginHorizontal: wp(5),
   },
 

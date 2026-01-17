@@ -5,7 +5,6 @@ import {
   Image,
   FlatList,
   TouchableOpacity,
-  SafeAreaView,
   StyleSheet,
   Alert,
   ActivityIndicator,
@@ -117,7 +116,7 @@ const LogoutDevices = ({ navigation }) => {
   );
 
   return (
-    <SafeAreaView style={styles.container}>
+    <View style={styles.container}>
       <Header
         title="Logged-in Devices"
         navigation={navigation}
@@ -151,7 +150,7 @@ const LogoutDevices = ({ navigation }) => {
         <SimpleLineIcons name="logout" size={scale(18)} color="#fff" />
         <Text style={styles.logoutAllText}> Log out of all devices</Text>
       </TouchableOpacity>
-    </SafeAreaView>
+    </View>
   );
 };
 
@@ -200,7 +199,7 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
     paddingVertical: RH(1.8),
-    marginBottom: responsiveHeight(5),
+    marginBottom: responsiveHeight(1),
   },
   logoutAllText: {
     color: '#fff',

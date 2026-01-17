@@ -35,6 +35,10 @@ import Signup_Address from '../screens/SignupScreen/Signup_Address';
 import SignUpTab from '../screens/SignupScreen/SignUpTab';
 import ConfirmSignup from '../screens/SignupScreen/ConfirmSignup';
 import Invoice from '../screens/Home/Invoice';
+import KycCompleteStatus from './TabNavigator/Cart/Kyc/KycCompleteStatus';
+import Search from '../screens/Home/Search';
+import Home from '../screens/Home/Home';
+
 
 
 
@@ -81,6 +85,10 @@ export default function AccountStack() {
       <Stack.Screen name="SignUpTab" component={SignUpTab} />
       <Stack.Screen name="ConfirmSignup" component={ConfirmSignup} />
       <Stack.Screen name="Invoice" component={Invoice} />
+      <Stack.Screen name="KycCompleteStatus" component={KycCompleteStatus} />
+      <Stack.Screen name="Search" component={Search} />
+      <Stack.Screen name="Home" component={Home} />
+      
       
     </Stack.Navigator>
   );

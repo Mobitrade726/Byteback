@@ -5,7 +5,6 @@ import {
   TouchableOpacity,
   ScrollView,
   StyleSheet,
-  SafeAreaView,
 } from 'react-native';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import Ionicons from 'react-native-vector-icons/Ionicons';
@@ -39,7 +38,7 @@ export default function SelectAddress({navigation}) {
   ];
 
   return (
-    <SafeAreaView style={styles.container}>
+    <View style={styles.container}>
       <View style={{flex: 1}}>
         <Header title="Checkout" navigation={navigation} showBack={true} />
 
@@ -108,7 +107,7 @@ export default function SelectAddress({navigation}) {
         style={styles.saveBtn}>
         <Text style={styles.saveBtnText}>Save & Continue</Text>
       </TouchableOpacity>
-    </SafeAreaView>
+    </View>
   );
 }
 

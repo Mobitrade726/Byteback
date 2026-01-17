@@ -4,7 +4,6 @@ import {
   Text,
   TextInput,
   TouchableOpacity,
-  SafeAreaView,
   ActivityIndicator,
   useColorScheme,
   StatusBar,
@@ -65,48 +64,80 @@ const LoginScreen = ({ navigation }) => {
     return Object.keys(newErrors).length === 0;
   };
 
+  // const requestLocationPermission = async () => {
+  //   try {
+  //     if (Platform.OS === 'android') {
+  //       const fineCheck = await PermissionsAndroid.check(
+  //         PermissionsAndroid.PERMISSIONS.ACCESS_FINE_LOCATION,
+  //       );
+
+  //       const coarseCheck = await PermissionsAndroid.check(
+  //         PermissionsAndroid.PERMISSIONS.ACCESS_COARSE_LOCATION,
+  //       );
+
+  //       if (!fineCheck || !coarseCheck) {
+  //         Alert.alert(
+  //           'Location Required',
+  //           'Please go to settings and enable location manually.',
+  //           [
+  //             { text: 'Open Settings', onPress: () => Linking.openSettings() },
+  //             { text: 'Cancel', style: 'cancel' },
+  //           ],
+  //         );
+
+  //         // ❗IMPORTANT → no setLoading here
+  //         const granted = await PermissionsAndroid.request(
+  //           PermissionsAndroid.PERMISSIONS.ACCESS_FINE_LOCATION,
+  //         );
+
+  //         if (
+  //           granted === PermissionsAndroid.RESULTS.DENIED ||
+  //           granted === PermissionsAndroid.RESULTS.NEVER_ASK_AGAIN
+  //         ) {
+  //           return false;
+  //         }
+
+  //         return true;
+  //       }
+
+  //       return true;
+  //     }
+
+  //     const auth = await Geolocation.requestAuthorization('whenInUse');
+  //     return auth === 'granted';
+  //   } catch (e) {
+  //     return false;
+  //   }
+  // };
+
   const requestLocationPermission = async () => {
     try {
       if (Platform.OS === 'android') {
-        const fineCheck = await PermissionsAndroid.check(
+        const granted = await PermissionsAndroid.request(
           PermissionsAndroid.PERMISSIONS.ACCESS_FINE_LOCATION,
         );
 
-        const coarseCheck = await PermissionsAndroid.check(
-          PermissionsAndroid.PERMISSIONS.ACCESS_COARSE_LOCATION,
-        );
-
-        if (!fineCheck || !coarseCheck) {
-          Alert.alert(
-            'Location Required',
-            'Please go to settings and enable location manually.',
-            [
-              { text: 'Open Settings', onPress: () => Linking.openSettings() },
-              { text: 'Cancel', style: 'cancel' },
-            ],
-          );
-
-          // ❗IMPORTANT → no setLoading here
-          const granted = await PermissionsAndroid.request(
-            PermissionsAndroid.PERMISSIONS.ACCESS_FINE_LOCATION,
-          );
-
-          if (
-            granted === PermissionsAndroid.RESULTS.DENIED ||
-            granted === PermissionsAndroid.RESULTS.NEVER_ASK_AGAIN
-          ) {
-            return false;
-          }
-
+        if (granted === PermissionsAndroid.RESULTS.GRANTED) {
           return true;
         }
 
-        return true;
+        // ❌ User denied OR never ask again
+        Alert.alert(
+          'Location Required',
+          'Please go to settings and enable location manually.',
+          [
+            { text: 'Open Settings', onPress: () => Linking.openSettings() },
+            { text: 'Cancel', style: 'cancel' },
+          ],
+        );
+
+        return false;
       }
 
+      // iOS
       const auth = await Geolocation.requestAuthorization('whenInUse');
       return auth === 'granted';
-    } catch (e) {
+    } catch (error) {
       return false;
     }
   };
@@ -202,16 +233,11 @@ const LoginScreen = ({ navigation }) => {
         const token = response.data.data.token;
         const userId = response.data.data.user_id;
 
-        // await AsyncStorage.setItem('TOKEN', token);
-        // await AsyncStorage.setItem('USERID', String(userId));
-        // await AsyncStorage.setItem('DEVICEID', deviceId);
-
         dispatch(setAuthData({ token, userId, deviceId }));
 
         setAlertMessage(response.data.message);
         setAlertType('success'); // "error", "warning" bhi kar sakte ho
         setAlertVisible(true);
-        // navigation.navigate('BottomNavigator');
       } else {
         setAlertMessage(response.data.message);
         setAlertType('error');
@@ -230,24 +256,8 @@ const LoginScreen = ({ navigation }) => {
 
   return (
     <>
-      <SafeAreaView style={styles.container}>
+      <View style={styles.container}>
         <View style={{ marginHorizontal: moderateScale(10) }}>
-          {/* Back Arrow */}
-          {/* <TouchableOpacity
-            style={styles.backButton}
-            onPress={() => BackHandler.exitApp()}
-          >
-            <Ionicons
-              name="chevron-back-outline"
-              size={moderateScale(24)}
-              style={{
-                backgroundColor: '#fff',
-                borderRadius: moderateScale(20),
-                padding: moderateScale(6),
-              }}
-            />
-          </TouchableOpacity> */}
-
           <Text style={styles.title}>Hey!</Text>
 
           {/* Email or Phone */}
@@ -257,7 +267,7 @@ const LoginScreen = ({ navigation }) => {
               errors.emailOrPhone && { borderColor: 'red' },
             ]}
             placeholder="Email or Phone"
-            placeholderTextColor={isDarkMode ? '#aaa' : '#666'}
+            placeholderTextColor={isDarkMode ? '#aaa' : '#000'}
             value={emailOrPhone}
             onChangeText={setEmailOrPhone}
           />
@@ -265,24 +275,11 @@ const LoginScreen = ({ navigation }) => {
             <Text style={styles.errorText}>{errors.emailOrPhone}</Text>
           )}
 
-          {/* Password */}
-          {/* <TextInput
-            style={[styles.input, errors.password && {borderColor: 'red'}]}
-            placeholder="Password"
-            placeholderTextColor={isDarkMode ? '#aaa' : '#666'}
-            secureTextEntry
-            value={password}
-            onChangeText={setPassword}
-          />
-          {errors.password && (
-            <Text style={styles.errorText}>{errors.password}</Text>
-          )} */}
-
           <View style={{ position: 'relative' }}>
             <TextInput
               style={[styles.input, errors.password && { borderColor: 'red' }]}
               placeholder="Password"
-              placeholderTextColor={isDarkMode ? '#aaa' : '#666'}
+              placeholderTextColor={isDarkMode ? '#aaa' : '#000'}
               secureTextEntry={!showPassword} // 👈 Hide/Show logic
               value={password}
               onChangeText={setPassword}
@@ -312,7 +309,7 @@ const LoginScreen = ({ navigation }) => {
 
           {/* Forgot Password */}
           <TouchableOpacity
-            // onPress={() => navigation.navigate('ForgetPassword')}
+            onPress={() => navigation.navigate('ForgetPassword')}
             style={styles.forgotContainer}
           >
             <Text style={styles.forgotText}>Forgot Password?</Text>
@@ -331,19 +328,6 @@ const LoginScreen = ({ navigation }) => {
             )}
           </TouchableOpacity>
 
-          {/* ✅ AlertModal should be here, inside root View */}
-          {/* <AlertModal
-            visible={alertVisible}
-            title="Success"
-            message={alertMessage}
-            type={alertType}
-            onOk={() => {
-              setAlertVisible(false);
-              navigation.navigate('BottomNavigator');
-            }}
-            onClose={() => setAlertVisible(false)}
-          /> */}
-
           <AlertModal
             visible={alertVisible}
             title={alertType === 'success' ? 'Success' : 'Error'}
@@ -361,19 +345,14 @@ const LoginScreen = ({ navigation }) => {
             onClose={() => setAlertVisible(false)}
           />
 
-          {/* Sign Up */}
-          {/* <TouchableOpacity
-            onPress={() => navigation.navigate('LandingPage')}
-            style={styles.signupButton}
-          >
-            <Text style={styles.signupText}>Sign up</Text>
-          </TouchableOpacity> */}
-
           <TouchableOpacity onPress={() => navigation.navigate('LandingPage')}>
-            <Text style={styles.bottomText}>New here? <Text style={{color:"#478F4E"}}>Create an Account</Text></Text>
+            <Text style={styles.bottomText}>
+              New here?{' '}
+              <Text style={{ color: '#478F4E' }}>Create an Account</Text>
+            </Text>
           </TouchableOpacity>
         </View>
-      </SafeAreaView>
+      </View>
     </>
   );
 };

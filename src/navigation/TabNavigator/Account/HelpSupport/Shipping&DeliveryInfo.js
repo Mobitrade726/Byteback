@@ -2,14 +2,13 @@ import React from 'react';
 import {
   View,
   Text,
-  SafeAreaView,
   ScrollView,
   StyleSheet,
 } from 'react-native';
 
 const ShippingDeliveryInfo = ({navigation}) => {
   return (
-    <SafeAreaView style={styles.container}>
+    <View style={styles.container}>
       {/* Header */}
       <Header
         title="Shipping & Delivery Info"
@@ -83,7 +82,7 @@ const ShippingDeliveryInfo = ({navigation}) => {
           </Text>
         </View>
       </ScrollView>
-    </SafeAreaView>
+    </View>
   );
 };
 

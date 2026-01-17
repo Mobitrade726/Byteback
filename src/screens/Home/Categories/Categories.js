@@ -3,7 +3,7 @@
 //   View,
 //   Text,
 //   StyleSheet,
-//   SafeAreaView,
+//   View,
 //   TouchableOpacity,
 //   FlatList,
 //   Image,
@@ -33,7 +33,7 @@
 //   return (
 //     <>
 //       <StatusBar barStyle="dark-content" backgroundColor="#fff" />
-//       <SafeAreaView style={styles.container}>
+//       <View style={styles.container}>
 //         <Header title="Categories" navigation={navigation} showBack={true} />
 
 //         {/* Category Grid */}
@@ -45,7 +45,7 @@
 //           contentContainerStyle={styles.list}
 //           showsVerticalScrollIndicator={false}
 //         />
-//       </SafeAreaView>
+//       </View>
 //     </>
 //   );
 // };
@@ -110,7 +110,6 @@ import {
   View,
   Text,
   StyleSheet,
-  SafeAreaView,
   TouchableOpacity,
   FlatList,
   Image,
@@ -120,8 +119,7 @@ import {
 import { useSelector } from 'react-redux';
 import { moderateScale, scale, verticalScale } from 'react-native-size-matters';
 import Header from '../../../constants/Header';
-
-const { width, height } = Dimensions.get('window');
+import responsive from '../../../constants/responsive';
 
 const Categories = ({ navigation }) => {
   const { catList } = useSelector(state => state.home);
@@ -148,7 +146,7 @@ const Categories = ({ navigation }) => {
 
   return (
     <>
-      <SafeAreaView style={styles.container}>
+      <View style={styles.container}>
         <Header title="Categories" navigation={navigation} showBack={true} />
 
         {/* Category Grid */}
@@ -160,7 +158,7 @@ const Categories = ({ navigation }) => {
           contentContainerStyle={styles.list}
           showsVerticalScrollIndicator={false}
         />
-      </SafeAreaView>
+      </View>
     </>
   );
 };
@@ -168,34 +166,44 @@ const Categories = ({ navigation }) => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#fff',
+    backgroundColor: '#FFFBFA',
   },
   list: {
-    paddingHorizontal: scale(10),
-    paddingTop: verticalScale(0),
+    alignSelf: 'center',
   },
   card: {
-    flex: 1,
-    margin: scale(5),
-    backgroundColor: '#fff',
-    borderRadius: moderateScale(12),
-    alignItems: 'center',
-    padding: scale(12),
+    backgroundColor: '#FFFBFA',
+    borderRadius: responsive.borderRadius(12),
+
+    // iOS shadow
     shadowColor: '#000',
-    shadowOffset: { width: 0, height: verticalScale(2) },
-    shadowOpacity: 0.1,
-    shadowRadius: moderateScale(3),
-    elevation: 3,
+    shadowOffset: { width: 0, height: 4 },
+    shadowOpacity: 0.12,
+    shadowRadius: moderateScale(6),
+
+    // Android shadow
+    elevation: 6,
+
+    // Layout & spacing
+    paddingVertical: responsive.paddingBottom(10),
+    paddingHorizontal: responsive.gap(3),
+    gap: responsive.gap(12),
+    marginHorizontal: responsive.gap(6),
+    marginVertical: responsive.gap(6),
+
+    // Optional subtle border
+    borderWidth: 1,
+    borderColor: '#F2F2F2',
   },
+
   cardImage: {
-    width: width / 2.8, // adjust to fit 2 columns with margin
-    height: verticalScale(75),
+    height: responsive.height(160),
+    width: responsive.width(160),
   },
   cardTitle: {
-    marginTop: verticalScale(8),
-    fontSize: moderateScale(15),
+    fontSize: responsive.fontSize(14),
     fontWeight: '500',
-    color: '#000',
+    color: '#171D1C',
     textAlign: 'center',
   },
 });

@@ -6,7 +6,6 @@ import {
   StyleSheet,
   TouchableOpacity,
   ScrollView,
-  SafeAreaView,
   Image,
   Alert,
   ActivityIndicator,
@@ -64,14 +63,14 @@ const Checkout = () => {
   const storeData = [
     {
       id: 1,
-      name: 'MobiTrde Store - A',
+      name: 'Byteback Store - A',
       status: 'Open',
       distance: '5 km',
       address: '123 Market Rd, City',
     },
     {
       id: 2,
-      name: 'MobiTrde Store - B',
+      name: 'Byteback Store - B',
       status: 'Open',
       distance: '10 km',
       address: '456 Mall St, City',
@@ -282,7 +281,7 @@ const Checkout = () => {
           currency: 'INR',
           key: 'rzp_test_RLLrUG1OvG4YYd',
           amount: Math.round(totalAmount * 100), // in paise
-          name: 'MobiTrde',
+          name: 'Byteback',
           order_id: razorpayOrderId,
           prefill: {
             email: checkoutData?.user_email || '',
@@ -388,7 +387,7 @@ const Checkout = () => {
   ]);
 
   return (
-    <SafeAreaView style={styles.container}>
+    <View style={styles.container}>
       <Header title="Checkout" navigation={navigation} showSearch showBack />
 
       <ScrollView
@@ -659,7 +658,7 @@ const Checkout = () => {
           By placing the order, you agree to our Terms & Return Policy.
         </Text>
       </ScrollView>
-    </SafeAreaView>
+    </View>
   );
 };
 

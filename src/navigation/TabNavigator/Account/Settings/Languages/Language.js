@@ -2,7 +2,6 @@ import React, {useState} from 'react';
 import {
   View,
   Text,
-  SafeAreaView,
   TouchableOpacity,
   StyleSheet,
 } from 'react-native';
@@ -14,7 +13,7 @@ const Language = ({navigation}) => {
   const languages = ['English', 'Hindi'];
 
   return (
-    <SafeAreaView style={styles.container}>
+    <View style={styles.container}>
       {/* Header */}
       <View style={styles.header}>
         <TouchableOpacity
@@ -64,7 +63,7 @@ const Language = ({navigation}) => {
       <TouchableOpacity style={styles.saveButton}>
         <Text style={styles.saveText}>Save</Text>
       </TouchableOpacity>
-    </SafeAreaView>
+    </View>
   );
 };
 

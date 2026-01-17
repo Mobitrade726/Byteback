@@ -5,7 +5,6 @@ import {
   Switch,
   TouchableOpacity,
   StyleSheet,
-  SafeAreaView,
 } from 'react-native';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import Feather from 'react-native-vector-icons/Feather';
@@ -16,7 +15,7 @@ const Privacy = ({navigation}) => {
   const [dataSharing, setDataSharing] = useState(false);
 
   return (
-    <SafeAreaView style={styles.container}>
+    <View style={styles.container}>
       {/* Header */}
       <View style={styles.header}>
         <TouchableOpacity
@@ -77,7 +76,7 @@ const Privacy = ({navigation}) => {
           <Text style={styles.saveButtonText}> Save Changes</Text>
         </TouchableOpacity>
       </View>
-    </SafeAreaView>
+    </View>
   );
 };
 

@@ -7,7 +7,7 @@
 //   FlatList,
 //   Image,
 //   StyleSheet,
-//   SafeAreaView,
+//   View,
 //   Dimensions,
 // } from 'react-native';
 // import Ionicons from 'react-native-vector-icons/Ionicons';
@@ -49,9 +49,9 @@
 //   const { productData } = useSelector(state => state.product);
 //   const wishlistItems = useSelector(state => state.wishlist.items);
 
-//   const selectedCategoryData = catList.find(
-//     item => item.category_name === catName,
-//   );
+// const selectedCategoryData = catList.find(
+//   item => item.category_name === catName,
+// );
 
 //   const osList = selectedCategoryData?.os_list || [];
 
@@ -155,7 +155,7 @@
 //   };
 
 //   return (
-//     <SafeAreaView style={styles.container}>
+//     <View style={styles.container}>
 //       <Header
 //         title="Shop by Budget"
 //         navigation={navigation}
@@ -274,7 +274,7 @@
 //           </View>
 //         )}
 //       </ScrollView>
-//     </SafeAreaView>
+//     </View>
 //   );
 // };
 
@@ -398,8 +398,6 @@
 
 // export default ShopByBudget;
 
-
-
 // // import React, { useEffect, useMemo, useState } from 'react';
 // // import {
 // //   View,
@@ -409,7 +407,7 @@
 // //   StyleSheet,
 // //   TouchableOpacity,
 // //   FlatList,
-// //   SafeAreaView,
+// //   View,
 // // } from 'react-native';
 // // import Ionicons from 'react-native-vector-icons/Ionicons';
 // // import AntDesign from 'react-native-vector-icons/AntDesign';
@@ -579,7 +577,7 @@
 // //   };
 
 // //   // return (
-// //   //   <SafeAreaView style={styles.container}>
+// //   //   <View style={styles.container}>
 // //   //     <ScrollView>
 // //   //       <Header
 // //   //         title="Shop by Budget"
@@ -646,10 +644,10 @@
 // //   //         </View>
 // //   //       )}
 // //   //     </ScrollView>
-// //   //   </SafeAreaView>
+// //   //   </View>
 // //   // );
 // //   return (
-// //     <SafeAreaView style={styles.container}>
+// //     <View style={styles.container}>
 // //       <FlatList
 // //         data={filteredProducts}
 // //         keyExtractor={(item, index) => item.id?.toString() ?? index.toString()}
@@ -712,7 +710,7 @@
 // //           </View>
 // //         }
 // //       />
-// //     </SafeAreaView>
+// //     </View>
 // //   );
 // // };
 
@@ -819,7 +817,7 @@
 //   FlatList,
 //   Dimensions,
 // } from 'react-native';
-// import { SafeAreaView } from 'react-native-safe-area-context';
+// import { View } from 'react-native-safe-area-context';
 // import Ionicons from 'react-native-vector-icons/Ionicons';
 // import AntDesign from 'react-native-vector-icons/AntDesign';
 // import { useRoute } from '@react-navigation/native';
@@ -1115,7 +1113,6 @@
 //   },
 // });
 
-
 import React, { useEffect, useMemo, useState } from 'react';
 import {
   View,
@@ -1154,17 +1151,17 @@ const budgetOptions = [
   { id: 4, label: 'Above ₹30,000' },
 ];
 
-const HomeShopByBudget = ({ navigation }) => {
+const ShopByBudget = ({ navigation }) => {
   const route = useRoute();
-  const { priceId, osname, arrayosname, rangeLabel } = route.params || {};
+  const { priceId, osname, arrayosname, rangeLabel, catName } =
+    route.params || {};
+  const { catList, brands } = useSelector(state => state.home);
 
   const dispatch = useDispatch();
   const { productData } = useSelector(state => state.product);
   const wishlistItems = useSelector(state => state.wishlist.items);
 
-  const [selected, setSelected] = useState(
-    rangeLabel || 'Under ₹10,000',
-  );
+  const [selected, setSelected] = useState(rangeLabel || 'Under ₹10,000');
   const [filteredProducts, setFilteredProducts] = useState([]);
   const [page, setPage] = useState(1);
   const [paginatedData, setPaginatedData] = useState([]);
@@ -1185,29 +1182,61 @@ const HomeShopByBudget = ({ navigation }) => {
 
   /* ================= OS FILTER ================= */
 
+  // const products = useMemo(() => {
+  //   if (!productData?.length) return [];
+
+  //   if (arrayosname?.length) {
+  //     return productData.filter(item =>
+  //       arrayosname.some(
+  //         os =>
+  //           item.operating_systems &&
+  //           item.operating_systems.toLowerCase() === os.toLowerCase(),
+  //       ),
+  //     );
+  //   }
+
+  //   if (osname) {
+  //     return productData.filter(
+  //       item =>
+  //         item.operating_systems &&
+  //         item.operating_systems.toLowerCase() === osname.toLowerCase(),
+  //     );
+  //   }
+
+  //   return productData;
+  // }, [productData, osname, arrayosname]);
+
   const products = useMemo(() => {
     if (!productData?.length) return [];
 
+    // ✅ 1. pichhli screen se category aayi hai
+    if (catName) {
+      return productData.filter(
+        item =>
+          item.category &&
+          item.category.toLowerCase() === catName.toLowerCase(),
+      );
+    }
+
+    // ✅ 2. multiple OS filter
     if (arrayosname?.length) {
       return productData.filter(item =>
         arrayosname.some(
-          os =>
-            item.operating_systems &&
-            item.operating_systems.toLowerCase() === os.toLowerCase(),
+          os => item.operating_systems?.toLowerCase() === os.toLowerCase(),
         ),
       );
     }
 
+    // ✅ 3. single OS filter
     if (osname) {
       return productData.filter(
-        item =>
-          item.operating_systems &&
-          item.operating_systems.toLowerCase() === osname.toLowerCase(),
+        item => item.operating_systems?.toLowerCase() === osname.toLowerCase(),
       );
     }
 
+    // ✅ 4. default → sabhi products
     return productData;
-  }, [productData, osname, arrayosname]);
+  }, [productData, catName, osname, arrayosname]);
 
   /* ================= PRICE FILTER ================= */
 
@@ -1253,9 +1282,7 @@ const HomeShopByBudget = ({ navigation }) => {
   /* ================= PRODUCT CARD ================= */
 
   const ProductCard = ({ item }) => {
-    const isLiked = wishlistItems.some(
-      w => w.barcode_id === item.barcode_id,
-    );
+    const isLiked = wishlistItems.some(w => w.barcode_id === item.barcode_id);
 
     return (
       <TouchableOpacity
@@ -1267,13 +1294,12 @@ const HomeShopByBudget = ({ navigation }) => {
         }
       >
         <View style={ProductCardStyles.imageContainerD}>
-          <Text style={ProductCardStyles.refurbishedLabelD}>
-            Refurbished
-          </Text>
+          <Text style={ProductCardStyles.refurbishedLabelD}>Refurbished</Text>
 
           <Image
             source={{ uri: item.feature_image }}
             style={ProductCardStyles.imageD}
+            resizeMode='contain'
           />
 
           <TouchableOpacity
@@ -1292,15 +1318,11 @@ const HomeShopByBudget = ({ navigation }) => {
           </TouchableOpacity>
         </View>
 
-        <Text style={styles.gradeText}>
-          Grade {item.grade_number}
-        </Text>
+        <Text style={styles.gradeText}>Grade {item.grade_number}</Text>
         <Text style={styles.productName} numberOfLines={1}>
           {item.model_name}
         </Text>
-        <Text style={styles.colorText}>
-          ● {item.color_name}
-        </Text>
+        <Text style={styles.colorText}>● {item.color_name}</Text>
 
         <View style={styles.priceRow}>
           <Text style={styles.price}>₹ {item.price}</Text>
@@ -1330,9 +1352,7 @@ const HomeShopByBudget = ({ navigation }) => {
         onEndReached={loadMore}
         ListHeaderComponent={
           <>
-            {osname && (
-              <Text style={styles.osText}>{osname}</Text>
-            )}
+            {osname && <Text style={styles.osText}>{osname}</Text>}
 
             <FlatList
               horizontal
@@ -1368,24 +1388,15 @@ const HomeShopByBudget = ({ navigation }) => {
         }
         ListFooterComponent={() =>
           paginatedData.length < filteredProducts.length ? (
-            <TouchableOpacity
-              style={styles.loadMoreBtn}
-              onPress={loadMore}
-            >
+            <TouchableOpacity style={styles.loadMoreBtn} onPress={loadMore}>
               <Text style={styles.loadMoreText}>Load More</Text>
             </TouchableOpacity>
           ) : null
         }
         ListEmptyComponent={
           <View style={styles.emptyBox}>
-            <Ionicons
-              name="alert-circle-outline"
-              size={48}
-              color="#888"
-            />
-            <Text style={styles.emptyText}>
-              No products available
-            </Text>
+            <Ionicons name="alert-circle-outline" size={48} color="#888" />
+            <Text style={styles.emptyText}>No products available</Text>
           </View>
         }
       />
@@ -1393,7 +1404,7 @@ const HomeShopByBudget = ({ navigation }) => {
   );
 };
 
-export default HomeShopByBudget;
+export default ShopByBudget;
 
 /* ================= STYLES ================= */
 

@@ -3,7 +3,6 @@ import {
   View,
   Text,
   TouchableOpacity,
-  SafeAreaView,
   StyleSheet,
   FlatList,
 } from 'react-native';
@@ -29,7 +28,7 @@ const HelpSupport = ({navigation}) => {
   );
 
   return (
-    <SafeAreaView style={styles.container}>
+    <View style={styles.container}>
       {/* Header */}
       <Header
         title='Help & Support'
@@ -44,7 +43,7 @@ const HelpSupport = ({navigation}) => {
         renderItem={renderItem}
         contentContainerStyle={styles.list}
       />
-    </SafeAreaView>
+    </View>
   );
 };
 

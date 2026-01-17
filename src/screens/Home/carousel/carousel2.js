@@ -5,14 +5,13 @@ import {
   StyleSheet,
   Image,
   TouchableOpacity,
-  SafeAreaView,
   ScrollView,
 } from 'react-native';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 
 const Carousel2 = ({navigation}) => {
   return (
-    <SafeAreaView style={styles.container}>
+    <View style={styles.container}>
       {/* Header */}
       <View style={styles.header}>
         <TouchableOpacity
@@ -65,7 +64,7 @@ const Carousel2 = ({navigation}) => {
       <TouchableOpacity style={styles.button}>
         <Text style={styles.buttonText}>Shop Prepaid Now</Text>
       </TouchableOpacity>
-    </SafeAreaView>
+    </View>
   );
 };
 

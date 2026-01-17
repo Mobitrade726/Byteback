@@ -6,9 +6,7 @@ import {
   StyleSheet,
   ScrollView,
   TouchableOpacity,
-  ActivityIndicator,
   Modal,
-  SafeAreaView,
   Dimensions,
   Pressable,
 } from 'react-native';
@@ -20,9 +18,7 @@ import {
   fetchSalesInvoiceAPI,
   fetchOrderStatusLogsAPI,
 } from '../../../../redux/slices/orderSlice';
-import { createAndSharePDF } from '../../../../screens/Home/Invoice';
 import { moderateScale } from 'react-native-size-matters';
-import { responsiveHeight } from 'react-native-responsive-dimensions';
 import ActivityLoader from '../../../../constants/Loader';
 
 const { width, height } = Dimensions.get('window');
@@ -52,14 +48,12 @@ const MyorderDetails = ({ navigation, route }) => {
     try {
       setInvoiceLoading(true);
       await dispatch(fetchSalesInvoiceAPI(id));
-      // // small delay to ensure invoiceData updated in store
-      // setTimeout(() => {
-      //   if (invoiceData) {
-      //     createAndSharePDF(invoiceData);
-      //   }
-      //   setInvoiceLoading(false);
-      // }, 400);
-      navigation.navigate('Invoice', { invoiceData: invoiceData });
+
+      navigation.navigate('Invoice', {
+        invoiceId: id,
+      });
+
+      setInvoiceLoading(false);
     } catch (err) {
       setInvoiceLoading(false);
     }
@@ -76,6 +70,10 @@ const MyorderDetails = ({ navigation, route }) => {
 
   const statusConfig = {
     Delivered: {
+      icon: require('../../../../../assets/images/orderdelever.png'),
+      tintColor: '#4CAF50', // green
+    },
+    'Payment verified': {
       icon: require('../../../../../assets/images/orderdelever.png'),
       tintColor: '#4CAF50', // green
     },
@@ -162,7 +160,7 @@ const MyorderDetails = ({ navigation, route }) => {
   };
 
   return (
-    <SafeAreaView style={styles.safe}>
+    <View style={styles.safe}>
       <Header
         title={`#${orderDetails?.order_id_Number ?? order_id_Number ?? ''}`}
         navigation={navigation}
@@ -174,17 +172,6 @@ const MyorderDetails = ({ navigation, route }) => {
         showsVerticalScrollIndicator={false}
         contentContainerStyle={styles.container}
       >
-        {/* STATUS CARD */}
-        {/* <View style={styles.statusCard}>
-          <View style={styles.statusLeft}>
-            <Text style={styles.statusLabel}>Status</Text>
-            <Text style={styles.statusValue}>{statusName}</Text>
-            <Text style={styles.orderTime}>
-              {orderDetails?.order_date_time ?? ''}
-            </Text>
-          </View>
-          <StatusIcon statusName={statusName} />
-        </View> */}
         <View
           style={[
             styles.statusCard,
@@ -275,46 +262,9 @@ const MyorderDetails = ({ navigation, route }) => {
                 {product?.model_name ?? 'Product'}
               </Text>
               <Text style={styles.productPrice}>₹{product?.price ?? '0'}</Text>
-              {/* {orderDetails?.order_status_value === '5' && (
-                <TouchableOpacity
-                  // onPress={() => setReturnModal(true)}
-                  onPress={() => {
-                    setSelectedProduct(product); // ⭐ YEH IMPORTANT
-                    setReturnModal(true);
-                  }}
-                  style={styles.returnBtn}
-                >
-                  <Text style={styles.returnBtnText}>Request Return</Text>
-                </TouchableOpacity>
-              )} */}
-              {/* {[5, 12].includes(Number(orderDetails?.order_status_value)) && (
-                <>
-                  {Number(product?.sales_return_status) === 0 ? (
-                    <TouchableOpacity
-                      onPress={() => {
-                        setSelectedProduct(product);
-                        setReturnModal(true);
-                      }}
-                      style={styles.returnBtn}
-                    >
-                      <Text style={styles.returnBtnText}>Request Return</Text>
-                    </TouchableOpacity>
-                  ) : (
-                    <View
-                      style={[styles.returnBtn, { backgroundColor: '#BEBEBE' }]}
-                    >
-                      <Text style={[styles.returnBtnText, { color: '#fff' }]}>
-                        Request Return
-                      </Text>
-                    </View>
-                  )}
-                </>
-              )} */}
-              {/* RETURN ACTION / STATUS */}
-              {/* RETURN ACTION / STATUS */}
+
               {[5, 12].includes(Number(orderDetails?.order_status_value)) && (
                 <>
-                  {/* Agar return abhi tak request nahi hua */}
                   {product?.sales_return_status === null ||
                   product?.sales_return_status === undefined ? (
                     <TouchableOpacity
@@ -374,7 +324,7 @@ const MyorderDetails = ({ navigation, route }) => {
               <Text style={styles.billRight}>₹{b.price}</Text>
             </View>
           ))}
-          <Text style={{ fontSize: responsiveHeight(1.8), fontWeight: '600' }}>
+          <Text style={{ fontSize: wp(3), fontWeight: '600' }}>
             Bill details
           </Text>
           <View style={styles.divider} />
@@ -446,7 +396,7 @@ const MyorderDetails = ({ navigation, route }) => {
             </TouchableOpacity>
           )}
         </View>
-        <View style={{ height: hp(12) }} />
+        {/* <View style={{ height: hp(12) }} /> */}
       </ScrollView>
 
       {/* Return Modal */}
@@ -491,7 +441,7 @@ const MyorderDetails = ({ navigation, route }) => {
           </View>
         </View>
       </Modal>
-    </SafeAreaView>
+    </View>
   );
 };
 
@@ -500,13 +450,13 @@ export default MyorderDetails;
 const styles = StyleSheet.create({
   safe: {
     flex: 1,
-    backgroundColor: '#F2F6FF',
+    backgroundColor: '#fff',
   },
 
   container: {
     paddingHorizontal: wp(4),
-    paddingBottom: hp(2),
-    paddingTop: hp(1),
+    // paddingBottom: hp(2),
+    // paddingTop: hp(1),
   },
 
   loaderBox: {
@@ -521,21 +471,24 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
-    padding: 14,
+    // padding: 14,
     borderRadius: 12,
     borderWidth: 1,
-    marginBottom: 12,
+    marginVertical: 8,
   },
 
   statusLabel: {
     fontSize: 12,
     color: '#6B7280',
+    marginLeft: 10,
+    marginTop: 10,
   },
 
   statusValue: {
-    fontSize: 16,
+    fontSize: 12,
     fontWeight: '700',
-    marginVertical: 4,
+    marginLeft: 10,
+    // marginVertical: 4,
   },
 
   orderTime: {
@@ -543,19 +496,15 @@ const styles = StyleSheet.create({
     color: '#6B7280',
   },
 
-  orderTime: {
-    fontSize: wp(3.2),
-    color: '#9CA3AF',
-    marginTop: hp(0.5),
-  },
   statusRight: {
-    width: wp(22),
+    // width: wp(22),
     alignItems: 'flex-end',
   },
   statusImage: {
-    width: wp(12),
-    height: wp(12),
+    width: wp(8),
+    height: wp(8),
     tintColor: '#000',
+    right: 10,
   },
   statusImage1: {
     width: wp(12),
@@ -580,9 +529,9 @@ const styles = StyleSheet.create({
     shadowColor: '#A5B4FC',
     shadowOpacity: 0.12,
     shadowOffset: { width: 0, height: 4 },
-    shadowRadius: 10,
-    elevation: 4,
     marginHorizontal: wp(1),
+    borderWidth: 1,
+    borderColor: '#f1f1f1',
   },
   infoSmall: {
     color: '#6B7280',
@@ -591,7 +540,7 @@ const styles = StyleSheet.create({
   },
   infoBold: {
     fontWeight: '800',
-    fontSize: wp(4),
+    fontSize: wp(3),
     marginTop: hp(0.4),
     color: '#111827',
   },
@@ -603,13 +552,13 @@ const styles = StyleSheet.create({
     padding: wp(3),
     flexDirection: 'row',
     alignItems: 'center',
-
     shadowColor: '#93C5FD',
     shadowOpacity: 0.22,
     shadowOffset: { width: 0, height: 6 },
     shadowRadius: 10,
-    elevation: 5,
-    marginVertical: hp(1.5),
+    borderWidth: 1,
+    borderColor: '#f1f1f1',
+    marginBottom: moderateScale(10),
   },
   rmCenter: { flex: 1 },
   rmTitle: {
@@ -640,29 +589,28 @@ const styles = StyleSheet.create({
     borderRadius: wp(3),
     padding: wp(3),
     flexDirection: 'row',
-    alignItems: 'flex-start',
-
     shadowColor: '#A5B4FC',
     shadowOpacity: 0.15,
     shadowRadius: 10,
-    elevation: 4,
     marginBottom: hp(2),
+    borderWidth: 1,
+    borderColor: '#f1f1f1',
+    alignItems: 'center',
   },
   addressLabel: {
     color: '#6B7280',
     fontWeight: '600',
-    fontSize: wp(3.2),
+    fontSize: wp(3),
   },
   addressText: {
     fontWeight: '700',
-    marginTop: hp(0.4),
     color: '#111827',
-    fontSize: wp(3.8),
+    fontSize: wp(3),
   },
 
   /* ----------------------------- PRODUCT LIST ---------------------------- */
   sectionTitle: {
-    fontSize: wp(4.6),
+    fontSize: wp(4),
     fontWeight: '800',
     color: '#1F2937',
     marginBottom: hp(1),
@@ -678,13 +626,14 @@ const styles = StyleSheet.create({
     shadowColor: '#C7D2FE',
     shadowOpacity: 0.25,
     shadowRadius: 12,
-    elevation: 4,
     marginBottom: hp(1.4),
+    borderWidth: 1,
+    borderColor: '#f1f1f1',
   },
   productInfo: { flex: 1, paddingRight: wp(3) },
   grade: {
     color: '#6B7280',
-    fontSize: wp(3.1),
+    fontSize: wp(3),
   },
 
   priceRow: {
@@ -695,25 +644,24 @@ const styles = StyleSheet.create({
   },
 
   priceLabel: {
-    fontSize: 14,
+    fontSize: wp(3),
     color: '#444',
     fontWeight: '500',
   },
 
   priceValue: {
-    fontSize: 14,
+    fontSize: wp(3),
     fontWeight: '600',
     color: '#000',
   },
 
   productTitle: {
-    fontSize: wp(4),
+    fontSize: wp(3),
     fontWeight: '800',
     color: '#111827',
-    marginTop: hp(0.3),
   },
   productPrice: {
-    fontSize: wp(4),
+    fontSize: wp(3),
     fontWeight: '800',
     color: '#2563EB',
     marginTop: hp(0.4),
@@ -737,6 +685,7 @@ const styles = StyleSheet.create({
   returnBtnText: {
     color: '#0284C7',
     fontWeight: '700',
+    fontSize: wp(2),
   },
 
   /* ----------------------------- BILL DETAILS ---------------------------- */
@@ -744,12 +693,11 @@ const styles = StyleSheet.create({
     backgroundColor: '#FFFFFF',
     borderRadius: wp(3),
     padding: wp(3.5),
-
     shadowColor: '#C7D2FE',
     shadowOpacity: 0.2,
     shadowRadius: 10,
-    elevation: 4,
-    marginTop: hp(1),
+    borderWidth: 1,
+    borderColor: '#f1f1f1',
   },
   billRow: {
     flexDirection: 'row',
@@ -761,36 +709,27 @@ const styles = StyleSheet.create({
     backgroundColor: '#E5E7EB',
     marginVertical: hp(1.2),
   },
-  priceLabel: { color: '#6B7280', fontWeight: '600' },
-  priceValue: { fontWeight: '900', color: '#111827' },
 
   /* ----------------------------- FOOTER ---------------------------- */
   footer: {
-    position: 'absolute',
-    bottom: hp(2),
-    left: wp(4),
-    right: wp(4),
-    marginBottom: responsiveHeight(3),
     flexDirection: 'row',
     justifyContent: 'space-between',
     gap: wp(4),
+    marginVertical: wp(2)
   },
   footerBtn: {
     flex: 1,
-    height: hp(6.8),
     borderRadius: wp(3),
     alignItems: 'center',
     justifyContent: 'center',
     flexDirection: 'row',
     gap: wp(2),
-    shadowColor: '#A7F3D0',
-    shadowOpacity: 0.3,
-    shadowRadius: 12,
-    elevation: 4,
+    borderWidth: 1,
+    borderColor: '#f1f1f1', padding: moderateScale(10)
   },
   footerBtnText: {
     fontWeight: '900',
-    fontSize: wp(3.8),
+    fontSize: wp(3),
   },
 
   /* ----------------------------- MODAL ---------------------------- */
@@ -860,6 +799,6 @@ const styles = StyleSheet.create({
 
   returnStatusText: {
     fontWeight: '800',
-    fontSize: wp(3.4),
+    fontSize: wp(2),
   },
 });

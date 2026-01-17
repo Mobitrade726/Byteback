@@ -4,7 +4,6 @@ import {
   Text,
   StyleSheet,
   Switch,
-  SafeAreaView,
   TouchableOpacity,
 } from 'react-native';
 import Ionicons from 'react-native-vector-icons/Ionicons';
@@ -15,7 +14,7 @@ const PushNotification = ({navigation}) => {
   const [lockScreenNotification, setLockScreenNotification] = useState(false);
 
   return (
-    <SafeAreaView style={styles.container}>
+    <View style={styles.container}>
       {/* Header */}
       <View style={styles.header}>
         <TouchableOpacity
@@ -76,7 +75,7 @@ const PushNotification = ({navigation}) => {
           />
         </View>
       </View>
-    </SafeAreaView>
+    </View>
   );
 };
 

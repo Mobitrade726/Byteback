@@ -2,7 +2,6 @@ import React from 'react';
 import {
   View,
   Text,
-  SafeAreaView,
   ScrollView,
   StyleSheet,
   TouchableOpacity,
@@ -11,7 +10,7 @@ import Ionicons from 'react-native-vector-icons/Ionicons';
 
 const TermsConditions = ({navigation}) => {
   return (
-    <SafeAreaView style={styles.container}>
+    <View style={styles.container}>
       {/* Header */}
        <Header
         title="Terms & Conditions"
@@ -93,7 +92,7 @@ const TermsConditions = ({navigation}) => {
           </Text>
         </View>
       </ScrollView>
-    </SafeAreaView>
+    </View>
   );
 };
 

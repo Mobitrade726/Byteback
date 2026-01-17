@@ -2,7 +2,6 @@ import React from 'react';
 import {
   View,
   Text,
-  SafeAreaView,
   TouchableOpacity,
   ScrollView,
 } from 'react-native';
@@ -11,7 +10,7 @@ import Header from '../../../../constants/Header';
 
 const AboutMobiTrade = ({navigation}) => {
   return (
-    <SafeAreaView style={styles.container}>
+    <View style={styles.container}>
       <Header
           title="About Byteback"
           navigation={navigation}
@@ -48,7 +47,7 @@ const AboutMobiTrade = ({navigation}) => {
           </Text>
         </View>
       </ScrollView>
-    </SafeAreaView>
+    </View>
   );
 };
 

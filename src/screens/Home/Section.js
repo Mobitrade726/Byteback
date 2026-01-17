@@ -1,6 +1,6 @@
 import React from "react";
 import { View, Text, TouchableOpacity } from "react-native";
-import { moderateScale } from "react-native-size-matters";
+import { moderateScale, scale } from "react-native-size-matters";
 import Ionicons from 'react-native-vector-icons/Ionicons';
 
 const Section = ({ title, children, onPress }) => {
@@ -13,12 +13,12 @@ const Section = ({ title, children, onPress }) => {
            alignItems: 'center',
            marginBottom: moderateScale(15),
          }}>
-         <Text style={{fontSize: moderateScale(18), fontWeight: 'bold', color: '#222'}}>
+         <Text style={{fontSize: moderateScale(20), fontWeight: 'bold', color: '#222'}}>
            {title}
          </Text>
-         {title !== 'More Features' && title !== 'Shop by budget' ? (
+         {title !== 'Shop by operating system' && title !== 'Shop by budget' && title !== 'More Features' ? (
            <TouchableOpacity onPress={onPress}>
-             <Ionicons name="chevron-forward" size={moderateScale(20)} color="#333" />
+             <Ionicons name="chevron-forward" size={moderateScale(18)} color="#333" />
            </TouchableOpacity>
          ) : null}
        </View>

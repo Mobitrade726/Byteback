@@ -1,5 +1,5 @@
 // import React from 'react';
-// import {Text, View, StyleSheet, TouchableOpacity, SafeAreaView} from 'react-native';
+// import {Text, View, StyleSheet, TouchableOpacity, View} from 'react-native';
 // import {createMaterialTopTabNavigator} from '@react-navigation/material-top-tabs';
 // import Ionicons from 'react-native-vector-icons/Ionicons';
 // import Signup from './Signup';
@@ -24,7 +24,7 @@
 //     : '';
 
 //   return (
-//     <SafeAreaView style={styles.container}>
+//     <View style={styles.container}>
 //       {/* Header */}
 
 //       <Header
@@ -103,7 +103,7 @@
 //           }}
 //         />
 //       </Tab.Navigator>
-//     </SafeAreaView>
+//     </View>
 //   );
 // };
 
@@ -135,7 +135,7 @@
 
 
 import React from 'react';
-import {Text, SafeAreaView, StyleSheet} from 'react-native';
+import {Text, View, StyleSheet} from 'react-native';
 import {createMaterialTopTabNavigator} from '@react-navigation/material-top-tabs';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import Signup from './Signup';
@@ -162,7 +162,7 @@ const SignUpTab = ({navigation}) => {
     : '';
 
   return (
-    <SafeAreaView style={styles.container}>
+    <View style={styles.container}>
       {/* Header */}
       <Header
         title={
@@ -243,7 +243,7 @@ const SignUpTab = ({navigation}) => {
           }}
         />
       </Tab.Navigator>
-    </SafeAreaView>
+    </View>
   );
 };
 

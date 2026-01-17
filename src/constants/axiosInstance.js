@@ -80,7 +80,6 @@
 
 //   const [sessionExpired, setSessionExpired] = useState(false);
 
-
 // const axiosInstance = axios.create({
 //   baseURL: API_BASE_URL,
 //   timeout: 15000,
@@ -117,24 +116,24 @@
 
 // export default axiosInstance;
 
-
 import axios from 'axios';
 import { API_BASE_URL } from '../utils/utils';
-import { triggerSessionExpired } from '../utils/sessionBridge';
+import { logout, sessionExpired } from '../redux/slices/authSlice';
+import { store } from '../redux/store';
 
 const axiosInstance = axios.create({
   baseURL: API_BASE_URL,
-  timeout: 15000,
 });
-
-let isSessionTriggered = false;
 
 axiosInstance.interceptors.response.use(
   response => response,
   error => {
-    if (error?.response?.status === 401 && !isSessionTriggered) {
-      isSessionTriggered = true;
-      triggerSessionExpired(); // 🔥 MODAL OPEN SIGNAL
+    console.log('🔥 AXIOS INTERCEPTOR HIT');
+
+    if (error?.response?.status === 401) {
+      console.log('🚨 401 DETECTED');
+      // triggerSessionExpired(); // 🔥 MODAL OPEN SIGNAL
+      store.dispatch(sessionExpired());
     }
     return Promise.reject(error);
   },

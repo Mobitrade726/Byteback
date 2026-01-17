@@ -5,7 +5,6 @@ import {
   TextInput,
   TouchableOpacity,
   StyleSheet,
-  SafeAreaView,
   ScrollView,
   Alert,
   ActivityIndicator,
@@ -215,7 +214,7 @@ export default function WithdrawScreen({ navigation }) {
   };
 
   return (
-    // <SafeAreaView style={styles.safeArea}>
+    // <View style={styles.safeArea}>
     //   <ScrollView contentContainerStyle={styles.container}>
     //     <Header title="Withdraw" navigation={navigation} showBack={true} />
 
@@ -403,8 +402,8 @@ export default function WithdrawScreen({ navigation }) {
     //       )}
     //     </View>
     //   </ScrollView>
-    // </SafeAreaView>
-    <SafeAreaView style={styles.safeArea}>
+    // </View>
+    <View style={styles.safeArea}>
       <Header title="Withdraw" navigation={navigation} showBack />
 
       <FlatList
@@ -413,7 +412,7 @@ export default function WithdrawScreen({ navigation }) {
         keyExtractor={item => item.id?.toString()}
         showsVerticalScrollIndicator={false}
         ItemSeparatorComponent={() => <View style={styles.separator} />}
-        contentContainerStyle={{ padding: 16 }}
+        contentContainerStyle={{ marginHorizontal: 10 }}
         // 🔝 WITHDRAW FORM
         ListHeaderComponent={
           <>
@@ -438,6 +437,7 @@ export default function WithdrawScreen({ navigation }) {
                   placeholder="Enter UPI ID"
                   value={upi}
                   onChangeText={setUPI}
+                  placeholderTextColor={'#000'}
                 />
               ) : (
                 <>
@@ -447,6 +447,7 @@ export default function WithdrawScreen({ navigation }) {
                     keyboardType="number-pad"
                     value={accountno}
                     onChangeText={setAccountno}
+                     placeholderTextColor={'#000'}
                   />
                   <TextInput
                     style={styles.input}
@@ -454,6 +455,7 @@ export default function WithdrawScreen({ navigation }) {
                     autoCapitalize="characters"
                     value={ifsccode}
                     onChangeText={setIfsccode}
+                     placeholderTextColor={'#000'}
                   />
                 </>
               )}
@@ -463,6 +465,7 @@ export default function WithdrawScreen({ navigation }) {
                 placeholder="Account Holder Name"
                 value={acholdername}
                 onChangeText={setAcholdername}
+                 placeholderTextColor={'#000'}
               />
 
               <TextInput
@@ -471,6 +474,7 @@ export default function WithdrawScreen({ navigation }) {
                 keyboardType="numeric"
                 value={amount}
                 onChangeText={setAmount}
+                 placeholderTextColor={'#000'}
               />
 
               <TextInput
@@ -479,10 +483,16 @@ export default function WithdrawScreen({ navigation }) {
                 multiline
                 value={remark}
                 onChangeText={setRemark}
+                 placeholderTextColor={'#000'}
               />
 
               {/* BALANCE + BUTTON */}
-              <View style={{ marginTop: rf(2) ,  backgroundColor: '#1e90ff', borderRadius: moderateScale(10)}}>
+              <View
+                style={{
+                  backgroundColor: '#333',
+                  borderRadius: moderateScale(10),
+                }}
+              >
                 <View style={styles.balanceRow}>
                   <Text style={styles.balanceLabel}>
                     Available Wallet Balance
@@ -493,7 +503,6 @@ export default function WithdrawScreen({ navigation }) {
                 <TouchableOpacity
                   style={styles.withdrawBtn}
                   onPress={handleWithdraw}
-                  disabled={loading}
                 >
                   {loading ? (
                     <ActivityIndicator color="#fff" />
@@ -530,19 +539,17 @@ export default function WithdrawScreen({ navigation }) {
           </>
         }
       />
-    </SafeAreaView>
+    </View>
   );
 }
 
 // Responsive Styles
 const styles = StyleSheet.create({
-  safeArea: { flex: 1, backgroundColor: '#FBFEFC' },
+  safeArea: { flex: 1, backgroundColor: '#fff' },
   container: { paddingBottom: rh(4) },
   card: {
     backgroundColor: '#fff',
-    padding: rw(4),
     borderRadius: rw(3),
-    elevation: 3,
     marginBottom: rh(2),
   },
   sectionTitle: {
@@ -555,36 +562,37 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'center',
-    backgroundColor: '#fff',
+    // backgroundColor: '#fff',
     paddingVertical: 14,
     borderRadius: 10,
-    marginHorizontal:10,
-    marginVertical:10
+    marginHorizontal: 10,
+    // marginVertical: 10,
   },
   balanceLabel: {
     fontSize: rf(1.5),
     marginHorizontal: 5,
     fontWeight: '600',
-    color: '#000',
+    color: '#fff',
   },
   balanceValue: {
     fontSize: rf(2),
     fontWeight: '700',
-    color: '#1e90ff',
+    color: '#fff',
   },
   withdrawBtn: {
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'center',
-    backgroundColor: '#1e90ff',
+    backgroundColor: '#14AE5C',
     paddingVertical: 14,
-    borderRadius: 10,
+    borderBottomRightRadius:10,
+    borderBottomLeftRadius:10
   },
   withdrawText: {
-    fontSize: rf(2),
+    fontSize: rf(1.5),
     color: '#fff',
     fontWeight: '600',
-    marginHorizontal:5
+    marginHorizontal: 5,
   },
   input: {
     backgroundColor: '#f9f9f9',

@@ -4,13 +4,10 @@ import {
   Text,
   Image,
   StyleSheet,
-  SafeAreaView,
   TouchableOpacity,
   ScrollView,
-  FlatList,
-  Dimensions,
-  ActivityIndicator,
   Alert,
+  FlatList,
 } from 'react-native';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import SimpleLineIcons from 'react-native-vector-icons/SimpleLineIcons';
@@ -41,22 +38,54 @@ import {
   responsiveWidth as rw,
   responsiveHeight as rh,
   responsiveFontSize as rf,
-  responsiveHeight,
 } from 'react-native-responsive-dimensions';
 import { scale, verticalScale, moderateScale } from 'react-native-size-matters';
 import Loader from '../../../constants/Loader';
 import AlertModal from '../../../constants/AlertModal';
+import responsive from '../../../constants/responsive';
+import {
+  addToWishlistAPI,
+  removeFromWishlistAPI,
+  fetchWishlist,
+} from '../../../redux/slices/wishlistSlice';
 
-const InfoItem = ({ label, value, working = true }) => (
-  <View style={styles.row}>
-    <Ionicons
-      name={working ? 'checkmark' : 'close'}
-      size={16}
-      color={working ? 'green' : 'red'}
-    />
-    <Text style={styles.label}>{label}</Text>
-    <Text style={styles.value}>{value}</Text>
-  </View>
+const OUTER_SIZE = responsive.width(52);
+const INNER_SIZE = responsive.width(36);
+const ICON_SIZE = responsive.width(36);
+
+const isGoodStatus = status => {
+  if (!status) return false;
+
+  const goodStatuses = [
+    'excellent',
+    'minor sign of usage',
+    'available',
+    'working',
+    'no bent'
+  ];
+
+  return goodStatuses.includes(status.toLowerCase());
+};
+
+const InfoItem = ({ label, value, working, showDivider = true }) => (
+  <>
+    <View style={styles.row}>
+      {working !== undefined && (
+        <Ionicons
+          name={working ? 'checkmark' : 'close'}
+          size={16}
+          color={working ? 'green' : 'red'}
+          style={{ marginRight: 6 }}
+        />
+      )}
+
+      <Text style={styles.label}>{label}</Text>
+
+      {value ? <Text style={styles.value}>{value}</Text> : null}
+    </View>
+
+    {showDivider && <View style={styles.dividerspecification} />}
+  </>
 );
 
 const trustFeatures = [
@@ -118,14 +147,14 @@ const InfoCard = ({ iconType, icon, text }) => {
           borderRadius: moderateScale(5), // responsive border radius
         }}
       >
-        <Icon name={icon} size={moderateScale(20)} color="#000" />
+        <Icon name={icon} size={moderateScale(12)} color="#000" />
       </View>
       <Text style={styles.infoTextD}>{text}</Text>
     </View>
   );
 };
 
-const ProductDetail = ({ route, iconType, icon, text }) => {
+const ProductList = ({ route, iconType, icon, text }) => {
   const navigation = useNavigation();
   const swiperRef = useRef(null);
   const [showSpecs, setShowSpecs] = useState(false); // Toggle state
@@ -135,8 +164,26 @@ const ProductDetail = ({ route, iconType, icon, text }) => {
   const [loading1, setLoading] = useState(true);
   const [error1, setError] = useState(null);
   const dispatch = useDispatch();
+  const { loading, productData } = useSelector(state => state.product);
+
   const [product, setProduct] = useState('');
-  const { loading } = useSelector(state => state.product);
+
+  const item = product;
+  const wishlistItems = useSelector(state => state.wishlist.items);
+
+  const isInWishlist = wishlistItems.some(
+    w => Number(w.barcode_id) === Number(product?.barcode?.barcode_id),
+  );
+
+  // const isInWishlist = wishlistItems.some(w => w.barcode_id == item.barcode_id);
+  const handleWishlistToggle = () => {
+    if (isInWishlist) {
+      dispatch(removeFromWishlistAPI(item));
+    } else {
+      dispatch(addToWishlistAPI(item));
+    }
+  };
+
   const [activeIndex, setActiveIndex] = useState(0);
   const { items } = useSelector(state => state.cart);
   const [alertVisible, setAlertVisible] = useState(false);
@@ -145,22 +192,22 @@ const ProductDetail = ({ route, iconType, icon, text }) => {
 
   useEffect(() => {
     dispatch(fetchCartAPI());
+    dispatch(fetchWishlist());
   }, [dispatch]);
+
+  const productId = product?.barcode?.barcode_id; // <-- single id
+  const alreadyInCart = items?.some(
+    item => Number(item?.barcode_id) === Number(productId),
+  );
 
   const handleAddToCart = () => {
     if (!product) return;
-
-    const productId = product?.barcode?.barcode_id; // <-- single id
 
     const showAlert = (msg, type = 'error') => {
       setAlertMessage(msg);
       setAlertType(type);
       setAlertVisible(true);
     };
-
-    const alreadyInCart = items?.some(
-      item => Number(item?.barcode_id) === Number(productId),
-    );
 
     if (alreadyInCart) {
       showAlert('This product is already in your cart.', 'error');
@@ -210,6 +257,7 @@ const ProductDetail = ({ route, iconType, icon, text }) => {
   let modelSpecification = product?.model_specification || [];
   let barcode_id = barcodeDetails?.barcode_id;
   let device_qc_reports = product?.device_qc_reports || [];
+  let product_categry = product?.category || [];
 
   // 🔹 Utility function to safely extract values
   const extractValues = (reports, pathFn) =>
@@ -247,6 +295,14 @@ const ProductDetail = ({ route, iconType, icon, text }) => {
       return acc;
     }, []) || [];
 
+  const accessories =
+    device_qc_reports?.reduce((acs, item) => {
+      if (item?.latest_info?.accessories) {
+        acs.push(...item.latest_info.accessories);
+      }
+      return acs;
+    }, []) || [];
+
   const getDeviceAgeLabel = age => {
     switch (
       String(age) // ensure string or number works
@@ -281,7 +337,6 @@ const ProductDetail = ({ route, iconType, icon, text }) => {
           setLoading(false);
         }
       } catch (err) {
-        console.error(err);
         setError('Failed to load product');
         setLoading(false);
       } finally {
@@ -301,15 +356,19 @@ const ProductDetail = ({ route, iconType, icon, text }) => {
   }, [dispatch]);
 
   // Suppose you already have `product` data from API
+
+  const label = product_categry === 'mobile' ? 'IMEI Number' : 'Serial Number';
+
+  const rowData = [label];
+
   const productSpecs = [
-    ['IMEI Number', barcodeDetails?.imei_number],
+    [rowData, barcodeDetails?.imei_number],
     ['Model Name', barcodeDetails?.barcode_model?.model_name],
     ['Color', barcodeDetails?.barcode_color?.color_name],
-    ['SIM Type', modelSpecification?.sim_type],
-    // ['Hybrid Sim Slot', product?.hybrid_sim_slot ? 'Yes' : 'No'],
+    ...(product_categry === 'mobile'
+      ? [['SIM Type', modelSpecification?.sim_type]]
+      : []),
     ['Touchscreen', modelSpecification?.touchscreen],
-    // ['Quick Charging', product?.quick_charging ? 'Yes' : 'No'],
-    // ['Sound Enhancements', product?.sound_enhancements],
   ];
 
   const handleShare = async item => {
@@ -328,113 +387,291 @@ const ProductDetail = ({ route, iconType, icon, text }) => {
     return <Loader size="large" color="green" />;
   }
 
+  const staticImages = [
+    {
+      id: 1,
+      image: require('../../../../assets/images/productlistslider.png'),
+    },
+    {
+      id: 2,
+      image: require('../../../../assets/images/productlistslider.png'),
+    },
+    {
+      id: 3,
+      image: require('../../../../assets/images/productlistslider.png'),
+    },
+  ];
+
+  const imagesToShow =
+    featureImage && featureImage.length > 0 ? featureImage : staticImages;
+
+  const currentModelName =
+    product?.model_specification?.model_name ||
+    product?.barcode?.barcode_model?.model_name;
+
+  const similarProducts = productData?.filter(
+    item => item?.model_name?.toLowerCase() === currentModelName?.toLowerCase(),
+  );
+
+  const currentGrade = Array.isArray(gradeNumbers)
+    ? gradeNumbers[0]?.trim()?.toUpperCase()
+    : gradeNumbers?.trim()?.toUpperCase();
+
+  console.log('🟢 Current Grade:', currentGrade);
+
+  const currentCategory = product?.category?.trim()?.toLowerCase();
+
+  console.log('🟡 Current Category:', currentCategory);
+
+  const similarProductsGrade = Array.isArray(productData)
+    ? productData.filter(item => {
+        const itemGrade = item?.grade_number?.trim()?.toUpperCase();
+
+        const itemCategory = item?.category?.trim()?.toLowerCase();
+
+        return (
+          itemGrade === currentGrade && // ✅ same grade
+          itemCategory === currentCategory // ✅ same category
+        );
+      })
+    : [];
+
+  const renderItemSimilar = ({ item }) => (
+    <TouchableOpacity
+      onPress={() => {
+        navigation.push('ProductList', {
+          product_barcode_id: item?.barcode_id,
+          product_barcode_price: item?.price,
+        });
+      }}
+      style={styles.cardsimilar}
+    >
+      <Image
+        source={
+          item?.feature_image
+            ? { uri: item.feature_image }
+            : require('../../../../assets/images/productlistslider.png')
+        }
+        style={styles.imagesimilar}
+      />
+
+      <Text style={styles.titlesimilar}>{item?.model_name}</Text>
+
+      <Text style={styles.descsimilar}>{item?.color_name}</Text>
+
+      <Text style={styles.descsimilar}>
+        {item?.category === 'Mobile'
+          ? item?.variant_name
+          : `${item?.ram || '-'} / ${item?.rom || '-'}`}
+      </Text>
+
+      <Text style={styles.gradesimilar}>Grade {item?.grade_number}</Text>
+
+      <Text style={styles.pricesimilar}>₹{item?.price}</Text>
+    </TouchableOpacity>
+  );
+  const renderItemGrade = ({ item }) => (
+    <TouchableOpacity
+      onPress={() => {
+        navigation.push('ProductList', {
+          product_barcode_id: item?.barcode_id,
+          product_barcode_price: item?.price,
+        });
+      }}
+      style={styles.cardsimilar}
+    >
+      <Image
+        source={
+          item?.feature_image
+            ? { uri: item.feature_image }
+            : require('../../../../assets/images/productlistslider.png')
+        }
+        style={styles.imagesimilar}
+      />
+
+      <Text style={styles.titlesimilar}>{item?.model_name}</Text>
+
+      <Text style={styles.descsimilar}>{item?.color_name}</Text>
+
+      <Text style={styles.descsimilar}>
+        {item?.category === 'Mobile'
+          ? item?.variant_name
+          : `${item?.ram || '-'} / ${item?.rom || '-'}`}
+      </Text>
+
+      <Text style={styles.gradesimilar}>Grade {item?.grade_number}</Text>
+
+      <Text style={styles.pricesimilar}>₹{item?.price}</Text>
+    </TouchableOpacity>
+  );
+
+  const features = [
+    '30 Days ByteBack Warranty',
+    '52 parameters Quality Check',
+    'Valid GST Bill',
+    '24/7 Customer Support',
+  ];
+
+  const paymentMethods = [
+    {
+      id: '1',
+      label: 'Byteback\nWallet',
+      icon: require('../../../../assets/images/Wallet--Streamline-Kameleon.png'),
+    },
+    {
+      id: '2',
+      label: 'COD',
+      icon: require('../../../../assets/images/Truck--Streamline-Kameleon.png'),
+    },
+    {
+      id: '3',
+      label: 'UPI',
+      icon: require('../../../../assets/images/Smartphone--Streamline-Kameleon.png'),
+    },
+    {
+      id: '4',
+      label: 'Credit Card',
+      icon: require('../../../../assets/images/Credit-Card-3--Streamline-Kameleon.png'),
+    },
+    {
+      id: '5',
+      label: 'Debit Card',
+      icon: require('../../../../assets/images/Credit-Card-3--Streamline-Kameleon-1.png'),
+    },
+    {
+      id: '6',
+      label: 'Net Banking',
+      icon: require('../../../../assets/images/Bank--Streamline-Kameleon.png'),
+    },
+  ];
+
   return (
-    <SafeAreaView style={styles.container}>
-      <ScrollView>
+    <View style={styles.container}>
+      <ScrollView showsVerticalScrollIndicator={false}>
         <Header
-          // title="Product List"
+          title="Product detail screen"
           navigation={navigation}
           showBack={true}
           showSearch
         />
-
-        {/* Main Image Carousel */}
-        <View style={styles.carouselWrapper}>
+        <View style={styles.container}>
           <Swiper
+            key={imagesToShow.length}
             ref={swiperRef}
-            autoplay
-            loop
-            showsPagination={false}
-            dotColor="#ccc"
-            activeDotColor="#000"
-            onIndexChanged={index => setActiveIndex(index)}
+            autoplay={imagesToShow.length > 1}
+            loop={imagesToShow.length > 1}
+            showsPagination
             style={styles.swiper}
+            dotStyle={styles.dot}
+            activeDotStyle={styles.activeDot}
+            paginationStyle={styles.pagination}
+            onIndexChanged={index => setActiveIndex(index)}
           >
-            {featureImage.map((imgObj, index) => (
+            {imagesToShow.map((item, index) => (
               <Image
                 key={index}
-                source={
-                  imgObj?.url
-                    ? { uri: imgObj?.url }
-                    : require('../../../../assets/images/empty.jpeg')
-                }
+                source={item.url ? { uri: item.url } : item.image}
                 style={styles.mainImage}
                 resizeMode="cover"
               />
             ))}
           </Swiper>
 
-          {/* Floating Right-side Icons */}
-          <View style={styles.iconColumn}>
-            <TouchableOpacity onPress={handleShare} style={styles.iconButton}>
-              <Ionicons
-                name="share-social-outline"
-                size={moderateScale(18)}
-                color="#000"
-              />
-            </TouchableOpacity>
-            {/* <TouchableOpacity style={styles.iconButton}>
-              <Ionicons name="heart-outline" size={18} color="#000" />
-            </TouchableOpacity> */}
-            <TouchableOpacity
-              style={styles.iconButton}
-              onPress={() => swiperRef.current.scrollBy(1)}
-            >
-              {/* ➡️ next */}
-              <Ionicons
-                name="chevron-forward-outline"
-                size={moderateScale(18)}
-                color="#000"
-              />
-            </TouchableOpacity>
-            <TouchableOpacity
-              style={styles.iconButton}
-              onPress={() => swiperRef.current.scrollBy(-1)}
-            >
-              {/* ⬅️ prev */}
-              <Ionicons
-                name="chevron-back"
-                size={moderateScale(18)}
-                color="#000"
-              />
-            </TouchableOpacity>
+          <View
+            style={{
+              marginVertical: 10,
+              marginHorizontal: responsive.marginHorizontal(5),
+            }}
+          >
+            <ScrollView horizontal showsHorizontalScrollIndicator={false}>
+              {imagesToShow.map((item, index) => (
+                <TouchableOpacity
+                  key={index}
+                  activeOpacity={0.8}
+                  onPress={() => {
+                    swiperRef.current?.scrollTo(index, true); // ✅ ONLY THIS
+                    setActiveIndex(index); // for highlight
+                  }}
+                  style={{
+                    alignSelf: 'center',
+                    marginHorizontal: responsive.marginHorizontal(3),
+                  }}
+                >
+                  <Image
+                    source={item.url ? { uri: item.url } : item.image}
+                    style={[
+                      styles.thumbnailImage,
+                      activeIndex === index && styles.activeThumbnail,
+                    ]}
+                  />
+                </TouchableOpacity>
+              ))}
+            </ScrollView>
           </View>
+
+          <ScrollView
+            horizontal
+            showsHorizontalScrollIndicator={false}
+            contentContainerStyle={styles.featureContainer}
+          >
+            {features.map((item, index) => (
+              <View key={index} style={styles.featureChip}>
+                <Text style={styles.featureText}>{item}</Text>
+              </View>
+            ))}
+          </ScrollView>
         </View>
 
-        {/* Thumbnails Strip */}
+        <View style={styles.iconColumn}>
+          <TouchableOpacity onPress={handleShare} style={styles.iconButton}>
+            <Ionicons name="share-social-outline" size={15} color="#000" />
+          </TouchableOpacity>
 
-        <ScrollView
-          horizontal
-          showsHorizontalScrollIndicator={false}
-          style={styles.thumbnailStrip}
-          contentContainerStyle={{ paddingHorizontal: moderateScale(10) }}
-        >
-          {featureImage.map((imgObj, index) => (
-            <TouchableOpacity
-              key={index}
-              onPress={() => {
-                if (swiperRef.current) {
-                  swiperRef.current.scrollBy(index - activeIndex); // jump to clicked image
-                }
-              }}
-            >
-              <Image
-                source={
-                  imgObj?.url
-                    ? { uri: imgObj.url }
-                    : require('../../../../assets/images/empty.jpeg')
-                }
-                style={[
-                  styles.thumbnail,
-                  index === activeIndex && styles.activeThumb,
-                ]}
-                resizeMode="cover"
-              />
-            </TouchableOpacity>
-          ))}
-        </ScrollView>
+          {/* <TouchableOpacity
+            style={styles.iconButton}
+            onPress={() => swiperRef.current?.scrollBy(1)}
+          >
+            <Ionicons name="chevron-forward-outline" size={16} color="#000" />
+          </TouchableOpacity> */}
 
-        {/* Header */}
+          {/* <TouchableOpacity
+            style={ProductCardStyles.heartIconD}
+            onPress={() => handleWishlistToggle()}
+          >
+            <AntDesign
+              name={isInWishlist ? 'heart' : 'hearto'}
+              size={20}
+              color={isInWishlist ? '#E74C3C' : '#999'}
+            />
+          </TouchableOpacity> */}
+
+          {/* ❤️ Wishlist */}
+          <TouchableOpacity
+            style={styles.iconButton}
+            onPress={handleWishlistToggle}
+          >
+            <AntDesign
+              name={isInWishlist ? 'heart' : 'hearto'}
+              size={18}
+              color={isInWishlist ? '#E74C3C' : '#000'}
+            />
+          </TouchableOpacity>
+
+          <TouchableOpacity
+            style={styles.iconButton}
+            onPress={() => swiperRef.current?.scrollBy(1)}
+          >
+            <Ionicons name="chevron-forward-outline" size={16} color="#000" />
+          </TouchableOpacity>
+
+          <TouchableOpacity
+            style={styles.iconButton}
+            onPress={() => swiperRef.current?.scrollBy(-1)}
+          >
+            <Ionicons name="chevron-back" size={16} color="#000" />
+          </TouchableOpacity>
+        </View>
+
         <View style={styles.headerP}>
           <View
             style={{
@@ -442,6 +679,7 @@ const ProductDetail = ({ route, iconType, icon, text }) => {
               flex: 1,
               justifyContent: 'space-between',
               alignItems: 'center',
+              marginBottom: responsive.marginBottom(5),
             }}
           >
             <View>
@@ -454,7 +692,7 @@ const ProductDetail = ({ route, iconType, icon, text }) => {
               <Text style={styles.priceP}>
                 ₹{barcodeDetails?.purchase_price || 'N/A'}
               </Text>
-              <Text style={styles.variant}>
+              <Text style={{ fontSize: responsive.fontSize(12) }}>
                 Size: {barcodeDetails?.barcode_variant?.variant_name || 'N/A'}
               </Text>
               <View
@@ -465,7 +703,7 @@ const ProductDetail = ({ route, iconType, icon, text }) => {
                   alignItems: 'center',
                 }}
               >
-                <Text style={styles.variant}>
+                <Text style={{ fontSize: responsive.fontSize(12) }}>
                   Color: {barcodeDetails?.barcode_color?.color_name || 'N/A'}
                 </Text>
                 <View
@@ -476,26 +714,26 @@ const ProductDetail = ({ route, iconType, icon, text }) => {
                 >
                   <Octicons
                     name="dot-fill"
-                    size={moderateScale(22)}
+                    size={moderateScale(20)}
                     color="#000"
                   />
                 </View>
               </View>
             </View>
             <View style={{ marginRight: moderateScale(20) }}>
-              <Text style={{ fontSize: moderateScale(48), fontWeight: 'bold' }}>
+              <Text
+                style={{
+                  fontSize: responsive.fontSize(48),
+                  fontWeight: 'bold',
+                }}
+              >
                 {gradeNumbers || 'N/A'}
               </Text>
               <Text style={styles.grade}>Grade</Text>
             </View>
           </View>
           {/* Buttons */}
-          <View
-            style={{
-              borderWidth: moderateScale(0.5),
-              marginTop: moderateScale(8),
-            }}
-          ></View>
+          <View style={styles.divider} />
           <View style={styles.buttonRow}>
             <TouchableOpacity
               // onPress={() =>
@@ -505,7 +743,9 @@ const ProductDetail = ({ route, iconType, icon, text }) => {
               disabled={loading}
               style={styles.addToCart}
             >
-              <Text style={styles.btnText}>Add to Cart</Text>
+              <Text style={styles.btnText}>
+                {!alreadyInCart ? 'Add to Cart' : 'Added'}
+              </Text>
             </TouchableOpacity>
             <TouchableOpacity
               onPress={() => handleBuyNow()}
@@ -514,17 +754,67 @@ const ProductDetail = ({ route, iconType, icon, text }) => {
               <Text style={styles.btnTextWhite}>Buy Now</Text>
             </TouchableOpacity>
           </View>
-          <View style={{ borderWidth: moderateScale(0.5) }}></View>
+          <View style={styles.divider} />
         </View>
+
+        <Text
+          style={{
+            fontSize: responsive.fontSize(16),
+            marginTop: responsive.marginTop(10),
+            marginHorizontal: responsive.marginHorizontal(10),
+            marginVertical: responsive.marginVertical(8),
+            fontWeight: '500',
+          }}
+        >
+          Available Payment Method
+        </Text>
+        <FlatList
+          horizontal
+          data={paymentMethods}
+          keyExtractor={item => item.id}
+          showsHorizontalScrollIndicator={false}
+          contentContainerStyle={styles.list}
+          renderItem={({ item }) => (
+            <View style={styles.item}>
+              <View style={styles.circleOuter}>
+                <View style={styles.circleInner}>
+                  <Image source={item.icon} style={styles.icon} />
+                </View>
+              </View>
+              <Text style={styles.labelpayment}>{item.label}</Text>
+            </View>
+          )}
+        />
+
+        <Text
+          style={{
+            fontSize: responsive.fontSize(16),
+            marginTop: responsive.marginTop(10),
+            marginHorizontal: responsive.marginHorizontal(8),
+            fontWeight: 'bold',
+          }}
+        >
+          {barcodeDetails?.barcode_model?.model_name || 'N/A'} Highlights
+        </Text>
 
         {/* Specifications & QC Report  */}
         <View style={styles.specSection}>
-          <Text style={styles.headlines}>
+          {/* <Text style={styles.headlines}>
             {barcodeDetails?.barcode_model?.model_name || 'N/A'} Highlights
-          </Text>
-          <View style={{}}>
-            <View style={{ backgroundColor: '#EAE6E5', padding: scale(5) }}>
-              <Text style={{ fontSize: rf(2.5), fontWeight: '600' }}>
+          </Text> */}
+          <View style={{ marginTop: moderateScale(8) }}>
+            <View
+              style={{
+                backgroundColor: '#EAE6E5',
+                padding: responsive.padding(8),
+              }}
+            >
+              <Text
+                style={{
+                  fontSize: responsive.fontSize(16),
+                  fontWeight: 'bold',
+                }}
+              >
                 Key Features
               </Text>
             </View>
@@ -532,14 +822,14 @@ const ProductDetail = ({ route, iconType, icon, text }) => {
               <View
                 key={label}
                 style={[
-                  styles.specRow,
+                  styles.specRowFeature,
                   {
-                    backgroundColor: index % 2 === 0 ? '#FFFBFA' : '#66666680',
+                    backgroundColor: index % 2 === 0 ? '#F0F0F0' : '#D9D9D9',
                   },
                 ]}
               >
-                <Text style={styles.specLabel}>{label}</Text>
-                <Text style={styles.specValue}>{value || 'N/A'}</Text>
+                <Text style={styles.specLabelFeature}>{label}</Text>
+                <Text style={styles.specValueFeature}>{value || 'N/A'}</Text>
               </View>
             ))}
           </View>
@@ -547,15 +837,13 @@ const ProductDetail = ({ route, iconType, icon, text }) => {
             style={{
               flexDirection: 'row',
               justifyContent: 'space-between',
-              fontSize: moderateScale(18), // responsive font size
-              marginHorizontal: scale(8),
-              marginTop: scale(8),
+              marginHorizontal: responsive.marginHorizontal(8),
+              marginTop: moderateScale(8),
             }}
           >
             <Text
               style={{
-                fontSize: rf(2.2),
-                marginVertical: moderateScale(5),
+                fontSize: responsive.fontSize(16),
                 fontWeight: 'bold',
               }}
             >
@@ -564,143 +852,190 @@ const ProductDetail = ({ route, iconType, icon, text }) => {
             <TouchableOpacity onPress={() => setShowSpecs(prev => !prev)}>
               <SimpleLineIcons
                 name={showSpecs ? 'arrow-up' : 'arrow-down'}
-                size={moderateScale(20)} // responsive size
+                size={moderateScale(12)} // responsive size
                 color="#000"
               />
             </TouchableOpacity>
           </View>
 
           {showSpecs && (
-            <View>
-              <Text style={styles.headlines}>OS & Processor Features</Text>
-              <View style={styles.specRow}>
-                <Text style={styles.specLabel}>Operating System</Text>
-                <Text style={styles.specValue}>
+            <View style={{}}>
+              <Text style={styles.headlinesviewspecifications}>
+                OS & Processor Features
+              </Text>
+              <View style={styles.dividerspecification} />
+
+              <View style={styles.specRowSpecification}>
+                <Text style={styles.specLabelSpecification}>
+                  Operating System
+                </Text>
+                <Text style={styles.specValuespecification}>
                   {modelSpecification?.operating_system || 'N/A'}
                 </Text>
               </View>
-              <View style={styles.specRow}>
-                <Text style={styles.specLabel}>Processor</Text>
-                <Text style={styles.specValue}>
+
+              <View style={styles.dividerspecification} />
+
+              <View style={styles.specRowSpecification}>
+                <Text style={styles.specLabelSpecification}>Processor</Text>
+                <Text style={styles.specValuespecification}>
                   {modelSpecification?.processor || 'N/A'}
                 </Text>
               </View>
 
-              <Text style={styles.headlines}>Display Features</Text>
-              <View style={styles.specRow}>
-                <Text style={styles.specLabel}>Display Size</Text>
-                <Text style={styles.specValue}>
+              <Text style={styles.headlinesviewspecifications}>
+                Display Features
+              </Text>
+              <View style={styles.dividerspecification} />
+              <View style={styles.specRowSpecification}>
+                <Text style={styles.specLabelSpecification}>Display Size</Text>
+                <Text style={styles.specValuespecification}>
                   {modelSpecification?.screen_size || 'N/A'}
                 </Text>
               </View>
-              <View style={styles.specRow}>
-                <Text style={styles.specLabel}>Resolution</Text>
-                <Text style={styles.specValue}>
+              <View style={styles.dividerspecification} />
+              <View style={styles.specRowSpecification}>
+                <Text style={styles.specLabelSpecification}>Resolution</Text>
+                <Text style={styles.specValuespecification}>
                   {modelSpecification?.resolution || 'N/A'}
                 </Text>
               </View>
-              <View style={styles.specRow}>
-                <Text style={styles.specLabel}>GPU</Text>
-                <Text style={styles.specValue}>
+              <View style={styles.dividerspecification} />
+              <View style={styles.specRowSpecification}>
+                <Text style={styles.specLabelSpecification}>GPU</Text>
+                <Text style={styles.specValuespecification}>
                   {modelSpecification?.graphics || 'N/A'}
                 </Text>
               </View>
 
-              <Text style={styles.headlines}>Memory & Storage</Text>
+              <Text style={styles.headlinesviewspecifications}>
+                Memory & Storage
+              </Text>
+              <View style={styles.dividerspecification} />
               {barcodeDetails?.barcode_brand?.category === 'Mobile' ? (
                 <>
-                  <View style={styles.specRow}>
-                    <Text style={styles.specLabel}>Internal Storage</Text>
-                    <Text style={styles.specValue}>
+                  <View style={styles.specRowSpecification}>
+                    <Text style={styles.specLabelSpecification}>
+                      Internal Storage
+                    </Text>
+                    <Text style={styles.specValuespecification}>
                       {barcodeDetails?.barcode_storage || 'N/A'}
                     </Text>
                   </View>
-                  <View style={styles.specRow}>
-                    <Text style={styles.specLabel}>RAM</Text>
-                    <Text style={styles.specValue}>
+                  <View style={styles.dividerspecification} />
+                  <View style={styles.specRowSpecification}>
+                    <Text style={styles.specLabelSpecification}>RAM</Text>
+                    <Text style={styles.specValuespecification}>
                       {barcodeDetails?.barcode_ram || 'N/A'}
                     </Text>
                   </View>
                 </>
               ) : (
                 <>
-                  <View style={styles.specRow}>
-                    <Text style={styles.specLabel}>Internal Storage</Text>
-                    <Text style={styles.specValue}>
+                  <View style={styles.specRowSpecification}>
+                    <Text style={styles.specLabelSpecification}>
+                      Internal Storage
+                    </Text>
+                    <Text style={styles.specValuespecification}>
                       {barcodeDetails?.barcode_storage?.rom_name || 'N/A'}
                     </Text>
                   </View>
-                  <View style={styles.specRow}>
-                    <Text style={styles.specLabel}>RAM</Text>
-                    <Text style={styles.specValue}>
+                  <View style={styles.dividerspecification} />
+                  <View style={styles.specRowSpecification}>
+                    <Text style={styles.specLabelSpecification}>RAM</Text>
+                    <Text style={styles.specValuespecification}>
                       {barcodeDetails?.barcode_storage?.rom_code || 'N/A'}
                     </Text>
                   </View>
                 </>
               )}
 
-              <Text style={styles.headlines}>Camera Features</Text>
-              <View style={styles.specRow}>
-                <Text style={styles.specLabel}>Primary Camera</Text>
-                <Text style={styles.specValue}>
+              <Text style={styles.headlinesviewspecifications}>
+                Camera Features
+              </Text>
+              <View style={styles.dividerspecification} />
+              <View style={styles.specRowSpecification}>
+                <Text style={styles.specLabelSpecification}>
+                  Primary Camera
+                </Text>
+                <Text style={styles.specValuespecification}>
                   {modelSpecification?.front_camera || 'N/A'}
                 </Text>
               </View>
-              <View style={styles.specRow}>
-                <Text style={styles.specLabel}>Secondary Camera</Text>
-                <Text style={styles.specValue}>
+              <View style={styles.dividerspecification} />
+              <View style={styles.specRowSpecification}>
+                <Text style={styles.specLabelSpecification}>
+                  Secondary Camera
+                </Text>
+                <Text style={styles.specValuespecification}>
                   {modelSpecification?.no_of_rear_camera || 'N/A'}
                 </Text>
               </View>
-              <View style={styles.specRow}>
-                <Text style={styles.specLabel}>Front Flashs</Text>
-                <Text style={styles.specValue}>
+              <View style={styles.dividerspecification} />
+              <View style={styles.specRowSpecification}>
+                <Text style={styles.specLabelSpecification}>Front Flashs</Text>
+                <Text style={styles.specValuespecification}>
                   {modelSpecification?.front_flash || 'N/A'}
                 </Text>
               </View>
-              <View style={styles.specRow}>
-                <Text style={styles.specLabel}>Back Flashs</Text>
-                <Text style={styles.specValue}>
+              <View style={styles.dividerspecification} />
+              <View style={styles.specRowSpecification}>
+                <Text style={styles.specLabelSpecification}>Back Flashs</Text>
+                <Text style={styles.specValuespecification}>
                   {modelSpecification?.rear_flash || 'N/A'}
                 </Text>
               </View>
-              <Text style={styles.headlines}>Other Details</Text>
-              <View style={styles.specRow}>
-                <Text style={styles.specLabel}>Sensors</Text>
-                <Text style={styles.specValue}>
+              <Text style={styles.headlinesviewspecifications}>
+                Other Details
+              </Text>
+              <View style={styles.dividerspecification} />
+              <View style={styles.specRowSpecification}>
+                <Text style={styles.specLabelSpecification}>Sensors</Text>
+                <Text style={styles.specValuespecification}>
                   {modelSpecification?.fingerprint_sensor || 'N/A'}
                 </Text>
               </View>
-              <View style={styles.specRow}>
-                <Text style={styles.specLabel}>GPS Type</Text>
-                <Text style={styles.specValue}>
+              <View style={styles.dividerspecification} />
+              <View style={styles.specRowSpecification}>
+                <Text style={styles.specLabelSpecification}>GPS Type</Text>
+                <Text style={styles.specValuespecification}>
                   {modelSpecification?.gps || 'N/A'}
                 </Text>
               </View>
-              <Text style={styles.headlines}>Battery & Power</Text>
-              <View style={styles.specRow}>
-                <Text style={styles.specLabel}>Battery Capacity</Text>
-                <Text style={styles.specValue}>
+              <Text style={styles.headlinesviewspecifications}>
+                Battery & Power
+              </Text>
+              <View style={styles.dividerspecification} />
+              <View style={styles.specRowSpecification}>
+                <Text style={styles.specLabelSpecification}>
+                  Battery Capacity
+                </Text>
+                <Text style={styles.specValuespecification}>
                   {modelSpecification?.battery_capacity || 'N/A'}
                 </Text>
               </View>
-              <Text style={styles.headlines}>Dimensions</Text>
-              <View style={styles.specRow}>
-                <Text style={styles.specLabel}>Size</Text>
-                <Text style={styles.specValue}>
+              <Text style={styles.headlinesviewspecifications}>Dimensions</Text>
+              <View style={styles.dividerspecification} />
+              <View style={styles.specRowSpecification}>
+                <Text style={styles.specLabelSpecification}>Size</Text>
+                <Text style={styles.specValuespecification}>
                   {modelSpecification?.dimensions || 'N/A'}
                 </Text>
               </View>
-              <View style={styles.specRow}>
-                <Text style={styles.specLabel}>Weight</Text>
-                <Text style={styles.specValue}>
+              <View style={styles.dividerspecification} />
+              <View style={styles.specRowSpecification}>
+                <Text style={styles.specLabelSpecification}>Weight</Text>
+                <Text style={styles.specValuespecification}>
                   {modelSpecification?.weight || 'N/A'}
                 </Text>
               </View>
-              <Text style={styles.headlines}>Warranty</Text>
-              <View style={styles.specRow}>
-                <Text style={styles.specLabel}>Warranty Summary</Text>
-                <Text style={styles.specValue}>
+              <Text style={styles.headlinesviewspecifications}>Warranty</Text>
+              <View style={styles.dividerspecification} />
+              <View style={styles.specRowSpecification}>
+                <Text style={styles.specLabelSpecification}>
+                  Warranty Summary
+                </Text>
+                <Text style={styles.specValuespecification}>
                   1 Year Manufacturer Warranty for Device and 6 Months
                   Manufacturer Warranty for In-Box Accessories
                 </Text>
@@ -716,19 +1051,22 @@ const ProductDetail = ({ route, iconType, icon, text }) => {
             style={{
               flexDirection: 'row',
               justifyContent: 'space-between',
-              fontSize: moderateScale(18), // responsive font size
-              marginHorizontal: scale(8),
-              marginBottom: moderateScale(15),
-              marginVertical: moderateScale(10),
+              marginHorizontal: responsive.marginHorizontal(8),
+              marginVertical: moderateScale(8),
             }}
           >
-            <Text style={{ fontSize: rf(2.2), fontWeight: 'bold' }}>
+            <Text
+              style={{
+                fontSize: responsive.fontSize(16),
+                fontWeight: 'bold',
+              }}
+            >
               QC Report
             </Text>
             <TouchableOpacity onPress={() => setShowSpecs1(prev => !prev)}>
               <SimpleLineIcons
                 name={showSpecs1 ? 'arrow-up' : 'arrow-down'}
-                size={moderateScale(20)} // responsive size
+                size={moderateScale(12)} // responsive size
                 color="#000"
               />
             </TouchableOpacity>
@@ -740,7 +1078,7 @@ const ProductDetail = ({ route, iconType, icon, text }) => {
                 style={{
                   flexDirection: 'row',
                   justifyContent: 'space-between',
-                  marginHorizontal: rw(2.5),
+                  marginHorizontal: moderateScale(10),
                 }}
               >
                 <View style={{}}>
@@ -750,7 +1088,9 @@ const ProductDetail = ({ route, iconType, icon, text }) => {
                   <Text style={styles.specLabel}>Warranty</Text>
                 </View>
                 <View>
-                  <Text style={styles.specLabel}>{barcodeDetails?.barcode_number?.barcode_number || 'N/A'}</Text>
+                  <Text style={styles.specLabel}>
+                    {barcodeDetails?.barcode_number?.barcode_number || 'N/A'}
+                  </Text>
                   <Text style={styles.specLabel}>{switchings || 'N/A'}</Text>
                   <Text style={styles.specLabel}>{devicelocked || 'N/A'}</Text>
                   <Text style={styles.specLabel}>
@@ -758,134 +1098,153 @@ const ProductDetail = ({ route, iconType, icon, text }) => {
                   </Text>
                 </View>
               </View>
-              <Text style={styles.headlines}>Accessories</Text>
-              <InfoItem label="Box with same IMEI / SN" value="" />
-              <InfoItem label="Charging Adapter" value="" />
-              <InfoItem label="Charging Cable" value="" />
-              <InfoItem label="Earphone" value="" />
+              {/* <Text style={styles.headlines}>Accessories</Text>
+              {accessories.map((d, idx) => (
+                <InfoItem key={idx} label={d?.accessory_name || 'N/A'} />
+              ))} */}
 
-              <Text style={styles.headlines}>Body Defects</Text>
+              {accessories?.length > 0 && (
+                <>
+                  <Text style={styles.headlinesviewspecifications}>
+                    Accessories
+                  </Text>
+
+                  {accessories.map((d, idx) => (
+                    <InfoItem key={idx} label={d?.accessory_name || 'N/A'} />
+                  ))}
+                </>
+              )}
+
+              <Text style={styles.headlinesviewspecifications}>
+                Body Defects
+              </Text>
+              <View style={styles.dividerspecification} />
 
               {details
-                .filter(d => d.defect_type === 'Body Defects') // only Body Defects
-                .map((d, idx) => (
-                  <InfoItem
-                    key={idx}
-                    label={d.parameter?.parameter_name || 'N/A'}
-                    value={d.parameter_status?.parameter_status_name || 'N/A'}
-                    working={d.parameter_status?.parameter_status_name || 'N/A'}
-                  />
-                ))}
+                .filter(d => d.defect_type === 'Body Defects')
+                .map((d, idx, arr) => {
+                  const status = d.parameter_status?.parameter_status_name;
 
-              <Text style={styles.headlines}>Screen Defects</Text>
+                  return (
+                    <InfoItem
+                      key={idx}
+                      label={d.parameter?.parameter_name || 'N/A'}
+                      value={status || 'N/A'}
+                      working={isGoodStatus(status)}
+                      showDivider={idx !== arr.length - 1} // 🔑 last pe nahi
+                    />
+                  );
+                })}
 
+              <Text style={styles.headlinesviewspecifications}>
+                Screen Defects
+              </Text>
+              <View style={styles.dividerspecification} />
               {details
-                .filter(d => d.defect_type === 'Screen Defects') // only Body Defects
-                .map((d, idx) => (
-                  <InfoItem
-                    key={idx}
-                    label={d.parameter?.parameter_name || 'N/A'}
-                    value={d.parameter_status?.parameter_status_name || 'N/A'}
-                    working={d.parameter_status?.parameter_status_name || 'N/A'}
-                  />
-                ))}
+                .filter(d => d.defect_type === 'Screen Defects')
+                .map((d, idx) => {
+                  const status = d.parameter_status?.parameter_status_name;
 
-              <Text style={styles.headlines}>Functional Defects</Text>
+                  return (
+                    <InfoItem
+                      key={idx}
+                      label={d.parameter?.parameter_name || 'N/A'}
+                      value={status || 'N/A'}
+                      working={isGoodStatus(status)}
+                    />
+                  );
+                })}
+              <Text style={styles.headlinesviewspecifications}>
+                Functional Defects
+              </Text>
               {details
-                .filter(d => d.defect_type === 'Functional Problems') // only Body Defects
-                .map((d, idx) => (
-                  <InfoItem
-                    key={idx}
-                    label={d.parameter?.parameter_name || 'N/A'}
-                    value={d.parameter_status?.parameter_status_name || 'N/A'}
-                    working={d.parameter_status?.parameter_status_name || 'N/A'}
-                  />
-                ))}
+                .filter(d => d.defect_type === 'Functional Problems')
+                .map((d, idx) => {
+                  const status = d.parameter_status?.parameter_status_name;
 
-              {/* <InfoItem label="Camera Lens" value="Minor Signs" />
-              <InfoItem label="Back Panel" value="Minor Signs" />
-              <InfoItem label="Screw" value="Available" />
-              <InfoItem label="Frame" value="Excellent" />
-              <InfoItem label="Device Bent" value="No Bent" />
-              <InfoItem label="Chrome" value="Excellent" />
-              <InfoItem label="Sim Tray" value="Excellent" /> */}
-              {/* 
-              // <Text style={styles.headlines}>Screen Defects</Text>
-              <InfoItem label="Display" value="Excellent" />
-              <InfoItem label="Front Glass" value="Minor Signs" />
-              <InfoItem label="Screen Quality" value="Original" />
-
-              <Text style={styles.headlines}>Functional Defects</Text>
-              <InfoItem label="WiFi" value="Not Working" working={false} />
-              <InfoItem label="Proximity Sensor" value="Working" />
-              <InfoItem label="Bluetooth" value="Working" />
-              <InfoItem label="Reciever" value="Working" />
-              <InfoItem label="Ringer" value="Working" />
-              <InfoItem label="Vibrator" value="Working" />
-              <InfoItem label="Mic" value="Working" />
-              <InfoItem label="SIM Status" value="Working" />
-              <InfoItem label="Front Flash Light" value="Working" />
-              <InfoItem label="Back Flash Light" value="Working" />
-              <InfoItem label="Fingerprint" value="Working" />
-              <InfoItem label="Front Camera" value="Working" />
-              <InfoItem label="Back Camera" value="Working" />
-
-              <InfoItem label="Portrait Camera" value="Not Working" />
-              <InfoItem label="Charging Jack" value="Working" />
-              <InfoItem label="Earphone Jack" value="Working" />
-              <InfoItem label="Home Key" value="Working" />
-              <InfoItem label="Power Key" value="Working" />
-              <InfoItem label="Silent Key " value="Working" />
-              <InfoItem label="Volume Key" value="Working" />
-              <InfoItem label="Face Lock" value="Working" />
-              <InfoItem label="True Tone" value="Working" />
-              <InfoItem label="Error Message" value="Working" />
-              <InfoItem label="Battery" value="Working" />
-              <InfoItem label="Battery Health" value="92%" /> */}
+                  return (
+                    <InfoItem
+                      key={idx}
+                      label={d.parameter?.parameter_name || 'N/A'}
+                      value={status || 'N/A'}
+                      working={isGoodStatus(status)}
+                    />
+                  );
+                })}
             </>
           )}
         </View>
 
-        {/* View Similar Products  */}
-        {/* <Text style={styles.headlines}>View Similar Products</Text> */}
+        <Text
+          style={{
+            fontSize: responsive.fontSize(16),
+            marginTop: responsive.marginTop(10),
+            marginHorizontal: responsive.marginHorizontal(8),
+            marginVertical: responsive.marginVertical(8),
+            fontWeight: 'bold',
+          }}
+        >
+          View Similar Products
+        </Text>
 
+        <FlatList
+          data={similarProducts}
+          horizontal
+          showsHorizontalScrollIndicator={false}
+          keyExtractor={item => item.id}
+          renderItem={renderItemSimilar}
+          contentContainerStyle={{ paddingHorizontal: 16 }}
+        />
+        <Text
+          style={{
+            fontSize: responsive.fontSize(16),
+            marginTop: responsive.marginTop(10),
+            marginHorizontal: responsive.marginHorizontal(10),
+            marginVertical: responsive.marginVertical(8),
+            fontWeight: 'bold',
+          }}
+        >
+          You Might Like
+        </Text>
+        <FlatList
+          data={similarProductsGrade}
+          horizontal
+          showsHorizontalScrollIndicator={false}
+          keyExtractor={item => item.id}
+          renderItem={renderItemGrade}
+          contentContainerStyle={{ paddingHorizontal: 16 }}
+        />
         <Text style={styles.subHeadingD}>Buy Smart. Buy Secure.</Text>
         <View style={styles.featureGridD}>
           <View style={styles.featureBoxD}>
             <AntDesign
               name="clockcircleo"
-              size={moderateScale(18)}
+              size={moderateScale(12)}
               color="#000"
             />
             <Text
               style={{
-                width: '90%',
-                marginLeft: moderateScale(5),
-                fontSize: moderateScale(12),
+                fontSize: responsive.fontSize(12),
               }}
             >
               Over a Decade of Service
             </Text>
           </View>
           <View style={[styles.featureBoxD]}>
-            <Feather name="truck" size={moderateScale(20)} color="#000" />
+            <Feather name="truck" size={moderateScale(12)} color="#000" />
             <Text
               style={{
-                width: '90%',
-                marginLeft: moderateScale(5),
-                fontSize: moderateScale(12),
+                fontSize: responsive.fontSize(12),
               }}
             >
               Pan-India Delivery
             </Text>
           </View>
           <View style={styles.featureBoxD}>
-            <EvilIcons name="undo" size={moderateScale(25)} color="#000" />
+            <EvilIcons name="undo" size={moderateScale(16)} color="#000" />
             <Text
               style={{
-                width: '90%',
-                marginLeft: moderateScale(5),
-                fontSize: moderateScale(12),
+                fontSize: responsive.fontSize(12),
               }}
             >
               14-Day Return Policy
@@ -894,22 +1253,20 @@ const ProductDetail = ({ route, iconType, icon, text }) => {
           <View style={styles.featureBoxD}>
             <MaterialIcons
               name="security"
-              size={moderateScale(20)}
+              size={moderateScale(12)}
               color="#000"
             />
             <Text
               style={{
-                width: '90%',
-                marginLeft: moderateScale(5),
-                fontSize: moderateScale(12),
+                fontSize: responsive.fontSize(12),
               }}
             >
-              7-Day Testing Warranty
+              30-Day Testing Warranty
             </Text>
           </View>
         </View>
 
-        <Text style={styles.subHeadingD}>Your Trust, Our Commitment</Text>
+        <Text style={[styles.subHeadingD]}>Your Trust, Our Commitment</Text>
         <ScrollView horizontal showsHorizontalScrollIndicator={false}>
           {trustFeatures.map(item => (
             <InfoCard
@@ -947,16 +1304,16 @@ const ProductDetail = ({ route, iconType, icon, text }) => {
           onClose={() => setAlertVisible(false)}
         />
       </ScrollView>
-    </SafeAreaView>
+    </View>
   );
 };
 
-export default ProductDetail;
+export default ProductList;
 
 export const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#fff',
+    backgroundColor: '#FFFBFA',
   },
   header: {
     flexDirection: 'row',
@@ -976,44 +1333,75 @@ export const styles = StyleSheet.create({
     color: '#000',
     textAlign: 'center',
   },
-  carouselWrapper: {
-    position: 'relative',
-    height: rh(31),
-    borderRadius: scale(10),
-    overflow: 'hidden',
-    marginHorizontal: rw(2.5),
+
+  swiper: {
+    height: responsive.height(360),
   },
+
   mainImage: {
-    width: '98%',
+    borderRadius: responsive.borderRadius(10),
+    height: responsive.height(360),
+    width: responsive.width(360),
     alignSelf: 'center',
-    height: rh(30),
-    borderRadius: scale(10),
-    resizeMode: 'center',
-    borderWidth: 1,
-    borderColor: '#1C9C48',
+    padding: responsive.padding(16),
   },
+
+  pagination: {
+    bottom: responsive.bottom(8), // kam rakho
+  },
+  dot: {
+    backgroundColor: '#ccc',
+    width: 8,
+    height: 8,
+    borderRadius: 8,
+    marginHorizontal: 3,
+  },
+  activeDot: {
+    backgroundColor: '#FFFBFA',
+    width: 8,
+    height: 8,
+    borderRadius: 4,
+  },
+
   iconColumn: {
     position: 'absolute',
-    right: rw(2),
-    top: rh(2),
+    right: rw(5),
+    top: rh(12),
     zIndex: 10,
   },
   iconButton: {
     backgroundColor: '#fff',
-    padding: moderateScale(8),
-    borderRadius: scale(20),
+    padding: responsive.padding(5),
+    borderRadius: responsive.borderRadius(20),
     marginVertical: verticalScale(6),
     elevation: 3,
+    justifyContent: 'center',
   },
+
+  /* 🔽 THUMBNAILS */
+  thumbnailRow: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    width: responsive.width(360),
+    marginTop: 12,
+    alignSelf: 'center',
+  },
+
+  thumbnailImage: {
+    width: responsive.width(115),
+    height: responsive.height(115),
+    borderRadius: 10,
+    borderWidth: 1,
+    borderColor: '#ddd',
+  },
+
+  activeThumbnail: {
+    borderColor: '#000',
+    borderWidth: 2,
+  },
+
   thumbnailStrip: {
     marginTop: verticalScale(0),
-  },
-  thumbnail: {
-    width: rw(32),
-    height: rw(38),
-    borderRadius: scale(12),
-    marginHorizontal: rw(1),
-    resizeMode: 'center',
   },
   headerP: {
     padding: 0,
@@ -1021,16 +1409,22 @@ export const styles = StyleSheet.create({
     marginVertical: verticalScale(1),
   },
   brandP: {
-    color: '#007aff',
-    fontSize: rf(3),
-    marginVertical: moderateScale(5),
+    color: '#11A5D7',
+    fontSize: responsive.fontSize(16),
+    marginVertical: moderateScale(1),
+    marginTop: moderateScale(5),
   },
   titleP: {
-    fontSize: rf(2.5),
-    fontWeight: '700',
+    fontSize: responsive.fontSize(28),
+    fontWeight: 'bold',
     marginVertical: verticalScale(1),
+    color: '#1A1A2D',
   },
-  priceP: { fontSize: rf(3), color: '#1C9C48', fontWeight: '700' },
+  priceP: {
+    fontSize: responsive.fontSize(16),
+    color: '#1A1A2D',
+    fontWeight: 'bold',
+  },
   strikePrice: {
     textDecorationLine: 'line-through',
     color: '#777',
@@ -1038,34 +1432,46 @@ export const styles = StyleSheet.create({
   },
   grade: {
     textAlign: 'center',
-    fontWeight: 'bold',
-    color: '#333',
-    fontSize: rf(2),
+    fontWeight: 'semibold',
+    color: '#333333',
+    fontSize: responsive.fontSize(14),
   },
-  variant: { fontSize: rf(2.2), color: '#333', marginBottom: verticalScale(1) },
+  variant: { fontSize: rf(2), color: '#333', marginBottom: verticalScale(1) },
   buttonRow: {
     flexDirection: 'row',
-    marginVertical: verticalScale(5),
-    gap: rw(3),
+    margin: responsive.margin(8),
+    gap: responsive.gap(10),
   },
   addToCart: {
     flex: 1,
-    backgroundColor: '#ddd',
-    padding: verticalScale(12),
-    borderRadius: scale(8),
+    backgroundColor: '#FFFBFA',
+    padding: responsive.padding(8),
+    borderRadius: responsive.borderRadius(12),
     alignItems: 'center',
-    borderWidth: 2,
+    borderWidth: 1,
     borderColor: '#666666',
+    justifyContent: 'center',
   },
   buyNow: {
     flex: 1,
     backgroundColor: '#1C9C48',
-    padding: verticalScale(12),
-    borderRadius: scale(8),
+    padding: responsive.padding(8),
+    borderRadius: responsive.borderRadius(12),
     alignItems: 'center',
+    borderWidth: 1,
+    borderColor: '#666666',
+    justifyContent: 'center',
   },
-  btnText: { fontWeight: '600', fontSize: rf(2) },
-  btnTextWhite: { color: '#fff', fontWeight: '600', fontSize: rf(2) },
+  btnText: {
+    fontWeight: '600',
+    fontSize: responsive.fontSize(16),
+    textAlign: 'center',
+  },
+  btnTextWhite: {
+    color: '#fff',
+    fontWeight: '600',
+    fontSize: responsive.fontSize(16),
+  },
   bullets: { marginTop: verticalScale(1) },
   bullet: { marginBottom: verticalScale(1), color: '#555', fontSize: rf(1.8) },
   viewMore: { color: '#007aff', marginTop: verticalScale(1.5) },
@@ -1104,27 +1510,62 @@ export const styles = StyleSheet.create({
   },
 
   specSection: {},
+  specRowFeature: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    paddingVertical: verticalScale(8),
+    borderBottomWidth: 0.5,
+    borderBottomColor: '#dcdcdc',
+  },
+
+  specLabelFeature: {
+    width: '25%', // 👈 label column
+    fontSize: responsive.fontSize(12),
+    color: '#666',
+    marginHorizontal: responsive.marginHorizontal(10),
+  },
+
+  specValueFeature: {
+    width: '55%', // 👈 value column
+    fontSize: responsive.fontSize(12),
+    color: '#666',
+    textAlign: 'left', // 🔑 start se hi
+    marginHorizontal: responsive.marginHorizontal(10),
+  },
+
   specRow: {
     flexDirection: 'row',
+    alignItems: 'center',
+    paddingVertical: verticalScale(8),
+  },
+  specLabel: {
+    fontSize: responsive.fontSize(13),
+    color: '#171D1C',
+    marginVertical: responsive.marginVertical(10),
+  },
+  specValue: {
+    fontSize: responsive.fontSize(13),
+    color: '#171D1C',
+    textAlign: 'left', // 🔑 start se hi
+  },
+
+  specRowSpecification: {
+    flexDirection: 'row',
     justifyContent: 'space-between',
-    paddingVertical: verticalScale(1.5),
+    padding: responsive.padding(15),
     borderBottomWidth: 0.2,
     borderTopWidth: 0.2,
     borderBottomColor: '#000',
   },
-  specLabel: {
-    fontSize: rf(2),
-    fontWeight: '500',
+  specLabelSpecification: {
+    fontSize: responsive.fontSize(12),
     color: '#666666',
-    marginVertical: verticalScale(5),
-    marginHorizontal: rw(2),
   },
-  specValue: {
-    color: '#555',
+  specValuespecification: {
     maxWidth: '60%',
     textAlign: 'right',
-    marginHorizontal: rw(1),
-    fontSize: rf(2),
+    fontSize: responsive.fontSize(12),
+    color: '#666666',
   },
 
   scrollContainer: {
@@ -1140,23 +1581,27 @@ export const styles = StyleSheet.create({
   },
   pillText: { color: '#000', fontSize: rf(1.8), fontWeight: '500' },
   headlines: {
-    fontSize: rf(2.2),
+    fontSize: rf(1.5),
     fontWeight: '700',
     marginVertical: verticalScale(10),
-    marginLeft: rw(2.5),
+    marginLeft: moderateScale(15),
+  },
+  headlinesviewspecifications: {
+    fontSize: responsive.fontSize(16),
+    fontWeight: '500',
+    padding: responsive.padding(10),
   },
 
   row: {
     flexDirection: 'row',
     justifyContent: 'space-between',
-    paddingVertical: verticalScale(1.5),
     borderBottomWidth: 0.2,
     borderTopWidth: 0.2,
     borderBottomColor: '#000',
-    padding: moderateScale(15),
+    padding: responsive.padding(8),
   },
-  label: { flex: 1, fontSize: rf(2.5), marginLeft: rw(2) },
-  value: { fontSize: rf(2), color: 'gray' },
+  label: { flex: 1, fontSize: rf(1.5), marginLeft: rw(2) },
+  value: { fontSize: rf(1.5), color: 'gray' },
 
   videoRow: { flexDirection: 'row', justifyContent: 'space-between' },
   videoCard: {
@@ -1240,9 +1685,11 @@ export const styles = StyleSheet.create({
     marginVertical: verticalScale(1),
   },
   subHeadingD: {
-    fontSize: moderateScale(14),
-    fontWeight: '600',
-    padding: moderateScale(10),
+    fontSize: responsive.fontSize(16),
+    marginTop: responsive.marginTop(10),
+    marginHorizontal: responsive.marginHorizontal(10),
+    marginVertical: responsive.marginVertical(8),
+    fontWeight: 'bold',
   },
   cardD: {
     width: rw(40),
@@ -1258,30 +1705,32 @@ export const styles = StyleSheet.create({
   featureGridD: {
     flexDirection: 'row',
     flexWrap: 'wrap',
-    justifyContent: 'space-between',
-    marginVertical: verticalScale(0),
-    margin: rw(2.5),
+    gap: 5,
+    alignSelf: 'center',
+    justifyContent: 'center',
+    marginHorizontal: responsive.marginHorizontal(8),
   },
   featureBoxD: {
     width: '48%',
     backgroundColor: '#ddd',
-    padding: moderateScale(10),
     borderRadius: scale(8),
     marginBottom: verticalScale(1),
     flexDirection: 'row',
     alignItems: 'center',
-    marginVertical: moderateScale(5),
+    padding: responsive.padding(10),
+    gap: 5,
   },
   infoCardD: {
+    width: '20%',
     flexDirection: 'row',
     alignItems: 'center',
     padding: moderateScale(5),
     borderRadius: scale(5),
     margin: rw(1.5),
     borderWidth: 1,
-    marginBottom: responsiveHeight(5),
+    marginHorizontal: responsive.marginHorizontal(10),
   },
-  infoTextD: { marginLeft: rw(1.5), fontSize: rf(1.8) },
+  infoTextD: { marginLeft: rw(1.5), fontSize: rf(1) },
   cardDe: {
     alignItems: 'center',
     marginHorizontal: rw(2.5),
@@ -1300,5 +1749,112 @@ export const styles = StyleSheet.create({
     textAlign: 'center',
     fontSize: rf(1.8),
     color: '#333',
+  },
+
+  cardsimilar: {
+    marginRight: 5,
+  },
+
+  imagesimilar: {
+    width: responsive.width(115),
+    height: responsive.height(115),
+    borderRadius: 10,
+    borderWidth: 1,
+    borderColor: '#ddd',
+  },
+
+  titlesimilar: {
+    fontSize: responsive.fontSize(12),
+    fontWeight: '600',
+    marginTop: 2,
+    color: '#000',
+    marginLeft: 3,
+  },
+
+  descsimilar: {
+    fontSize: responsive.fontSize(12),
+    color: '#666',
+    marginLeft: 3,
+  },
+
+  gradesimilar: {
+    fontSize: responsive.fontSize(12),
+    color: '#888',
+    marginLeft: 3,
+  },
+
+  pricesimilar: {
+    fontSize: responsive.fontSize(13),
+    fontWeight: '700',
+    color: '#000',
+    marginLeft: 3,
+  },
+
+  featureContainer: {
+    paddingHorizontal: 12,
+    alignItems: 'center',
+  },
+  featureChip: {
+    backgroundColor: '#F1F1F1',
+    paddingHorizontal: 16,
+    paddingVertical: 8,
+    borderRadius: responsive.borderRadius(12),
+    marginRight: 10,
+  },
+  featureText: {
+    fontSize: responsive.fontSize(15),
+    color: '#000',
+    fontWeight: '500',
+  },
+
+  labelpayment: {
+    flex: 1,
+    fontSize: responsive.fontSize(10),
+    textAlign: 'center',
+    marginVertical: 5,
+  },
+
+  list: {
+    alignSelf: 'center',
+    justifyContent: 'center',
+  },
+  item: {
+    alignItems: 'center',
+    marginHorizontal: 5,
+  },
+
+  circleOuter: {
+    width: OUTER_SIZE,
+    height: OUTER_SIZE,
+    borderRadius: OUTER_SIZE / 2,
+    backgroundColor: '#E6F0E6',
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+
+  circleInner: {
+    width: INNER_SIZE,
+    height: INNER_SIZE,
+    borderRadius: INNER_SIZE / 2,
+    backgroundColor: '#FFFFFF',
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+
+  icon: {
+    width: ICON_SIZE,
+    height: ICON_SIZE,
+    resizeMode: 'contain',
+  },
+
+  divider: {
+    height: 1,
+    backgroundColor: '#333', // dark grey / black
+    opacity: 0.6,
+  },
+  dividerspecification: {
+    height: 1,
+    backgroundColor: '#333', // dark grey / black
+    opacity: 0.6,
   },
 });

@@ -6,7 +6,6 @@ import {
   TouchableOpacity,
   StyleSheet,
   ActivityIndicator,
-  SafeAreaView,
   ScrollView,
   Alert,
 } from 'react-native';
@@ -95,7 +94,7 @@ const Myorder = ({ navigation }) => {
             'ready for dispatch',
           )
         ) {
-          actions.push({ label: 'Cancle', screen: 'YourOrderIsCancle' });
+          actions.push({ label: 'Cancel', screen: 'YourOrderIsCancle' });
         }
         pushDetails();
         return actions;
@@ -113,7 +112,7 @@ const Myorder = ({ navigation }) => {
             'ready for dispatch',
           )
         ) {
-          actions.push({ label: 'Cancle', screen: 'YourOrderIsCancle' });
+          actions.push({ label: 'Cancel', screen: 'YourOrderIsCancle' });
         }
         pushDetails();
         return actions;
@@ -134,7 +133,7 @@ const Myorder = ({ navigation }) => {
             'ready for pick-up',
           )
         ) {
-          actions.push({ label: 'Cancle', screen: 'YourOrderIsCancle' });
+          actions.push({ label: 'Cancel', screen: 'YourOrderIsCancle' });
         }
         pushDetails();
         return actions;
@@ -151,7 +150,7 @@ const Myorder = ({ navigation }) => {
             'ready for pick-up',
           )
         ) {
-          actions.push({ label: 'Cancle', screen: 'YourOrderIsCancle' });
+          actions.push({ label: 'Cancel', screen: 'YourOrderIsCancle' });
         }
         pushDetails();
         return actions;
@@ -169,7 +168,7 @@ const Myorder = ({ navigation }) => {
             'ready for pick-up',
           )
         ) {
-          actions.push({ label: 'Cancle', screen: 'YourOrderIsCancle' });
+          actions.push({ label: 'Cancel', screen: 'YourOrderIsCancle' });
         }
         pushDetails();
         return actions;
@@ -200,7 +199,7 @@ const Myorder = ({ navigation }) => {
             <Text
               style={{
                 color: statusStyles[item.order_status]?.color || '#000',
-                fontWeight: '700',
+                fontWeight: '700', fontSize: RF(1.3),
               }}
             >
               {item.order_status}
@@ -231,7 +230,7 @@ const Myorder = ({ navigation }) => {
             //   key={index}
             //   onPress={() => {
             //     navigation.navigate('MyorderDetails', {
-            //       from: btn.label === 'Cancle' ? 'cancel' : 'details',
+            //       from: btn.label === 'Cancel' ? 'cancel' : 'details',
             //       order_id: item.order_id,
             //       order_id_Number: item.order_id_Number,
             //       payment_mode_value: item.payment_mode_value,
@@ -247,7 +246,7 @@ const Myorder = ({ navigation }) => {
             <TouchableOpacity
               key={index}
               onPress={() => {
-                const isCancel = btn.label.toLowerCase() === 'cancle';
+                const isCancel = btn.label.toLowerCase() === 'cancel';
 
                 if (isCancel) {
                   Alert.alert('Cancel Order', 'Are you sure?', [
@@ -310,7 +309,7 @@ const Myorder = ({ navigation }) => {
         </Text>
 
         <TouchableOpacity
-          onPress={() => navigation.navigate('BottomNavigator')}
+          onPress={() => navigation.goBack()}
           style={styles.emptyButton}
         >
           <Text style={styles.emptyButtonText}>Start Shopping</Text>
@@ -320,7 +319,7 @@ const Myorder = ({ navigation }) => {
   };
 
   return (
-    <SafeAreaView style={{ flex: 1, backgroundColor: '#fff' }}>
+    <View style={{ flex: 1, backgroundColor: '#fff' }}>
       {/* Header */}
       <Header title="My Orders" navigation={navigation} showBack={true} />
       <FlatList showsVerticalScrollIndicator={false}
@@ -334,7 +333,7 @@ const Myorder = ({ navigation }) => {
         }}
         ListEmptyComponent={<EmptyOrders navigation={navigation} />}
       />
-    </SafeAreaView>
+    </View>
   );
 };
 
@@ -352,7 +351,7 @@ const styles = StyleSheet.create({
     backgroundColor: '#fff',
     borderRadius: scale(8),
     marginTop: moderateScale(5),
-    padding: scale(18),
+    padding: scale(10),
     marginBottom: verticalScale(5),
     borderWidth: scale(1), borderColor:"#f1f1f1",
   },
@@ -364,26 +363,20 @@ const styles = StyleSheet.create({
   },
 
   orderTitle: {
-    fontSize: RF(2.2),
+    fontSize: RF(2),
     fontWeight: '800',
     color: '#111',
     marginBottom: verticalScale(8),
   },
 
   statusBox: {
-    paddingVertical: verticalScale(6),
-    paddingHorizontal: scale(16),
+    paddingVertical: verticalScale(7),
+    paddingHorizontal: scale(15),
     borderRadius: scale(20),
-
-    shadowColor: '#000',
-    shadowOpacity: 0.18,
-    shadowRadius: scale(6),
-    shadowOffset: { width: 0, height: scale(3) },
-    elevation: 5,
   },
 
   subText: {
-    fontSize: RF(1.8),
+    fontSize: RF(1.5),
     color: '#444',
     marginTop: verticalScale(4),
     fontWeight: '500',

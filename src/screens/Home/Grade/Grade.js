@@ -5,7 +5,7 @@
 //   StyleSheet,
 //   TouchableOpacity,
 //   ScrollView,
-//   SafeAreaView,
+//   View,
 // } from 'react-native';
 // import Ionicons from 'react-native-vector-icons/Ionicons';
 // import LinearGradient from 'react-native-linear-gradient';
@@ -113,7 +113,7 @@
 //   };
 
 //   return (
-//     <SafeAreaView style={styles.container}>
+//     <View style={styles.container}>
 //       <ScrollView>
 //         {/* Header */}
 //         <View style={styles.header}>
@@ -177,7 +177,7 @@
 //           </View>
 //         ))}
 //       </ScrollView>
-//     </SafeAreaView>
+//     </View>
 //   );
 // };
 
@@ -267,7 +267,6 @@ import {
   StyleSheet,
   TouchableOpacity,
   ScrollView,
-  SafeAreaView,
   Dimensions,
 } from 'react-native';
 import Ionicons from 'react-native-vector-icons/Ionicons';
@@ -380,7 +379,7 @@ const Grade = ({navigation}) => {
   };
 
   return (
-    <SafeAreaView style={styles.container}>
+    <View style={styles.container}>
       <ScrollView>
         {/* Header */}
         <Header
@@ -436,7 +435,7 @@ const Grade = ({navigation}) => {
           </View>
         ))}
       </ScrollView>
-    </SafeAreaView>
+    </View>
   );
 };
 

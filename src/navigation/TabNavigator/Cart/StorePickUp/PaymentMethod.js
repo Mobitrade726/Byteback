@@ -7,7 +7,6 @@ import {
   ScrollView,
   Image,
   StyleSheet,
-  SafeAreaView,
   KeyboardAvoidingView,
 } from 'react-native';
 import {Picker} from '@react-native-picker/picker';
@@ -21,7 +20,7 @@ const PaymentScreen = ({navigation}) => {
   const [showNetBanking, setShowNetBanking] = useState(false);
 
   return (
-    <SafeAreaView style={styles.container}>
+    <View style={styles.container}>
       <Header
         title="Choose a Payment Method"
         navigation={navigation}
@@ -258,7 +257,7 @@ const PaymentScreen = ({navigation}) => {
         style={styles.proceedButton}>
         <Text style={styles.proceedText}>Proceed to Pay</Text>
       </TouchableOpacity>
-    </SafeAreaView>
+    </View>
   );
 };
 

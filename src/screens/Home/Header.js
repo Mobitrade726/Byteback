@@ -218,7 +218,7 @@
 //   View,
 //   Image,
 //   ActivityIndicator,
-//   SafeAreaView,
+//   View,
 // } from 'react-native';
 // import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 // import EvilIcons from 'react-native-vector-icons/EvilIcons';
@@ -357,7 +357,8 @@ const Header = ({navigation}) => {
           setLogoUrl(json.data[0].logo);
         }
       } catch (error) {
-        console.log('Error fetching logo:', error);
+        // console.log('Error fetching logo:', error);
+        setLoading(false);
       } finally {
         setLoading(false);
       }

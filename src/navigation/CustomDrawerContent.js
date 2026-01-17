@@ -6,7 +6,6 @@ import {
   Image,
   TouchableOpacity,
   ScrollView,
-  SafeAreaView,
 } from 'react-native';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 
@@ -33,7 +32,7 @@ const CustomDrawerContent = ({navigation}) => {
   ];
 
   return (
-    <SafeAreaView>
+    <View>
       <ScrollView contentContainerStyle={styles.container}>
         {/* Header */}
         <View style={styles.header}>
@@ -93,7 +92,7 @@ const CustomDrawerContent = ({navigation}) => {
           ))}
         </View>
       </ScrollView>
-    </SafeAreaView>
+    </View>
   );
 };
 

@@ -30,7 +30,6 @@
 //   },
 // });
 
-
 import { combineReducers, configureStore } from '@reduxjs/toolkit';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { persistStore, persistReducer } from 'redux-persist';
@@ -47,6 +46,8 @@ import returnReducer from './slices/returnSlice';
 import buyerAddressReducer from './slices/buyerAddressSlice';
 import logoutDevicesReducer from './slices/logoutDevicesSlice';
 import authReducer from './slices/authSlice';
+import forgotPasswordReducer from './slices/forgotPasswordSlice';
+
 
 // --------------------------------------
 // Persist Config
@@ -73,6 +74,7 @@ const rootReducer = combineReducers({
   orders: orderReducer,
   returns: returnReducer,
   buyerAddress: buyerAddressReducer,
+  forgotPassword: forgotPasswordReducer,
 });
 
 // --------------------------------------

@@ -4,7 +4,7 @@
 //   Text,
 //   TouchableOpacity,
 //   FlatList,
-//   SafeAreaView,
+//   View,
 // } from 'react-native';
 // import Ionicons from 'react-native-vector-icons/Ionicons';
 // import {styles} from './styles';
@@ -69,7 +69,7 @@
 //   );
 
 //   return (
-//     <SafeAreaView style={styles.container}>
+//     <View style={styles.container}>
 //       {/* Header */}
 //       <View style={styles.header}>
 //         <TouchableOpacity
@@ -100,7 +100,7 @@
 //         <Ionicons name="add-circle-outline" size={22} color="#fff" />
 //         <Text style={styles.addButtonText}>Add New Address</Text>
 //       </TouchableOpacity>
-//     </SafeAreaView>
+//     </View>
 //   );
 // };
 
@@ -112,7 +112,6 @@ import {
   Text,
   TouchableOpacity,
   FlatList,
-  SafeAreaView,
   ActivityIndicator,
   Alert,
 } from 'react-native';
@@ -195,68 +194,71 @@ const Addresses = ({ navigation }) => {
   );
 
   const renderAddress = ({ item }) => (
-    <View style={styles.card}>
-      {/* Top Row */}
-      <View style={styles.cardHeader}>
-        <View style={styles.iconBox}>
+    <>
+      <View style={styles.card}>
+        {/* Top Row */}
+        <View style={styles.cardHeader}>
+          <View style={styles.iconBox}>
+            <Ionicons
+              name={
+                item.address_type === 'Work'
+                  ? 'business-outline'
+                  : item.address_type === 'Office'
+                  ? 'storefront-outline'
+                  : 'home-outline'
+              }
+              size={moderateScale(24)}
+              color="#11A5D7"
+            />
+          </View>
+
+          {/* Address Text */}
+          <View style={styles.textSection}>
+            <Text style={styles.typeText}>{item.address_type}</Text>
+
+            <Text style={styles.address}>
+              {item.billing_Address}, {item.billing_City}, {item.billing_State}{' '}
+              - {item.billing_Zip}
+            </Text>
+          </View>
+
+          <TouchableOpacity
+            onPress={() =>
+              navigation.navigate('AddNewAddress', {
+                editNewAddress: 'editNewAddress',
+                user_address_id: item?.user_address_id,
+              })
+            }
+          >
+            <Text style={styles.edit}>Edit</Text>
+          </TouchableOpacity>
+        </View>
+
+        {/* Bottom Selection */}
+        <TouchableOpacity
+          style={styles.radioRow}
+          onPress={() => setSelectedAddress(item.address_type)}
+        >
           <Ionicons
             name={
-              item.address_type === 'Work'
-                ? 'business-outline'
-                : item.address_type === 'Office'
-                ? 'storefront-outline'
-                : 'home-outline'
+              selectedAddress === item.address_type
+                ? 'radio-button-on'
+                : 'radio-button-off'
             }
-            size={moderateScale(24)}
+            size={moderateScale(22)}
             color="#11A5D7"
           />
-        </View>
-
-        {/* Address Text */}
-        <View style={styles.textSection}>
-          <Text style={styles.typeText}>{item.address_type}</Text>
-
-          <Text style={styles.address}>
-            {item.billing_Address}, {item.billing_City}, {item.billing_State} -{' '}
-            {item.billing_Zip}
+          <Text style={styles.defaultLabel}>
+            Deliver to {item.address_type}
           </Text>
-        </View>
-
-        <TouchableOpacity
-          onPress={() =>
-            navigation.navigate('AddNewAddress', {
-              editNewAddress: 'editNewAddress',
-              user_address_id: item?.user_address_id,
-            })
-          }
-        >
-          <Text style={styles.edit}>Edit</Text>
         </TouchableOpacity>
       </View>
-
-      {/* Bottom Selection */}
-      <TouchableOpacity
-        style={styles.radioRow}
-        onPress={() => setSelectedAddress(item.address_type)}
-      >
-        <Ionicons
-          name={
-            selectedAddress === item.address_type
-              ? 'radio-button-on'
-              : 'radio-button-off'
-          }
-          size={moderateScale(22)}
-          color="#11A5D7"
-        />
-        <Text style={styles.defaultLabel}>Deliver to {item.address_type}</Text>
-      </TouchableOpacity>
-    </View>
+    </>
   );
 
   return (
-    <SafeAreaView style={styles.container}>
+    <View style={styles.container}>
       <Header title="Saved Address" navigation={navigation} showBack={true} />
-
       {/* Loader */}
       {loading ? (
         <View
@@ -269,6 +271,7 @@ const Addresses = ({ navigation }) => {
         </View>
       ) : (
         <FlatList
+          showsVerticalScrollIndicator={false}
           data={addresses}
           keyExtractor={item => item.id?.toString()}
           renderItem={renderAddress}
@@ -286,8 +289,6 @@ const Addresses = ({ navigation }) => {
           }
         />
       )}
-
-      {/* Add Address Button */}
       <TouchableOpacity
         onPress={() =>
           navigation.navigate('AddNewAddress', {
@@ -299,12 +300,12 @@ const Addresses = ({ navigation }) => {
       >
         <Ionicons
           name="add-circle-outline"
-          size={moderateScale(22)}
+          size={moderateScale(20)}
           color="#fff"
         />
         <Text style={styles.addButtonText}>Add New Address</Text>
       </TouchableOpacity>
-    </SafeAreaView>
+    </View>
   );
 };
 

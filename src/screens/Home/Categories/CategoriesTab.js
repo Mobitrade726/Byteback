@@ -2,7 +2,7 @@
 // // import {Text, View, StyleSheet, TouchableOpacity} from 'react-native';
 // // import {createMaterialTopTabNavigator} from '@react-navigation/material-top-tabs';
 // // import Ionicons from 'react-native-vector-icons/Ionicons';
-// // import {SafeAreaView} from 'react-native-safe-area-context';
+// // import {View} from 'react-native-safe-area-context';
 // // import {useRoute} from '@react-navigation/native';
 // // import Android from './Android/Android';
 // // import iOS from './iOS/iOS';
@@ -15,7 +15,7 @@
 // //     const { initialTab } = route.params || {}; // Get passed param
 
 // //   return (
-// //     <SafeAreaView style={styles.container}>
+// //     <View style={styles.container}>
 // //       {/* Header */}
 // //       <View style={styles.header}>
 // //         <TouchableOpacity
@@ -48,7 +48,7 @@
 // //         <Tab.Screen name="WindowsOS" component={WindowsOS} />
 // //         <Tab.Screen name="MacOS" component={MacOS} />
 // //       </Tab.Navigator>
-// //     </SafeAreaView>
+// //     </View>
 // //   );
 // // };
 
@@ -85,7 +85,7 @@
 //   View,
 //   StyleSheet,
 //   TouchableOpacity,
-//   SafeAreaView,
+//   View,
 // } from 'react-native';
 // import {createMaterialTopTabNavigator} from '@react-navigation/material-top-tabs';
 // import Ionicons from 'react-native-vector-icons/Ionicons';
@@ -110,7 +110,7 @@
 //   };
 
 //   return (
-//     <SafeAreaView style={styles.container}>
+//     <View style={styles.container}>
 //       {/* Header */}
 //       <Header title="Categories" navigation={navigation} showBack={true} />
 
@@ -135,7 +135,7 @@
 //           />
 //         ))}
 //       </Tab.Navigator>
-//     </SafeAreaView>
+//     </View>
 //   );
 // };
 
@@ -164,18 +164,10 @@
 
 // export default CategoriesTab;
 
-
-
-
 import React from 'react';
-import {
-  Text,
-  View,
-  StyleSheet,
-  SafeAreaView,
-} from 'react-native';
-import {createMaterialTopTabNavigator} from '@react-navigation/material-top-tabs';
-import {useSelector} from 'react-redux';
+import { Text, View, StyleSheet } from 'react-native';
+import { createMaterialTopTabNavigator } from '@react-navigation/material-top-tabs';
+import { useSelector } from 'react-redux';
 import CatPage from './CatPage';
 import Header from '../../../constants/Header';
 import {
@@ -183,17 +175,17 @@ import {
   responsiveHeight,
   responsiveWidth,
 } from 'react-native-responsive-dimensions';
-import {moderateScale} from 'react-native-size-matters';
+import { moderateScale } from 'react-native-size-matters';
 
 const Tab = createMaterialTopTabNavigator();
 
-const CategoriesTab = ({navigation, route}) => {
-  const {initialTab} = route.params || {};
-  const {catList} = useSelector(state => state.home);
+const CategoriesTab = ({ navigation, route }) => {
+  const { initialTab } = route.params || {};
+  const { catList } = useSelector(state => state.home);
 
   // Component for each tab
-  const DynamicTabComponent = ({route}) => {
-    const {tabId, cat_name,catId} = route.params;
+  const DynamicTabComponent = ({ route }) => {
+    const { tabId, cat_name, catId } = route.params;
     return (
       <View style={styles.tabContent}>
         <CatPage tabId={tabId} catName={cat_name} catId={catId} />
@@ -202,47 +194,80 @@ const CategoriesTab = ({navigation, route}) => {
   };
 
   return (
-    <SafeAreaView style={styles.container}>
+    <View style={styles.container}>
       {/* Header */}
-      <Header title="Categories" navigation={navigation} showBack={true} showSearch={true} />
+      <Header
+        title="Categories"
+        navigation={navigation}
+        showBack={true}
+        showSearch={true}
+      />
 
       <Tab.Navigator
         initialRouteName={initialTab || catList[0]?.category_name || 'Default'}
+        // screenOptions={{
+        //   tabBarLabelStyle: {
+        //     fontSize: responsiveFontSize(1.8),
+        //     fontWeight: '500',
+
+        //   },
+        //   tabBarActiveTintColor: '#478F4E',
+        //   tabBarInactiveTintColor: '#aaa',
+        //   tabBarIndicatorStyle: {
+        //     backgroundColor: '#478F4E',
+        //     height: responsiveHeight(0.5),
+        //   },
+        //   tabBarStyle: {
+        //     height: responsiveHeight(6),
+        //     elevation: 0,
+        //     shadowOpacity: 0,
+        //   },
+        //   tabBarScrollEnabled: true, // For many tabs
+        //   lazy: true,
+        // }}
         screenOptions={{
-          tabBarLabelStyle: {
-            fontSize: responsiveFontSize(1.8),
-            fontWeight: '500',
+          tabBarScrollEnabled: true,
+
+          tabBarItemStyle: {
+            width: responsiveWidth(25),
+            paddingHorizontal: responsiveWidth(2), // 👈 width control
           },
-          tabBarActiveTintColor: '#478F4E',
-          tabBarInactiveTintColor: '#aaa',
+
+          tabBarLabelStyle: {
+            fontSize: responsiveFontSize(1.5),
+            paddingHorizontal: 0, // 👈 extra padding remove
+          },
+
           tabBarIndicatorStyle: {
             backgroundColor: '#478F4E',
-            height: responsiveHeight(0.5),
+            height: responsiveHeight(0.3),
           },
+
           tabBarStyle: {
-            height: responsiveHeight(6),
-            elevation: 0,
-            shadowOpacity: 0,
+            height: responsiveHeight(4.8),
           },
-          tabBarScrollEnabled: true, // For many tabs
-          lazy: true,
-        }}>
+        }}
+      >
         {catList.map(tab => (
           <Tab.Screen
             key={tab.id}
             name={tab.category_name}
             component={DynamicTabComponent}
-            initialParams={{tabId: tab.id, cat_name: tab.category_name, catId: tab.id}}
+            initialParams={{
+              tabId: tab.id,
+              cat_name: tab.category_name,
+              catId: tab.id,
+            }}
           />
         ))}
       </Tab.Navigator>
-    </SafeAreaView>
+    </View>
   );
 };
 
 const styles = StyleSheet.create({
-  container: {flex: 1, backgroundColor: '#fff'},
-  tabContent: {flex: 1},
+  container: { flex: 1, backgroundColor: '#fff' },
+  tabContent: { flex: 1 },
   headerTitle: {
     fontSize: responsiveFontSize(2),
     fontWeight: '500',

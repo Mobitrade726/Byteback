@@ -7,7 +7,7 @@
 //   TextInput,
 //   Image,
 //   ScrollView,
-//   SafeAreaView,
+//   View,
 //   Modal,
 // } from 'react-native';
 // import Ionicons from 'react-native-vector-icons/Ionicons';
@@ -58,7 +58,7 @@
 //   };
 
 //   return (
-//     <SafeAreaView style={{flex: 1, backgroundColor: '#fffdfd'}}>
+//     <View style={{flex: 1, backgroundColor: '#fffdfd'}}>
 //       <Header title="Return request" navigation={navigation} showBack={true} />
 
 //       <ScrollView contentContainerStyle={styles.content}>
@@ -166,7 +166,7 @@
 //           </View>
 //         </View>
 //       </Modal>
-//     </SafeAreaView>
+//     </View>
 //   );
 // };
 
@@ -347,7 +347,6 @@ import {
   TextInput,
   Image,
   ScrollView,
-  SafeAreaView,
   Modal,
   ActivityIndicator,
 } from 'react-native';
@@ -437,7 +436,7 @@ const ReturnRequest = ({ navigation, route }) => {
   };
 
   return (
-    <SafeAreaView style={{ flex: 1, backgroundColor: '#fffdfd' }}>
+    <View style={{ flex: 1, backgroundColor: '#fffdfd' }}>
       <Header title="Return request" navigation={navigation} showBack={true} />
 
       <ScrollView contentContainerStyle={styles.content}>
@@ -568,7 +567,7 @@ const ReturnRequest = ({ navigation, route }) => {
           </View>
         </View>
       </Modal>
-    </SafeAreaView>
+    </View>
   );
 };
 
