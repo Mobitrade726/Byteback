@@ -207,7 +207,7 @@ const Addresses = ({ navigation }) => {
                   ? 'storefront-outline'
                   : 'home-outline'
               }
-              size={moderateScale(24)}
+              size={moderateScale(18)}
               color="#11A5D7"
             />
           </View>
@@ -233,26 +233,23 @@ const Addresses = ({ navigation }) => {
             <Text style={styles.edit}>Edit</Text>
           </TouchableOpacity>
         </View>
-
-        {/* Bottom Selection */}
-        <TouchableOpacity
-          style={styles.radioRow}
-          onPress={() => setSelectedAddress(item.address_type)}
-        >
-          <Ionicons
-            name={
-              selectedAddress === item.address_type
-                ? 'radio-button-on'
-                : 'radio-button-off'
-            }
-            size={moderateScale(22)}
-            color="#11A5D7"
-          />
-          <Text style={styles.defaultLabel}>
-            Deliver to {item.address_type}
-          </Text>
-        </TouchableOpacity>
       </View>
+      {/* Bottom Selection */}
+      <TouchableOpacity
+        style={styles.radioRow}
+        onPress={() => setSelectedAddress(item.address_type)}
+      >
+        <Ionicons
+          name={
+            selectedAddress === item.address_type
+              ? 'radio-button-on'
+              : 'radio-button-off'
+          }
+          size={moderateScale(15)}
+          color="#11A5D7"
+        />
+        <Text style={styles.defaultLabel}>Deliver to {item.address_type}</Text>
+      </TouchableOpacity>
     </>
   );
 

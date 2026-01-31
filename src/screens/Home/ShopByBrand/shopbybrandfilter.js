@@ -2005,56 +2005,55 @@
 // };
 
 // const styles = StyleSheet.create({
-  // container: { flex: 1, backgroundColor: '#fff' },
-  // tabContainer: {
-  //   flexDirection: 'row',
-  //   justifyContent: 'space-around',
-  //   marginVertical: responsiveHeight(1.5),
-  // },
-  // tabText: {
-  //   fontSize: responsiveFontSize(2),
-  //   color: 'gray',
-  //   fontWeight: '600',
-  // },
-  // activeTabText: {
-  //   color: '#000',
-  //   borderBottomWidth: 2,
-  //   borderColor: '#000',
-  //   paddingBottom: responsiveHeight(0.5),
-  // },
-  // loaderContainer: {
-  //   flex: 1,
-  //   justifyContent: 'center',
-  //   alignItems: 'center',
-  //   marginTop: 50,
-  // },
-  // emptyContainer: {
-  //   alignItems: 'center',
-  //   marginTop: responsiveHeight(5),
-  //   paddingHorizontal: responsiveWidth(5),
-  // },
-  // emptyImage: {
-  //   width: responsiveWidth(35),
-  //   height: responsiveWidth(35),
-  //   resizeMode: 'contain',
-  //   marginBottom: responsiveHeight(2),
-  // },
-  // emptyTitle: {
-  //   fontSize: responsiveFontSize(2.2),
-  //   fontWeight: '700',
-  //   color: '#000',
-  //   marginBottom: responsiveHeight(1),
-  //   textAlign: 'center',
-  // },
-  // emptySubtitle: {
-  //   fontSize: responsiveFontSize(1.6),
-  //   color: '#666',
-  //   textAlign: 'center',
-  // },
+// container: { flex: 1, backgroundColor: '#fff' },
+// tabContainer: {
+//   flexDirection: 'row',
+//   justifyContent: 'space-around',
+//   marginVertical: responsiveHeight(1.5),
+// },
+// tabText: {
+//   fontSize: responsiveFontSize(2),
+//   color: 'gray',
+//   fontWeight: '600',
+// },
+// activeTabText: {
+//   color: '#000',
+//   borderBottomWidth: 2,
+//   borderColor: '#000',
+//   paddingBottom: responsiveHeight(0.5),
+// },
+// loaderContainer: {
+//   flex: 1,
+//   justifyContent: 'center',
+//   alignItems: 'center',
+//   marginTop: 50,
+// },
+// emptyContainer: {
+//   alignItems: 'center',
+//   marginTop: responsiveHeight(5),
+//   paddingHorizontal: responsiveWidth(5),
+// },
+// emptyImage: {
+//   width: responsiveWidth(35),
+//   height: responsiveWidth(35),
+//   resizeMode: 'contain',
+//   marginBottom: responsiveHeight(2),
+// },
+// emptyTitle: {
+//   fontSize: responsiveFontSize(2.2),
+//   fontWeight: '700',
+//   color: '#000',
+//   marginBottom: responsiveHeight(1),
+//   textAlign: 'center',
+// },
+// emptySubtitle: {
+//   fontSize: responsiveFontSize(1.6),
+//   color: '#666',
+//   textAlign: 'center',
+// },
 // });
 
 // export default Shopbybrandfilter;
-
 
 import React, { useCallback, useEffect, useState } from 'react';
 import {
@@ -2086,6 +2085,7 @@ import {
   removeFromWishlistAPI,
 } from '../../../redux/slices/wishlistSlice';
 import { fetchCatList } from '../../../redux/slices/homeSlice';
+import responsive from '../../../constants/responsive';
 
 const ITEMS_PER_PAGE = 6;
 
@@ -2103,13 +2103,11 @@ const Shopbybrandfilter = ({ navigation, route }) => {
   const [page, setPage] = useState(1);
   const [loading, setLoading] = useState(false);
 
-  console.log('brandsData---------------------->', brandsData)
-
   /* ================= FETCH CATEGORY LIST ================= */
   useFocusEffect(
     useCallback(() => {
       dispatch(fetchCatList());
-    }, [])
+    }, []),
   );
 
   /* ================= SET DEFAULT TAB FROM PARAM ================= */
@@ -2129,7 +2127,7 @@ const Shopbybrandfilter = ({ navigation, route }) => {
       try {
         setLoading(true);
         const res = await axios.get(
-          `${API_BASE_URL}/productlistbrand/${brandname}`
+          `${API_BASE_URL}/productlistbrand/${brandname}`,
         );
         setBrandsData(res?.data?.data || []);
       } catch (err) {
@@ -2148,7 +2146,7 @@ const Shopbybrandfilter = ({ navigation, route }) => {
   /* ================= FILTER BY CATEGORY ================= */
   useEffect(() => {
     const data = brandsData.filter(
-      item => item.category === activeTab?.category_name
+      item => item.category === activeTab?.category_name,
     );
     setFilteredData(data);
     setPage(1);
@@ -2171,7 +2169,7 @@ const Shopbybrandfilter = ({ navigation, route }) => {
   /* ================= PRODUCT CARD ================= */
   const ProductCard = ({ item }) => {
     const isInWishlist = wishlistItems.some(
-      w => w.barcode_id === item.barcode_id
+      w => w.barcode_id === item.barcode_id,
     );
 
     const toggleWishlist = () => {
@@ -2183,47 +2181,49 @@ const Shopbybrandfilter = ({ navigation, route }) => {
     };
 
     return (
-      <TouchableOpacity
-        style={ProductCardStyles.cardD}
-        onPress={() =>
-          navigation.navigate('ProductList', {
-            product_barcode_id: item.barcode_id,
-            product_barcode_price: item.price,
-          })
-        }
-      >
-        <View style={ProductCardStyles.imageContainerD}>
-          <Text style={ProductCardStyles.refurbishedLabelD}>PRE-OWNED</Text>
-
-          <Image
-            source={
-              item?.feature_image
-                ? { uri: item.feature_image }
-                : require('../../../../assets/images/empty.jpeg')
-            }
-            style={ProductCardStyles.imageD}
-            resizeMode='contain'
-          />
-
+      <View style={{ width: responsive.width(170) }}>
+        <View style={ProductCardStyles.cardShadow}>
           <TouchableOpacity
-            style={ProductCardStyles.heartIconD}
-            onPress={toggleWishlist}
+            style={ProductCardStyles.cardD}
+            onPress={() =>
+              navigation.navigate('ProductList', {
+                product_barcode_id: item.barcode_id,
+                product_barcode_price: item.price,
+              })
+            }
           >
-            <AntDesign
-              name={isInWishlist ? 'heart' : 'hearto'}
-              size={moderateScale(20)}
-              color={isInWishlist ? '#E74C3C' : '#999'}
+            <Text style={ProductCardStyles.refurbishedLabelD}>(Pre-Owned)</Text>
+
+            <Image
+              source={
+                item?.feature_image
+                  ? { uri: item.feature_image }
+                  : require('../../../../assets/images/empty.jpeg')
+              }
+              style={ProductCardStyles.imageD}
+              resizeMode="contain"
             />
+
+            <TouchableOpacity
+              style={ProductCardStyles.heartIconD}
+              onPress={toggleWishlist}
+            >
+              <AntDesign
+                name={isInWishlist ? 'heart' : 'hearto'}
+                size={moderateScale(20)}
+                color={isInWishlist ? '#E74C3C' : '#999'}
+              />
+            </TouchableOpacity>
+
+            <Text style={ProductCardStyles.gradeText}>
+              Grade {item.grade_number}
+            </Text>
           </TouchableOpacity>
         </View>
-
-        <Text style={ProductCardStyles.gradeTextD}>
-          Grade {item.grade_number}
-        </Text>
-        <Text style={ProductCardStyles.productNameD}>{item.model_name}</Text>
-        <Text style={ProductCardStyles.colorTextD}>● {item.color_name}</Text>
-        <Text style={ProductCardStyles.priceD}>₹ {item.price}</Text>
-      </TouchableOpacity>
+        <Text style={ProductCardStyles.productName}>{item.model_name}</Text>
+        <Text style={ProductCardStyles.colorText}>● {item.color_name}</Text>
+        <Text style={ProductCardStyles.price}>₹ {item.price}</Text>
+      </View>
     );
   };
 
@@ -2235,10 +2235,7 @@ const Shopbybrandfilter = ({ navigation, route }) => {
       {/* TABS */}
       <View style={styles.tabContainer}>
         {catList.map(cat => (
-          <TouchableOpacity
-            key={cat.id}
-            onPress={() => setActiveTab(cat)}
-          >
+          <TouchableOpacity key={cat.id} onPress={() => setActiveTab(cat)}>
             <Text
               style={[
                 styles.tabText,
@@ -2265,7 +2262,10 @@ const Shopbybrandfilter = ({ navigation, route }) => {
           onEndReached={loadMore}
           onEndReachedThreshold={0.5}
           showsVerticalScrollIndicator={false}
-          contentContainerStyle={styles.listContent}
+          columnWrapperStyle={{ justifyContent: 'space-between' }}
+          contentContainerStyle={{
+            paddingHorizontal: responsive.paddingHorizontal(10),
+          }}
         />
       ) : (
         <View style={styles.emptyContainer}>
@@ -2293,7 +2293,7 @@ const styles = StyleSheet.create({
     marginVertical: responsiveHeight(1.5),
   },
   tabText: {
-    fontSize: responsiveFontSize(2),
+    fontSize: responsive.fontSize(14),
     color: '#777',
     fontWeight: '600',
   },

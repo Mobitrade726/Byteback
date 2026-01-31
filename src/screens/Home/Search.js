@@ -44,11 +44,12 @@ import {
   responsiveFontSize as RF,
 } from 'react-native-responsive-dimensions';
 import FilterModalStyles_Search from '../../constants/FilterModalStyles_Search';
+import responsive from '../../constants/responsive';
 
 const PER_PAGE = 6; // frontend pagination: 6 items per page
 
 // ------------ icon renderer (pure) ------------
-const renderIcon = (iconData, size = 22, color = '#333') => {
+const renderIcon = (iconData, size = moderateScale(12), color = '#333') => {
   if (!iconData || !iconData.icon || !iconData.icon_set) return null;
   switch (iconData.icon_set) {
     case 'FontAwesome':
@@ -74,39 +75,41 @@ const renderIcon = (iconData, size = 22, color = '#333') => {
 const ProductCard = React.memo(
   ({ item, onToggleWishlist, isInWishlist, onPress }) => {
     return (
-      <TouchableOpacity
-        onPress={() => onPress(item)}
-        style={ProductCardStyles.cardD}
-      >
-        <View style={ProductCardStyles.imageContainerD}>
-          {item && (
-            <Text style={ProductCardStyles.refurbishedLabelD}>PRE-OWNED</Text>
-          )}
-          <Image
-            source={{ uri: item.feature_image }}
-            style={ProductCardStyles.imageD}
-            resizeMode='contain'
-          />
-          <TouchableOpacity
-            style={ProductCardStyles.heartIconD}
-            onPress={() => onToggleWishlist(item)}
-          >
-            <AntDesign
-              name={isInWishlist ? 'heart' : 'hearto'}
-              size={moderateScale(20)}
-              color={isInWishlist ? '#E74C3C' : '#999'}
+      <View>
+        <TouchableOpacity
+          onPress={() => onPress(item)}
+          style={ProductCardStyles.cardD}
+        >
+          <View style={ProductCardStyles.imageContainerD}>
+            {item && (
+              <Text style={ProductCardStyles.refurbishedLabelD}>PRE-OWNED</Text>
+            )}
+            <Image
+              source={{ uri: item.feature_image }}
+              style={ProductCardStyles.imageD}
+              resizeMode="contain"
             />
-          </TouchableOpacity>
-        </View>
-        <Text style={ProductCardStyles.gradeTextD}>
-          Grade {item.grade_number}
-        </Text>
-        <Text style={ProductCardStyles.productNameD}>{item.model_name}</Text>
-        <Text style={ProductCardStyles.colorTextD}>● {item.color_name}</Text>
+            <TouchableOpacity
+              style={ProductCardStyles.heartIconD}
+              onPress={() => onToggleWishlist(item)}
+            >
+              <AntDesign
+                name={isInWishlist ? 'heart' : 'hearto'}
+                size={moderateScale(12)}
+                color={isInWishlist ? '#E74C3C' : '#999'}
+              />
+            </TouchableOpacity>
+          </View>
+          <Text style={ProductCardStyles.gradeText}>
+            Grade {item.grade_number}
+          </Text>
+        </TouchableOpacity>
+        <Text style={ProductCardStyles.productName}>{item.model_name}</Text>
+        <Text style={ProductCardStyles.colorText}>● {item.color_name}</Text>
         <View style={ProductCardStyles.priceRowD}>
-          <Text style={ProductCardStyles.priceD}>₹ {item.price}</Text>
+          <Text style={ProductCardStyles.price}>₹ {item.price}</Text>
         </View>
-      </TouchableOpacity>
+      </View>
     );
   },
 );
@@ -122,7 +125,7 @@ const SearchRefactored = ({ navigation }) => {
   const wishlistItems = useSelector(state => state.wishlist.items || []);
   const { catList = [] } = useSelector(state => state.home || {});
 
-  console.log('nocartidfilterdata---------------->', nocartidfilterdata)
+  console.log('nocartidfilterdata---------------->', nocartidfilterdata?.grades);
 
   // UI state
   const [searchText, setSearchText] = useState('');
@@ -181,8 +184,14 @@ const SearchRefactored = ({ navigation }) => {
       selectedStorage;
     if (!anyFilters) return filteredData;
 
-    console.log('filteredDatatesting--------------------------------->',filteredData);
-    console.log('selectedGrade--------------------------------->',selectedGrade);
+    console.log(
+      'filteredDatatesting--------------------------------->',
+      filteredData,
+    );
+    console.log(
+      'selectedGrade--------------------------------->',
+      selectedGrade,
+    );
 
     return filteredData.filter(item => {
       if (selectedBrands.length && !selectedBrands.includes(item.brand_name))
@@ -381,7 +390,7 @@ const SearchRefactored = ({ navigation }) => {
             },
           ]}
         >
-          {renderIcon(searchIcon, moderateScale(24), '#333')}
+          {renderIcon(searchIcon, moderateScale(18), '#333')}
           <TouchableOpacity
             onPress={() => setShowDropdown(prev => !prev)}
             style={{ marginLeft: moderateScale(5) }}
@@ -390,7 +399,7 @@ const SearchRefactored = ({ navigation }) => {
               name={
                 showDropdown ? 'chevron-up-outline' : 'chevron-down-outline'
               }
-              size={moderateScale(25)}
+              size={moderateScale(20)}
               color="#000"
             />
           </TouchableOpacity>
@@ -408,7 +417,7 @@ const SearchRefactored = ({ navigation }) => {
           <TouchableOpacity>
             <Ionicons
               name="mic-outline"
-              size={moderateScale(26)}
+              size={moderateScale(20)}
               color="#11A5D7"
             />
           </TouchableOpacity>
@@ -424,7 +433,9 @@ const SearchRefactored = ({ navigation }) => {
                 style={styles.dropdownItem}
               >
                 {renderIcon(cat)}
-                <Text style={{ fontSize: 16, color: '#333' }}>
+                <Text
+                  style={{ fontSize: responsive.fontSize(12), color: '#333' }}
+                >
                   {cat.category_name}
                 </Text>
               </TouchableOpacity>
@@ -445,7 +456,7 @@ const SearchRefactored = ({ navigation }) => {
           style={styles.filterButton}
           onPress={() => setShowFilterModal(true)}
         >
-          <Icon name="sliders" size={moderateScale(16)} color="#000" />
+          <Icon name="sliders" size={moderateScale(12)} color="#000" />
           <Text style={styles.sortText}>Filter</Text>
         </TouchableOpacity>
       </View>
@@ -455,7 +466,7 @@ const SearchRefactored = ({ navigation }) => {
         <View style={FilterModalStyles_Search.modalContainer}>
           <View style={FilterModalStyles_Search.header1}>
             <TouchableOpacity onPress={() => setShowFilterModal(false)}>
-              <Ionicons name="close" size={moderateScale(24)} />
+              <Ionicons name="close" size={moderateScale(20)} />
             </TouchableOpacity>
             <Text style={FilterModalStyles_Search.headerTitle1}>Filters</Text>
             <Ionicons name="options-outline" size={moderateScale(20)} />
@@ -488,7 +499,7 @@ const SearchRefactored = ({ navigation }) => {
                 >
                   <Ionicons
                     name={tab.icon}
-                    size={moderateScale(18)}
+                    size={moderateScale(12)}
                     color={selectedTab === tab.key ? '#000' : '#555'}
                   />
                   <Text
@@ -546,7 +557,9 @@ const SearchRefactored = ({ navigation }) => {
                   }}
                   contentContainerStyle={{
                     paddingHorizontal: 10,
-                    paddingTop: 10, flex:1, marginBottom:responsiveHeight(3)
+                    paddingTop: 10,
+                    flex: 1,
+                    marginBottom: responsiveHeight(3),
                   }}
                   renderItem={({ item }) => {
                     const selected = selectedColors.includes(item.color_name);
@@ -555,14 +568,16 @@ const SearchRefactored = ({ navigation }) => {
                         onPress={() => toggleColor(item.color_name)}
                         style={[
                           FilterModalStyles_Search.colorBox,
-                          selected && FilterModalStyles_Search.selectedWrapper_c,
+                          selected &&
+                            FilterModalStyles_Search.selectedWrapper_c,
                         ]}
                       >
                         <View
                           style={[
                             FilterModalStyles_Search.colorCircle_c,
                             { backgroundColor: item.hex },
-                            selected && FilterModalStyles_Search.colorCircleSelected_c,
+                            selected &&
+                              FilterModalStyles_Search.colorCircleSelected_c,
                           ]}
                         />
                         <Text
@@ -608,14 +623,16 @@ const SearchRefactored = ({ navigation }) => {
                         key={r.ram_id ? String(r.ram_id) : `ram-${index}`}
                         style={[
                           FilterModalStyles_Search.optionButton,
-                          selectedRam === r && FilterModalStyles_Search.selectedButton,
+                          selectedRam === r &&
+                            FilterModalStyles_Search.selectedButton,
                         ]}
                         onPress={() => setSelectedRam(r)}
                       >
                         <Text
                           style={[
                             FilterModalStyles_Search.optionText,
-                            selectedRam === r && FilterModalStyles_Search.selectedText,
+                            selectedRam === r &&
+                              FilterModalStyles_Search.selectedText,
                           ]}
                         >
                           {r.ram_name}
@@ -624,7 +641,9 @@ const SearchRefactored = ({ navigation }) => {
                     ))}
                   </View>
 
-                  <Text style={FilterModalStyles_Search.subHeading}>Storage</Text>
+                  <Text style={FilterModalStyles_Search.subHeading}>
+                    Storage
+                  </Text>
                   <View style={FilterModalStyles_Search.optionContainer}>
                     {(nocartidfilterdata.roms || []).map((s, index) => (
                       <TouchableOpacity
@@ -777,7 +796,12 @@ const styles = StyleSheet.create({
     paddingHorizontal: scale(10),
     paddingVertical: verticalScale(8),
   },
-  input: { flex: 1, padding: scale(3), fontSize: RF(2), color: '#000' },
+  input: {
+    flex: 1,
+    padding: scale(3),
+    fontSize: responsive.fontSize(14),
+    color: '#000',
+  },
 
   dropdown: {
     backgroundColor: '#fff',
@@ -808,7 +832,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     gap: scale(6),
   },
-  sortText: { fontSize: RF(1.6), marginLeft: 6 },
+  sortText: { fontSize: responsive.fontSize(14) },
 
   modalContainer: {
     flex: 1,

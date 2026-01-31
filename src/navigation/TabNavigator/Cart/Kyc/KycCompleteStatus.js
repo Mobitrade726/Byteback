@@ -454,7 +454,6 @@
 //   },
 // });
 
-
 import React, { useEffect, useState } from 'react';
 import {
   View,
@@ -466,19 +465,15 @@ import {
   Alert,
 } from 'react-native';
 import Ionicons from 'react-native-vector-icons/Ionicons';
-import {
-  launchCamera,
-  launchImageLibrary,
-} from 'react-native-image-picker';
+import { launchCamera, launchImageLibrary } from 'react-native-image-picker';
 import { useDispatch, useSelector } from 'react-redux';
 import { fetchProfile } from '../../../../redux/slices/profileSlice';
 import Header from '../../../../constants/Header';
 import { API_BASE_URL } from '../../../../utils/utils';
 import Toast from 'react-native-toast-message';
-import {
-  responsiveFontSize,
-} from 'react-native-responsive-dimensions';
+import { responsiveFontSize } from 'react-native-responsive-dimensions';
 import { moderateScale, verticalScale } from 'react-native-size-matters';
+import responsive from '../../../../constants/responsive';
 
 const KycScreen = ({ navigation }) => {
   const dispatch = useDispatch();
@@ -650,14 +645,11 @@ const KycScreen = ({ navigation }) => {
         });
       }
 
-      const res = await fetch(
-        `${API_BASE_URL}/buyer/documents/store`,
-        {
-          method: 'POST',
-          headers: { Authorization: `Bearer ${token}` },
-          body: formData,
-        },
-      );
+      const res = await fetch(`${API_BASE_URL}/buyer/documents/store`, {
+        method: 'POST',
+        headers: { Authorization: `Bearer ${token}` },
+        body: formData,
+      });
 
       const json = await res.json();
 
@@ -685,9 +677,7 @@ const KycScreen = ({ navigation }) => {
       <ScrollView>
         <View style={styles.card}>
           <Text style={styles.title}>KYC Verification</Text>
-          <Text style={styles.subtitle}>
-            Upload valid government identity
-          </Text>
+          <Text style={styles.subtitle}>Upload valid government identity</Text>
 
           <TouchableOpacity
             style={styles.dropdownHeader}
@@ -745,12 +735,15 @@ const KycScreen = ({ navigation }) => {
           )}
 
           <TouchableOpacity
-            style={styles.checkboxRow}
+            style={[
+              styles.checkboxRow,
+              { marginTop: responsive.marginTop(10) },
+            ]}
             onPress={() => setConfirmInfo(!confirmInfo)}
           >
             <Ionicons
               name={confirmInfo ? 'checkbox' : 'square-outline'}
-              size={18}
+              size={moderateScale(12)}
             />
             <Text style={styles.checkText}>
               I confirm information is correct
@@ -758,16 +751,17 @@ const KycScreen = ({ navigation }) => {
           </TouchableOpacity>
 
           <TouchableOpacity
-            style={styles.checkboxRow}
+            style={[
+              styles.checkboxRow,
+              { marginTop: responsive.marginTop(5) },
+            ]}
             onPress={() => setAgreeTerms(!agreeTerms)}
           >
             <Ionicons
               name={agreeTerms ? 'checkbox' : 'square-outline'}
-              size={18}
+              size={moderateScale(12)}
             />
-            <Text style={styles.checkText}>
-              I agree to terms & conditions
-            </Text>
+            <Text style={styles.checkText}>I agree to terms & conditions</Text>
           </TouchableOpacity>
 
           <TouchableOpacity
@@ -792,48 +786,61 @@ export default KycScreen;
 const styles = StyleSheet.create({
   container: { flex: 1, backgroundColor: '#fff' },
   card: { padding: moderateScale(16) },
-  title: { fontSize: responsiveFontSize(2.4), fontWeight: '700' },
-  subtitle: { color: '#666', marginBottom: 10 },
+  title: { fontSize: responsive.fontSize(20), fontWeight: '700' },
+  subtitle: {
+    color: '#666',
+    marginVertical: responsive.marginVertical(10),
+    marginBottom: responsive.marginBottom(15),
+    fontSize: responsive.fontSize(16),
+  },
   dropdownHeader: {
     borderWidth: 1,
     borderRadius: 12,
-    padding: 14,
+    padding: responsive.padding(10),
     flexDirection: 'row',
     justifyContent: 'space-between',
   },
   dropdownItem: {
-    padding: 14,
+    padding: responsive.padding(10),
     borderBottomWidth: 1,
     borderColor: '#eee',
   },
   input: {
     borderWidth: 1,
     borderRadius: 12,
-    padding: 14,
-    marginTop: 10,
+    padding: responsive.padding(10),
+    marginTop: responsive.marginTop(20),
+    fontSize: responsive.fontSize(16),
+    marginBottom: responsive.marginBottom(10),
   },
   uploadBox: {
     marginTop: 12,
     borderWidth: 1,
     borderStyle: 'dashed',
     borderRadius: 12,
-    padding: 14,
+    padding: responsive.padding(10),
     flexDirection: 'row',
     alignItems: 'center',
+    marginBottom: responsive.marginBottom(10),
   },
-  uploadText: { marginLeft: 10 },
+  uploadText: { marginLeft: 10, fontSize: responsive.fontSize(16) },
   checkboxRow: {
     flexDirection: 'row',
     alignItems: 'center',
-    marginTop: 12,
+    justifyContent: 'center',
   },
-  checkText: { marginLeft: 10, flex: 1 },
+  checkText: { marginLeft: 5, flex: 1, fontSize: responsive.fontSize(12) },
   submitBtn: {
     marginTop: 24,
     backgroundColor: '#111',
-    padding: 14,
+    padding: responsive.fontSize(14),
     borderRadius: 12,
     alignItems: 'center',
+    fontSize: responsive.fontSize(12),
   },
-  submitText: { color: '#fff', fontWeight: '700' },
+  submitText: {
+    color: '#fff',
+    fontWeight: '700',
+    fontSize: responsive.fontSize(16),
+  },
 });

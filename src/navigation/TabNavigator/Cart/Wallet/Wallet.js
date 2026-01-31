@@ -69,15 +69,42 @@ export default function Wallet({ navigation }) {
       checkmarkColor = 'gray';
     }
 
+    const getTransactionIcon = description => {
+      const desc = description?.toLowerCase();
+
+      if (desc.includes('order cancelled')) {
+        return { icon: 'close-circle', color: '#CB444B' };
+      }
+
+      if (desc.includes('order')) {
+        return { icon: 'cart', color: '#1C9C48' };
+      }
+
+      if (desc.includes('refund')) {
+        return { icon: 'arrow-down', color: '#F9A825' };
+      }
+
+      if (desc.includes('added money')) {
+        return { icon: 'cash-plus', color: '#1C9C48' };
+      }
+
+      if (desc.includes('withdraw')) {
+        return { icon: 'cash-minus', color: '#D32F2F' };
+      }
+
+      return { icon: 'cash', color: '#999' };
+    };
+
+    const iconData = getTransactionIcon(item.description);
+
     return (
       <View style={styles.transactionRow}>
         <MaterialCommunityIcons
-          name="cash-multiple"
+          name={iconData.icon}
           size={moderateScale(18)}
-          color={iconColor}
+          color={iconData.color}
           style={styles.transactionIcon}
         />
-
         <View style={{ flex: 1 }}>
           <Text style={[styles.amount, { color: iconColor }]}>
             {displayAmount}
@@ -90,7 +117,6 @@ export default function Wallet({ navigation }) {
           </Text>
           <Text style={styles.date}>{item.date}</Text>
         </View>
-
         <Ionicons
           name="checkmark-circle-outline"
           size={moderateScale(18)}
@@ -105,34 +131,39 @@ export default function Wallet({ navigation }) {
       <Header title="Wallet" navigation={navigation} showBack={true} />
 
       {/* Balance Card */}
-      <View style={styles.balanceCard}>
-        <Text style={styles.balanceLabel}>Your Balance</Text>
-        <Text style={styles.balanceAmount}>₹{balance}</Text>
-        <View style={styles.buttonRow}>
+      <View style={[ProductCardStyles.cardShadow, { marginTop: 5 }]}>
+        <View style={styles.balanceCard}>
+          <Text style={styles.balanceLabel}>Your Balance</Text>
+          <Text style={styles.balanceAmount}>₹{balance}</Text>
+          <View style={styles.buttonRow}>
+            <TouchableOpacity
+              onPress={() => navigation.navigate('WalletAddMoney')}
+              style={styles.addMoneyBtn}
+            >
+              <Text style={styles.addMoneyText}>Add Money</Text>
+            </TouchableOpacity>
+            <TouchableOpacity
+              onPress={() => navigation.navigate('Withdraw')}
+              style={styles.withdrawBtn}
+            >
+              <Text style={styles.withdrawText}>Withdraw</Text>
+            </TouchableOpacity>
+          </View>
           <TouchableOpacity
-            onPress={() => navigation.navigate('WalletAddMoney')}
-            style={styles.addMoneyBtn}
+            onPress={() => navigation.navigate('WalletTransactions')}
+            style={styles.allTransactionsBtn}
           >
-            <Text style={styles.addMoneyText}>Add Money</Text>
-          </TouchableOpacity>
-          <TouchableOpacity
-            onPress={() => navigation.navigate('Withdraw')}
-            style={styles.withdrawBtn}
-          >
-            <Text style={styles.withdrawText}>Withdraw</Text>
+            <Text style={styles.allTransactionsText}>
+              View All Transactions
+            </Text>
           </TouchableOpacity>
         </View>
-        <TouchableOpacity
-          onPress={() => navigation.navigate('WalletTransactions')}
-          style={styles.allTransactionsBtn}
-        >
-          <Text style={styles.allTransactionsText}>View All Transactions</Text>
-        </TouchableOpacity>
       </View>
 
       {/* Recent Transactions */}
       <Text style={styles.recentTitle}>Recent Transactions</Text>
-      <FlatList showsVerticalScrollIndicator={false}
+      <FlatList
+        showsVerticalScrollIndicator={false}
         data={ledgerbalance}
         renderItem={renderTransaction}
         keyExtractor={(item, index) =>
@@ -209,11 +240,13 @@ export default function Wallet({ navigation }) {
 }
 import { scale, verticalScale, moderateScale } from 'react-native-size-matters';
 import { responsiveFontSize as RF } from 'react-native-responsive-dimensions';
+import responsive from '../../../../constants/responsive';
+import { ProductCardStyles } from '../../../../constants/ProductCardStyles';
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#fff',
+    backgroundColor: '#FFFFFF',
   },
   header: {
     flexDirection: 'row',
@@ -235,20 +268,27 @@ const styles = StyleSheet.create({
     textAlign: 'center',
   },
   balanceCard: {
-    backgroundColor: '#fff',
-    padding: scale(15),
-    borderRadius: scale(5),
-    borderWidth: 1,
+    backgroundColor: '#FFFFFF',
+    padding: responsive.padding(10),
+    borderRadius: responsive.borderRadius(12),
+    borderWidth: 0,
     overflow: 'hidden',
-    marginVertical: verticalScale(5),
-    marginHorizontal: scale(10), borderColor:"#f1f1f1"
+    marginHorizontal: scale(10),
+    marginBottom: responsive.marginBottom(10),
+    borderColor: '#ffffff',
+    elevation: 5,
+
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 4 },
+    shadowOpacity: 0.15,
+    shadowRadius: 6,
   },
   balanceLabel: {
-    fontSize: RF(1.5),
+    fontSize: responsive.fontSize(15),
     color: 'gray',
   },
   balanceAmount: {
-    fontSize: RF(2),
+    fontSize: responsive.fontSize(25),
     fontWeight: 'bold',
     marginVertical: verticalScale(5),
   },
@@ -260,27 +300,26 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   addMoneyBtn: {
-    backgroundColor: 'green',
-    paddingVertical: verticalScale(8),
-    // paddingHorizontal: scale(10),
-    borderRadius: scale(8),
+    backgroundColor: '#1C9C48',
+    // paddingVertical: verticalScale(8),
+    borderRadius: responsive.borderRadius(12),
+    padding: responsive.padding(10),
     flex: 1,
     alignItems: 'center',
-    marginRight: 5,
+    marginHorizontal: responsive.marginHorizontal(2),
   },
   addMoneyText: {
     color: '#fff',
     fontWeight: 'bold',
-    fontSize: RF(1.5),
+    fontSize: responsive.fontSize(16),
   },
   withdrawBtn: {
-    backgroundColor: '#444',
-    paddingVertical: verticalScale(8),
-    // paddingHorizontal: scale(10),
-    borderRadius: scale(8),
+    backgroundColor: '#666666',
+    borderRadius: responsive.borderRadius(12),
+    padding: responsive.padding(10),
     flex: 1,
     alignItems: 'center',
-    marginLeft: 5,
+    marginHorizontal: responsive.marginHorizontal(2),
   },
   withdrawText: {
     color: '#fff',
@@ -288,10 +327,10 @@ const styles = StyleSheet.create({
     fontSize: RF(1.5),
   },
   allTransactionsBtn: {
-    backgroundColor: '#222',
-    paddingVertical: verticalScale(8),
-    paddingHorizontal: scale(20),
-    borderRadius: scale(8),
+    backgroundColor: '#333333',
+    padding: responsive.padding(10),
+    marginHorizontal: responsive.marginHorizontal(2),
+    borderRadius: responsive.borderRadius(12),
   },
   allTransactionsText: {
     color: '#fff',
@@ -300,11 +339,11 @@ const styles = StyleSheet.create({
     textAlign: 'center',
   },
   recentTitle: {
-    fontSize: RF(1.8),
-    fontWeight: '600',
-    color: 'gray',
+    fontSize: responsive.fontSize(16),
+    color: '#171D1C',
     marginBottom: verticalScale(10),
     marginHorizontal: scale(15),
+    textAlign: 'center',
   },
   transactionRow: {
     flexDirection: 'row',

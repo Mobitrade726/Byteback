@@ -256,19 +256,12 @@ import {
   heightPercentageToDP as hp,
 } from 'react-native-responsive-screen';
 import Header from '../../../constants/Header';
+import responsive from '../../../constants/responsive';
 
 const ProfileScreen = ({ navigation }) => {
   const dispatch = useDispatch();
   const { data } = useSelector(state => state.profile);
   const [appVersion, setAppVersion] = useState('');
-  // const [kycData] = useState({
-  //   status:
-  //     data?.vendordocuments == null
-  //       ? 'Pending' // or 'Pending', whatever default you want
-  //       : data?.vendordocuments?.proof_of_identity === null
-  //       ? 'Pending'
-  //       : 'Approved',
-  // });
 
   const getKycStatus = () => {
     if (
@@ -301,52 +294,6 @@ const ProfileScreen = ({ navigation }) => {
     getVersion();
     dispatch(fetchProfile());
   }, [dispatch]);
-
-  // const options = [
-  //   {
-  //     label: 'My Orders',
-  //     image: require('../../../../assets/images/OrdersIcon.png'),
-  //     screen: 'Myorder',
-  //   },
-  //   {
-  //     label: 'KYC Status',
-  //     image: require('../../../../assets/images/kycstatus.png'),
-  //     screen: 'KYCStatus',
-  //     kycStatus: kycData?.status,
-  //   },
-  //   {
-  //     label: 'Wishlist',
-  //     image: require('../../../../assets/images/WishlistIcon.png'),
-  //     screen: 'WatchList',
-  //   },
-  //   {
-  //     label: 'My Wallet',
-  //     image: require('../../../../assets/images/wallet.png'),
-  //     screen: 'Wallet',
-  //   },
-  //   {
-  //     label: 'Saved Addresses',
-  //     image: require('../../../../assets/images/AddressIcon.png'),
-  //     screen: 'Addresses',
-  //   },
-  //   {
-  //     label: 'Help Centre',
-  //     image: require('../../../../assets/images/HelpIcon.png'),
-  //     subtext: 'FAQs',
-  //     screen: 'HelpSupport',
-  //   },
-  //   {
-  //     label: 'About',
-  //     image: require('../../../../assets/images/about.png'),
-  //     subtext: `App Version: v${appVersion}`,
-  //     screen: 'AboutMobiTrade',
-  //   },
-  //   {
-  //     label: 'Settings',
-  //     image: require('../../../../assets/images/setting.png'),
-  //     screen: 'Settings',
-  //   },
-  // ];
 
   const options = [
     {
@@ -411,11 +358,6 @@ const ProfileScreen = ({ navigation }) => {
         contentContainerStyle={styles.container}
         showsVerticalScrollIndicator={false}
       >
-        {/* <View style={styles.profileContainer}>
-          <Text style={styles.name}>{data?.customer_name || ''}</Text>
-          <Text style={styles.email}>{data?.email || ''}</Text>
-        </View> */}
-
         <View style={styles.profileCard}>
           <View style={styles.avatarWrapper}>
             {data?.profile_image ? (
@@ -451,7 +393,11 @@ const ProfileScreen = ({ navigation }) => {
           >
             {/* <Image source={item.image} style={styles.optionImage} /> */}
             <View style={styles.iconWrapper}>
-              <Icon name={item.icon} size={wp('6%')} color="#333" />
+              <Icon
+                name={item.icon}
+                size={responsive.fontSize(24)}
+                color="#11A5D7"
+              />
             </View>
 
             <View style={styles.optionTextContainer}>
@@ -460,17 +406,6 @@ const ProfileScreen = ({ navigation }) => {
                 <Text style={styles.optionSubtext}>{item.subtext}</Text>
               )}
             </View>
-            {/* {item.label === 'KYC Status' && (
-              <Text
-                style={{
-                  color: kycData.color,
-                  backgroundColor: kycData.background,
-                  fontWeight: 'bold',
-                }}
-              >
-                {item.kycStatus === 'Approved' ? 'Approved' : 'Pending'}
-              </Text>
-            )} */}
             {item.label === 'KYC Status' && (
               <View
                 style={[
@@ -481,13 +416,19 @@ const ProfileScreen = ({ navigation }) => {
                   },
                 ]}
               >
-                <Text style={{ color: kycData.color, fontWeight: '700' }}>
+                <Text
+                  style={{
+                    color: kycData.color,
+                    fontWeight: '700',
+                    fontSize: responsive.fontSize(10),
+                  }}
+                >
                   {kycData.status}
                 </Text>
               </View>
             )}
 
-            <Icon name="chevron-forward" size={wp('5%')} color="#999" />
+            <Icon name="chevron-forward" size={wp('4%')} color="#999" />
           </TouchableOpacity>
         ))}
       </ScrollView>
@@ -504,21 +445,6 @@ const styles = StyleSheet.create({
     flexGrow: 1,
     paddingBottom: hp('2%'),
   },
-  // profileContainer: {
-  //   alignItems: 'center',
-  //   marginBottom: hp('2%'),
-  // },
-  // name: {
-  //   fontSize: wp('5.5%'),
-  //   fontWeight: '700',
-  //   marginTop: hp('1%'),
-  //   color: '#333',
-  // },
-  // email: {
-  //   fontSize: wp('3.8%'),
-  //   color: '#999',
-  //   marginBottom: hp('1%'),
-  // },
   profileCard: {
     alignItems: 'center',
     // marginBottom: hp('2%'),
@@ -538,28 +464,28 @@ const styles = StyleSheet.create({
   },
 
   initialAvatar: {
-    width: wp('20%'),
-    height: wp('20%'),
-    borderRadius: wp('12%'),
+    width: wp('12%'),
+    height: wp('12%'),
+    borderRadius: wp('20%'),
     backgroundColor: '#E3F2FD',
     justifyContent: 'center',
     alignItems: 'center',
   },
 
   initialText: {
-    fontSize: wp('10%'),
+    fontSize: responsive.fontSize(20),
     fontWeight: '700',
     color: '#1976D2',
   },
 
   profileName: {
-    fontSize: wp('5.5%'),
+    fontSize: responsive.fontSize(25),
     fontWeight: '700',
     color: '#222',
   },
 
   profileEmail: {
-    fontSize: wp('3.8%'),
+    fontSize: responsive.fontSize(15),
     color: '#777',
     marginTop: hp('0.4%'),
   },
@@ -583,9 +509,9 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   optionLabel: {
-    fontSize: wp('4.2%'),
+    fontSize: responsive.fontSize(17),
     fontWeight: '600',
-    color: '#222',
+    color: '#171D1C',
   },
   optionSubtext: {
     fontSize: wp('3%'),
@@ -595,7 +521,7 @@ const styles = StyleSheet.create({
   kycStatus: {
     marginRight: wp('2%'),
     color: '#00A9E0',
-    fontWeight: 'bold',
+    fontWeight: '500',
     fontSize: wp('3.8%'),
   },
 
@@ -603,15 +529,15 @@ const styles = StyleSheet.create({
     width: wp('10%'),
     height: wp('10%'),
     borderRadius: wp('5%'),
-    backgroundColor: '#f2f2f2',
+    backgroundColor: '#fff',
     justifyContent: 'center',
     alignItems: 'center',
-    marginRight: wp('3%'),
+    marginRight: wp('0%'),
   },
 
   kycBadge: {
-    paddingHorizontal: wp('2.5%'),
-    paddingVertical: hp('0.4%'),
+    paddingHorizontal: wp('4%'),
+    paddingVertical: hp('1%'),
     borderRadius: wp('2%'),
     marginRight: wp('2%'),
   },

@@ -548,6 +548,7 @@ import { useRoute } from '@react-navigation/native';
 import axios from 'axios';
 import { API_BASE_URL } from '../../utils/utils';
 import {
+  responsiveFontSize,
   responsiveFontSize as RF,
   responsiveHeight as RH,
   responsiveWidth as RW,
@@ -555,6 +556,7 @@ import {
 import { scale, verticalScale, moderateScale } from 'react-native-size-matters';
 import { useSelector } from 'react-redux';
 import AlertModal from '../../constants/AlertModal';
+import responsive from '../../constants/responsive';
 
 const Signup_Address = ({ navigation }) => {
   const token = useSelector(state => state.auth.token);
@@ -688,7 +690,16 @@ const Signup_Address = ({ navigation }) => {
         }
       }
     } catch (err) {
-      setAlertMessage(JSON.stringify(err?.response?.data?.errors));
+      const errors = err?.response?.data?.errors;
+
+      if (errors) {
+        const errorMessages = Object.values(errors).flat().join('\n'); // ya ', '
+
+        setAlertMessage(errorMessages);
+      } else {
+        setAlertMessage(err?.response?.data?.message || 'Something went wrong');
+      }
+
       setAlertType('error');
       setAlertVisible(true);
     } finally {
@@ -854,7 +865,7 @@ const Signup_Address = ({ navigation }) => {
         {zipLoading && form.billingZip.length === 6 && (
           <ActivityIndicator
             size="small"
-            color="#478F4E"
+            color="#4B9AC1"
             style={{ marginBottom: RH(1) }}
           />
         )}
@@ -893,7 +904,7 @@ const Signup_Address = ({ navigation }) => {
           <CheckBox
             value={isBilling}
             onValueChange={setIsBilling}
-            tintColors={{ true: '#1C9C48', false: '#aaa' }}
+            tintColors={{ true: '#4B9AC1', false: '#aaa' }}
           />
           <Text style={styles.checkboxLabel}>Same as above</Text>
         </View>
@@ -929,7 +940,7 @@ const Signup_Address = ({ navigation }) => {
             {zipLoading && form.shippingZip.length === 6 && (
               <ActivityIndicator
                 size="small"
-                color="#478F4E"
+                color="#4B9AC1"
                 style={{ marginBottom: RH(1) }}
               />
             )}
@@ -968,7 +979,7 @@ const Signup_Address = ({ navigation }) => {
             styles.registerButton,
             {
               backgroundColor:
-                Object.keys(errors).length > 0 ? '#aaa' : '#478F4E',
+                Object.keys(errors).length > 0 ? '#aaa' : '#4B9AC1',
             },
           ]}
           onPress={handleRegister}
@@ -1021,32 +1032,32 @@ const styles = StyleSheet.create({
   container: { flex: 1, backgroundColor: '#FAFAFA' },
   form: { padding: RW(5) },
   sectionHeaderText: {
-    fontSize: RF(2.5),
+    fontSize: responsive.fontSize(20),
     fontWeight: '600',
     color: '#171D1C',
     marginTop: RH(2),
   },
   divider: {
     borderBottomWidth: verticalScale(2.8),
-    borderColor: '#478F4E',
+    borderColor: '#4B9AC1',
     marginBottom: RH(2),
     marginTop: RH(1),
   },
   label: {
     marginBottom: RH(0.8),
-    fontSize: RF(2),
+    fontSize: responsive.fontSize(16),
     color: '#000',
     fontWeight: '500',
   },
   input: {
     backgroundColor: '#fff',
-    borderRadius: moderateScale(16),
+    borderRadius: responsive.borderRadius(16),
     padding: verticalScale(12),
-    fontSize: RF(1.8),
+    fontSize: responsive.fontSize(14),
     color: '#000',
     marginBottom: RH(1.5),
-    borderWidth: 1,
-    borderColor: '#ccc',
+    borderWidth: 2,
+    borderColor: '#333333',
   },
   errorInput: {
     borderColor: 'red',
@@ -1068,14 +1079,15 @@ const styles = StyleSheet.create({
     marginHorizontal: RW(2),
   },
   registerButton: {
-    paddingVertical: RH(2),
-    borderRadius: moderateScale(12),
+    backgroundColor: '#4B9AC1',
+    paddingVertical: verticalScale(15),
+    borderRadius: moderateScale(10),
     alignItems: 'center',
-    marginBottom: RH(5),
+    marginTop: verticalScale(10),
   },
   registerText: {
     color: '#fff',
-    fontWeight: 'bold',
-    fontSize: RF(2),
+    fontSize: responsiveFontSize(2),
+    fontWeight: '600',
   },
 });

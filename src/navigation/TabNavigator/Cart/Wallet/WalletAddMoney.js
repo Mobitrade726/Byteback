@@ -200,35 +200,35 @@ const WalletAddMoney = ({ navigation }) => {
     let icon = 'cash-multiple';
     let iconColor = '#000';
     let checkmarkIcon = 'checkmark-circle-outline';
-    let checkmarkColor = '#10B981'; // default green
+    let checkmarkColor = '#1C9C48'; // default green
     let displayAmount = Number(item.amount || 0).toLocaleString();
 
     switch (item.status_text) {
       case 'Money Added':
         icon = 'cash-plus';
-        iconColor = '#10B981';
+        iconColor = '#1C9C48';
         checkmarkIcon = 'checkmark-circle-outline';
-        checkmarkColor = '#10B981';
+        checkmarkColor = '#1C9C48';
         displayAmount = `+ ₹ ${displayAmount}`;
         break;
       case 'Verification Pending':
         icon = 'timer-sand';
-        iconColor = '#FBBF24';
+        iconColor = '#F6C344';
         checkmarkIcon = 'time-outline';
-        checkmarkColor = '#FBBF24';
+        checkmarkColor = '#F6C344';
         displayAmount = `₹ ${displayAmount}`;
         break;
       case 'Rejected':
         icon = 'close-octagon-outline';
-        iconColor = '#EF4444';
+        iconColor = '#CB444B';
         checkmarkIcon = 'close-circle-outline';
-        checkmarkColor = '#EF4444';
+        checkmarkColor = '#CB444B';
         displayAmount = `₹ ${displayAmount}`;
         break;
       default:
         // fallback for credit/debit or unknown status
         icon = item.transaction_type === '1' ? 'cash-plus' : 'cash-minus';
-        iconColor = item.transaction_type === '1' ? '#10B981' : '#EF4444';
+        iconColor = item.transaction_type === '1' ? '#1C9C48' : '#CB444B';
         checkmarkIcon =
           item.transaction_type === '1'
             ? 'checkmark-circle-outline'
@@ -245,7 +245,7 @@ const WalletAddMoney = ({ navigation }) => {
       <View style={styles.transactionRow}>
         <MaterialCommunityIcons
           name={icon}
-          size={24}
+          size={moderateScale(18)}
           color={iconColor}
           style={styles.transactionIcon}
         />
@@ -261,9 +261,10 @@ const WalletAddMoney = ({ navigation }) => {
         </View>
         <Ionicons
           name={checkmarkIcon}
-          size={moderateScale(22)}
+          size={moderateScale(18)}
           color={checkmarkColor}
         />
+        {/* <View style={styles.dividerspecification} /> */}
       </View>
     );
   };
@@ -277,30 +278,33 @@ const WalletAddMoney = ({ navigation }) => {
         renderItem={renderTransaction}
         keyExtractor={item => item.id?.toString()}
         showsVerticalScrollIndicator={false}
-        contentContainerStyle={{ padding: 20 }}
-        // 👆 TOP FORM + BALANCE
         ListHeaderComponent={
           <>
             <View style={styles.balanceContainer}>
-              <Text style={styles.balanceLabel}>Wallet Balance</Text>
+              <Text style={styles.balanceLabel}>Current Balance</Text>
               {loading ? (
                 <ActivityIndicator color="#14AE5C" />
               ) : (
                 <Text style={styles.balanceValue}>₹{balance}</Text>
               )}
             </View>
-
+            <Text style={styles.subHeader}>Enter Amount</Text>
             <TextInput
               style={styles.input}
-              placeholder="Enter amount"
+              placeholder="XXXXXXXXX"
               keyboardType="numeric"
               value={amount}
               onChangeText={setAmount}
-              placeholderTextColor={'#000'}
             />
-
-            <Text style={styles.subHeader}>Select Payment Method</Text>
-
+            <View
+              style={{
+                backgroundColor: '#F5F5F5',
+                padding: responsive.padding(10),
+                marginBottom: responsive.marginBottom(5),
+              }}
+            >
+              <Text style={styles.subHeaderWallet}>Topup Wallet</Text>
+            </View>
             <View style={styles.methodContainer}>
               {['upi', 'rtgs', 'card'].map(method => (
                 <TouchableOpacity
@@ -328,17 +332,23 @@ const WalletAddMoney = ({ navigation }) => {
               onPress={handleAddMoney}
               disabled={isProcessing}
             >
-              {/* <Text style={styles.payButtonText}> { isProcessing ? <ActivityIndicator size="large" color="#fff" /> : Add Money}</Text> */}
               {isProcessing ? (
                 <ActivityIndicator size="small" color="#fff" />
               ) : (
                 <Text style={styles.payButtonText}>Add Money</Text>
               )}
             </TouchableOpacity>
-
-            <Text style={styles.historyTitle}>
-              History (Showing only Add Money)
-            </Text>
+            <View
+              style={{
+                backgroundColor: '#EAE6E5',
+                padding: responsive.padding(10),
+              }}
+            >
+              <Text style={styles.historyTitle}>
+                History{' '}
+                <Text style={styles.historyText}>(Showing only Add Money)</Text>
+              </Text>
+            </View>
           </>
         }
         // 👇 EMPTY HISTORY
@@ -356,7 +366,6 @@ const WalletAddMoney = ({ navigation }) => {
             </View>
           )
         }
-        ItemSeparatorComponent={() => <View style={styles.separator} />}
       />
 
       {loading && (
@@ -376,11 +385,12 @@ export default WalletAddMoney;
 
 import { scale, verticalScale, moderateScale } from 'react-native-size-matters';
 import { responsiveFontSize as RF } from 'react-native-responsive-dimensions';
+import responsive from '../../../../constants/responsive';
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#FBFEFC',
+    backgroundColor: '#ffffff',
   },
   header: {
     fontSize: RF(2.8),
@@ -390,43 +400,59 @@ const styles = StyleSheet.create({
     marginVertical: verticalScale(10),
   },
   balanceContainer: {
-    backgroundColor: '#fff',
+    backgroundColor: '#FBFEFC',
     borderRadius: scale(12),
     padding: scale(15),
-    alignItems: 'center',
-    marginBottom: verticalScale(20),
+    marginHorizontal: responsive.marginHorizontal(10),
+    marginVertical: responsive.marginVertical(5),
     elevation: 2,
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 4 },
+    shadowOpacity: 0.15,
+    shadowRadius: 6,
   },
   balanceLabel: {
-    fontSize: RF(2),
+    fontSize: responsive.fontSize(16),
     color: '#888',
   },
   balanceValue: {
-    fontSize: RF(4),
+    fontSize: responsive.fontSize(25),
     fontWeight: 'bold',
-    color: '#14AE5C',
-    marginVertical: verticalScale(8),
+    color: '#1A1A2D',
   },
   input: {
     backgroundColor: '#fff',
     borderRadius: scale(12),
-    paddingVertical: verticalScale(12),
-    paddingHorizontal: scale(15),
-    fontSize: RF(2),
+    marginHorizontal: responsive.marginHorizontal(10),
+    marginVertical: responsive.marginVertical(5),
+    padding: responsive.padding(12),
+    fontSize: responsive.fontSize(16),
     marginBottom: verticalScale(20),
     elevation: 2,
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 4 },
+    shadowOpacity: 0.15,
+    shadowRadius: 6,
   },
   subHeader: {
-    fontSize: RF(2.2),
+    fontSize: responsive.fontSize(20),
     fontWeight: '600',
     color: '#333',
-    marginBottom: verticalScale(10),
+    marginHorizontal: responsive.marginHorizontal(10),
+    marginVertical: responsive.marginVertical(5),
+  },
+  subHeaderWallet: {
+    fontSize: responsive.fontSize(20),
+    fontWeight: '600',
+    color: '#333',
   },
   methodContainer: {
     flexDirection: 'row',
     flexWrap: 'wrap',
     justifyContent: 'center',
-    marginBottom: verticalScale(20),
+    backgroundColor: '#F5F5F5',
+    padding: responsive.padding(10),
+    marginBottom: responsive.marginBottom(5),
   },
   methodButton: {
     borderWidth: 1,
@@ -452,14 +478,16 @@ const styles = StyleSheet.create({
   },
   payButton: {
     backgroundColor: '#14AE5C',
-    paddingVertical: verticalScale(15),
     borderRadius: scale(10),
     alignItems: 'center',
-    marginBottom: verticalScale(20),
+    padding: responsive.padding(10),
+    marginHorizontal: responsive.marginHorizontal(10),
+    marginTop: responsive.marginTop(20),
+    marginBottom: responsive.marginTop(20),
   },
   payButtonText: {
     color: '#fff',
-    fontSize: RF(2),
+    fontSize: responsive.fontSize(17),
     fontWeight: 'bold',
   },
   recentTitle: {
@@ -473,20 +501,22 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     paddingVertical: verticalScale(12),
     paddingHorizontal: scale(15),
+    backgroundColor: '#F5F5F5',
+    borderBottomWidth: 0.3,
   },
   transactionIcon: {
     marginRight: scale(12),
   },
   amount: {
-    fontSize: RF(2),
+    fontSize: responsive.fontSize(20),
     fontWeight: 'bold',
   },
   label: {
-    fontSize: RF(1.8),
+    fontSize: responsive.fontSize(17),
     color: '#000',
   },
   date: {
-    fontSize: RF(1.6),
+    fontSize: responsive.fontSize(15),
     color: 'gray',
   },
   separator: {
@@ -506,23 +536,32 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
     marginBottom: verticalScale(8),
   },
-  historyText: {
-    color: '#333',
-    fontSize: RF(1.8),
-  },
+
   historyStatusSuccess: {
     color: 'green',
     fontWeight: '600',
     fontSize: RF(1.8),
   },
   historyStatusPending: {
-    color: '#f39c12',
+    color: '#F6C344',
     fontWeight: '600',
     fontSize: RF(1.8),
   },
   historyStatusFailed: {
-    color: '#e74c3c',
+    color: '#CB444B',
     fontWeight: '600',
     fontSize: RF(1.8),
+  },
+  historyTitle: {
+    fontSize: responsive.fontSize(16),
+  },
+  historyText: {
+    color: '#333',
+    fontSize: responsive.fontSize(10),
+  },
+  dividerspecification: {
+    height: 1,
+    backgroundColor: '#E5E7EB',
+    marginVertical: 10,
   },
 });

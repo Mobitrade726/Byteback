@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, { useState } from 'react';
 import {
   View,
   Text,
@@ -47,7 +47,7 @@ const faqData = [
   },
 ];
 
-const FAQsScreen = ({navigation}) => {
+const FAQsScreen = ({ navigation }) => {
   const [search, setSearch] = useState('');
   const [expandedIndex, setExpandedIndex] = useState(null);
 
@@ -60,16 +60,17 @@ const FAQsScreen = ({navigation}) => {
     item.question.toLowerCase().includes(search.toLowerCase()),
   );
 
-  const renderItem = ({item, index}) => (
+  const renderItem = ({ item, index }) => (
     <View style={styles.card}>
       <TouchableOpacity
         style={styles.cardHeader}
         onPress={() => toggleExpand(index)}
-        activeOpacity={0.7}>
+        activeOpacity={0.7}
+      >
         <Text style={styles.question}>{item.question}</Text>
         <Ionicons
           name={expandedIndex === index ? 'chevron-up' : 'chevron-down'}
-          size={moderateScale(20)}
+          size={moderateScale(12)}
           color="#333"
         />
       </TouchableOpacity>
@@ -84,14 +85,14 @@ const FAQsScreen = ({navigation}) => {
       {/* Header */}
       <Header title="FAQs" navigation={navigation} showBack={true} showSearch />
 
-      <View style={{padding: moderateScale(16)}}>
+      <View style={{ padding: moderateScale(16) }}>
         {/* Search Bar */}
         <View style={styles.searchContainer}>
           <Ionicons
             name="search"
-            size={moderateScale(20)}
+            size={moderateScale(12)}
             color="#4CAF50"
-            style={{marginRight: moderateScale(8)}}
+            style={{ marginRight: moderateScale(8) }}
           />
           <TextInput
             placeholder="Search questions..."
@@ -107,7 +108,7 @@ const FAQsScreen = ({navigation}) => {
           data={filteredFaqs}
           keyExtractor={(item, index) => index.toString()}
           renderItem={renderItem}
-          contentContainerStyle={{paddingBottom: moderateScale(80)}}
+          contentContainerStyle={{ paddingBottom: moderateScale(80) }}
         />
       </View>
 
@@ -201,9 +202,10 @@ export default FAQsScreen;
 //   },
 // });
 
-import {verticalScale, moderateScale} from 'react-native-size-matters';
-import {responsiveFontSize} from 'react-native-responsive-dimensions';
+import { verticalScale, moderateScale } from 'react-native-size-matters';
+import { responsiveFontSize } from 'react-native-responsive-dimensions';
 import Header from '../../../../constants/Header';
+import responsive from '../../../../constants/responsive';
 
 const styles = StyleSheet.create({
   container: {
@@ -234,13 +236,12 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     backgroundColor: '#EAF6EF',
     borderRadius: moderateScale(8),
-    paddingHorizontal: moderateScale(12),
-    paddingVertical: verticalScale(8),
+    padding: responsive.padding(10),
     marginBottom: verticalScale(16),
   },
   searchInput: {
     flex: 1,
-    fontSize: responsiveFontSize(1.8), // ~14
+    fontSize: responsive.fontSize(14), // ~14
     color: '#333',
     paddingVertical: Platform.OS === 'ios' ? verticalScale(6) : 0,
   },
@@ -258,7 +259,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   question: {
-    fontSize: responsiveFontSize(1.9), // ~15
+    fontSize: responsive.fontSize(14), // ~15
     color: '#222',
     fontWeight: '500',
     flex: 1,
@@ -266,7 +267,7 @@ const styles = StyleSheet.create({
   },
   answer: {
     marginTop: verticalScale(8),
-    fontSize: responsiveFontSize(1.8), // ~14
+    fontSize: responsive.fontSize(14), // ~14
     color: '#4CAF50',
     lineHeight: verticalScale(20),
   },
@@ -280,7 +281,7 @@ const styles = StyleSheet.create({
     paddingHorizontal: moderateScale(24),
   },
   moreButtonText: {
-    fontSize: responsiveFontSize(1.8), // ~14
+    fontSize: responsive.fontSize(14), // ~14
     fontWeight: '600',
     color: '#111',
   },

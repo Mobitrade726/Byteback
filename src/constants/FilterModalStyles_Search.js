@@ -2,6 +2,7 @@
 import { StyleSheet } from 'react-native';
 import { responsiveWidth } from 'react-native-responsive-dimensions';
 import { moderateScale } from 'react-native-size-matters';
+import responsive from './responsive';
 
 const FilterModalStyles_Search = StyleSheet.create({
   modalContainer: {
@@ -19,8 +20,8 @@ const FilterModalStyles_Search = StyleSheet.create({
   },
 
   headerTitle1: {
-    fontSize: moderateScale(16),
-    fontWeight: '600',
+    fontSize: responsive.fontSize(20),
+    color: '#333333',
   },
 
   body: {
@@ -47,7 +48,7 @@ const FilterModalStyles_Search = StyleSheet.create({
 
   tabLabel: {
     marginLeft: moderateScale(10),
-    fontSize: moderateScale(14),
+    fontSize: responsive.fontSize(12),
     color: '#555',
   },
 
@@ -70,7 +71,7 @@ const FilterModalStyles_Search = StyleSheet.create({
   },
 
   brandText: {
-    fontSize: moderateScale(14),
+    fontSize: responsive.fontSize(12),
     color: '#000',
     textAlign: 'center',
   },
@@ -84,8 +85,8 @@ const FilterModalStyles_Search = StyleSheet.create({
   },
 
   colorCircle_c: {
-    width: 25,
-    height: 25,
+    width: 20,
+    height: 20,
     borderRadius: 18,
     marginBottom: 6,
     borderWidth: 1,
@@ -107,7 +108,7 @@ const FilterModalStyles_Search = StyleSheet.create({
   },
 
   colorLabel_c: {
-    fontSize: 10,
+    fontSize: responsive.fontSize(8),
     textAlign: 'center',
   },
 
@@ -127,6 +128,7 @@ const FilterModalStyles_Search = StyleSheet.create({
   gradeText: {
     textAlign: 'center',
     color: '#000',
+    fontSize: responsive.fontSize(12),
   },
 
   gradeTextSelected: {
@@ -134,8 +136,7 @@ const FilterModalStyles_Search = StyleSheet.create({
   },
 
   subHeading: {
-    fontSize: 14,
-    fontWeight: '600',
+    fontSize: responsive.fontSize(12),
     marginVertical: 10,
   },
 
@@ -162,11 +163,13 @@ const FilterModalStyles_Search = StyleSheet.create({
   optionText: {
     color: '#000',
     textAlign: 'center',
+    fontSize: responsive.fontSize(12),
   },
 
   selectedText: {
     color: '#fff',
     textAlign: 'center',
+    fontSize: responsive.fontSize(12),
   },
 
   footer: {
@@ -178,10 +181,10 @@ const FilterModalStyles_Search = StyleSheet.create({
 
   resetBtn: {
     flex: 1,
-    padding: 12,
+    padding: responsive.padding(12),
     borderWidth: 1,
-    borderColor: '#000',
-    borderRadius: 6,
+    borderColor: '#333333',
+    borderRadius: responsive.borderRadius(12),
     marginRight: 10,
     alignItems: 'center',
   },
@@ -189,19 +192,21 @@ const FilterModalStyles_Search = StyleSheet.create({
   resetText: {
     color: '#000',
     fontWeight: '600',
+    fontSize: responsive.fontSize(16),
   },
 
   applyBtn: {
     flex: 1,
-    padding: 12,
-    backgroundColor: '#000',
-    borderRadius: 6,
+    padding: responsive.padding(12),
+    backgroundColor: '#333333',
+    borderRadius: responsive.borderRadius(12),
     alignItems: 'center',
   },
 
   applyText: {
     color: '#fff',
     fontWeight: '600',
+    fontSize: responsive.fontSize(16),
   },
 });
 
@@ -252,7 +257,7 @@ export const FilterModalStyles_All = StyleSheet.create({
 
   tabLabel: {
     marginLeft: moderateScale(10),
-    fontSize: moderateScale(14),
+    fontSize: responsive.fontSize(12),
     color: '#555',
   },
 
@@ -272,7 +277,7 @@ export const FilterModalStyles_All = StyleSheet.create({
   },
 
   brandText: {
-    fontSize: moderateScale(14),
+    fontSize: responsive.fontSize(12),
     color: '#000',
     textAlign: 'center',
   },
@@ -286,8 +291,8 @@ export const FilterModalStyles_All = StyleSheet.create({
   },
 
   colorCircle_c: {
-    width: 25,
-    height: 25,
+    width: 20,
+    height: 20,
     borderRadius: 18,
     marginBottom: 6,
     borderWidth: 1,
@@ -309,19 +314,19 @@ export const FilterModalStyles_All = StyleSheet.create({
   },
 
   colorLabel_c: {
-    fontSize: 10,
+    fontSize: responsive.fontSize(8),
     textAlign: 'center',
   },
 
   subHeading: {
-    fontSize: 14,
-    fontWeight: '600',
+    fontSize: responsive.fontSize(12),
     marginVertical: 10,
+    marginLeft: 8,
   },
 
   optionContainer: {
     flexDirection: 'row', // ✅ REQUIRED
-    flexWrap: 'wrap', 
+    flexWrap: 'wrap',
   },
 
   optionButton: {
@@ -332,7 +337,8 @@ export const FilterModalStyles_All = StyleSheet.create({
     borderColor: '#ddd',
     borderRadius: 6,
     marginBottom: moderateScale(10),
-    backgroundColor: '#fff', marginHorizontal:5
+    backgroundColor: '#fff',
+    marginHorizontal: 5,
   },
 
   selectedButton: {
@@ -343,7 +349,7 @@ export const FilterModalStyles_All = StyleSheet.create({
   optionText: {
     color: '#000',
     textAlign: 'center',
-    fontSize: 14,
+    fontSize: responsive.fontSize(12),
   },
 
   selectedText: {
@@ -360,10 +366,10 @@ export const FilterModalStyles_All = StyleSheet.create({
 
   resetBtn: {
     flex: 1,
-    padding: 12,
+    padding: responsive.padding(12),
     borderWidth: 1,
-    borderColor: '#000',
-    borderRadius: 6,
+    borderColor: '#333333',
+    borderRadius: responsive.borderRadius(12),
     marginRight: 10,
     alignItems: 'center',
   },
@@ -371,19 +377,21 @@ export const FilterModalStyles_All = StyleSheet.create({
   resetText: {
     color: '#000',
     fontWeight: '600',
+    fontSize: responsive.fontSize(16),
   },
 
   applyBtn: {
     flex: 1,
-    padding: 12,
-    backgroundColor: '#000',
-    borderRadius: 6,
+    padding: responsive.padding(12),
+    backgroundColor: '#333333',
+    borderRadius: responsive.borderRadius(12),
     alignItems: 'center',
   },
 
   applyText: {
     color: '#fff',
     fontWeight: '600',
+    fontSize: responsive.fontSize(16),
   },
 });
 

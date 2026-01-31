@@ -919,61 +919,62 @@ const initialState = {
   mobileBudget: [
     {
       id: '1',
-      image:
-        'https://i.postimg.cc/B6HGCYW5/A-sleek-smartphone-with-a-modern-design-resting-on-a-wooden-table-surrounded-by-small-decorative-pla.png',
+      image: require('../../../assets/images/mobile1.png'),
       label: 'Under ₹10,000',
       subname: 'Great for budget buyers',
+      cat: 'Mobile',
     },
     {
       id: '2',
-      image:
-        'https://i.postimg.cc/B6HGCYW5/A-sleek-smartphone-with-a-modern-design-resting-on-a-wooden-table-surrounded-by-small-decorative-pla.png',
+      image: require('../../../assets/images/mobile2.png'),
       label: '₹10,000 - ₹20,000',
       subname: 'Ideal for beginners ',
+      cat: 'Mobile',
     },
     {
       id: '3',
-      image:
-        'https://i.postimg.cc/B6HGCYW5/A-sleek-smartphone-with-a-modern-design-resting-on-a-wooden-table-surrounded-by-small-decorative-pla.png',
+      image: require('../../../assets/images/mobile3.png'),
       label: '₹20,000 - ₹30,000',
       subname: 'Premium selections ',
+      cat: 'Mobile',
     },
     {
       id: '4',
-      image:
-        'https://i.postimg.cc/B6HGCYW5/A-sleek-smartphone-with-a-modern-design-resting-on-a-wooden-table-surrounded-by-small-decorative-pla.png',
+      image: require('../../../assets/images/mobile4.png'),
       label: 'Above ₹30,000',
       subname: 'Premium selections ',
+      cat: 'Mobile',
     },
   ],
   LaptopBudget: [
     {
       id: '1',
-      image:
-        'https://i.postimg.cc/T3pKjD0d/A-sleek-modern-chair-with-a-minimalist-design-placed-in-a-well-lit-room-with-elegant-decor.png',
+      image: require('../../../assets/images/laptop1.png'),
+
       label: 'Under ₹10,000',
       subname: 'Ideal for savvy students',
+      cat: 'Laptop',
     },
     {
       id: '2',
-      image:
-        'https://i.postimg.cc/nrFzXjMt/A-sleek-smartphone-with-a-modern-design-resting-on-a-wooden-table-surrounded-by-small-decorative-pla.png',
+      image: require('../../../assets/images/laptop2.png'),
       label: '₹10,000 - ₹20,000',
       subname: 'Premium selections ',
+      cat: 'Laptop',
     },
     {
       id: '3',
-      image:
-        'https://i.postimg.cc/DZgf3v6p/A-sleek-modern-laptop-placed-on-a-wooden-desk-with-a-potted-plant-beside-it.png',
+      image: require('../../../assets/images/laptop3.png'),
       label: '₹20,000 - ₹30,000',
       subname: 'Luxury Macbooks & Windows PC',
+      cat: 'Laptop',
     },
     {
       id: '4',
-      image:
-        'https://i.postimg.cc/DZgf3v6p/A-sleek-modern-laptop-placed-on-a-wooden-desk-with-a-potted-plant-beside-it.png',
+      image: require('../../../assets/images/laptop4.png'),
       label: 'Above ₹30,000',
       subname: 'Luxury Macbooks & Windows PC',
+      cat: 'Laptop',
     },
   ],
   recentlyView: [

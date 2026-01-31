@@ -539,7 +539,7 @@
 // });
 
 import React from 'react';
-import { View, Text, TouchableOpacity, StyleSheet } from 'react-native';
+import { View, Text, TouchableOpacity, StyleSheet, Platform } from 'react-native';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import responsive from './responsive';
@@ -558,10 +558,7 @@ const Header = ({
         {/* LEFT */}
         <View style={styles.header}>
           {showBack && (
-            <TouchableOpacity
-              onPress={onBackPress || navigation.goBack}
-              style={styles.backButton}
-            >
+            <TouchableOpacity onPress={onBackPress || navigation.goBack}>
               <Ionicons
                 name="chevron-back"
                 size={moderateScale(16)}
@@ -598,32 +595,48 @@ export default Header;
 
 const styles = StyleSheet.create({
   safe: {
-    backgroundColor: '#FFFBFA',
+    backgroundColor: '#FFFFFF',
   },
 
   container: {
     flexDirection: 'row',
     alignItems: 'center',
     paddingHorizontal: responsive.paddingHorizontal(12),
-    backgroundColor: '#FFFBFA',
+    paddingBottom: responsive.paddingBottom(5),
+    backgroundColor: '#FFFFFF',
   },
 
   header: {
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'space-between',
-    backgroundColor: '#FFFBFA',
+    backgroundColor: '#FFFFFF',
+    // elevation: 2,
+    padding: responsive.padding(8),
+    borderRadius: responsive.borderRadius(100),
+
+    // ✅ Android shadow
+    elevation: Platform.OS === 'android' ? 5 : 0,
+
+    // ✅ iOS shadow
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.15,
+    shadowRadius: 4,
   },
+  // backButton: {
+  //   backgroundColor: '#FFFFFF',
+  //   borderRadius: responsive.borderRadius(200),
+  //   height: responsive.height(35),
+  //   width: responsive.width(35),
+  //   justifyContent: 'center',
+  //   alignItems: 'center',
+  //   elevation: 2,
+  // },
   headerTitle: {
     fontSize: responsive.fontSize(16),
     fontWeight: '600',
     color: '#171D1C',
-  },
-  backButton: {
-    backgroundColor: '#FFFBFA',
-    borderRadius: responsive.borderRadius(200),
-    height: responsive.height(35),
-    width: responsive.width(28), justifyContent:'center',alignItems:'center', elevation:2
   },
 
   center: {

@@ -35,6 +35,8 @@ import {
 } from 'react-native-responsive-dimensions';
 import { ProductCardStyles } from '../../../constants/ProductCardStyles';
 import { FilterModalStyles_All } from '../../../constants/FilterModalStyles_Search';
+import { SafeAreaView } from 'react-native-safe-area-context';
+import responsive from '../../../constants/responsive';
 
 const { width } = Dimensions.get('window');
 
@@ -60,9 +62,6 @@ const Recentlyadd = ({ tabId, catName, catId }) => {
   const [selectedGrades, setSelectedGrades] = useState([]);
   const [selectedVariant, setSelectedVariant] = useState(null);
 
-  console.log('applyselectedfilters----------->', applyselectedfilters);
-  console.log('filteredProduct----------->', filteredProduct);
-
   useFocusEffect(
     useCallback(() => {
       dispatch(fetchProductList());
@@ -70,9 +69,11 @@ const Recentlyadd = ({ tabId, catName, catId }) => {
       dispatch(fetchFilterData(catId));
       dispatch(addRecentlyViewed());
       dispatch(fetchWishlist());
-      
     }, [dispatch]),
   );
+
+  console.log('lateststock--------------->', lateststock);
+  console.log('applyselectedfilters--------------->', applyselectedfilters);
 
   // Apply filters
   useEffect(() => {
@@ -106,11 +107,10 @@ const Recentlyadd = ({ tabId, catName, catId }) => {
         return false;
 
       // Grade filter
-      if (
-        applyselectedfilters.grade_number &&
-        item.grade_number !== applyselectedfilters.grade_number
-      )
-        return false;
+      if (applyselectedfilters.grade?.length > 0) {
+        if (!applyselectedfilters.grade.includes(item.grade_number))
+          return false;
+      }
 
       // RAM filter
       if (
@@ -219,7 +219,7 @@ const Recentlyadd = ({ tabId, catName, catId }) => {
     setSelectedGrades([]);
     setSelectedRam(null);
     setSelectedStorage(null);
-    setSelectedVariant(null)
+    setSelectedVariant(null);
     ApplyselectedFilters(null);
   };
   const toggleBrand = brand => {
@@ -235,6 +235,7 @@ const Recentlyadd = ({ tabId, catName, catId }) => {
     );
   };
   const renderItemColor = ({ item }) => {
+    console.log('item----------------------->', item?.color_name);
     const isSelected = selectedColors.includes(item.color_name);
     return (
       <TouchableOpacity
@@ -304,7 +305,7 @@ const Recentlyadd = ({ tabId, catName, catId }) => {
             key={`cat-color`}
             data={COLORS}
             keyExtractor={(item, index) =>
-              item.name?.toString() ?? index.toString()
+              item?.color_id ? `color-${item.color_id}` : `color-index-${index}`
             }
             numColumns={3}
             showsVerticalScrollIndicator={false}
@@ -462,55 +463,55 @@ const Recentlyadd = ({ tabId, catName, catId }) => {
     };
 
     return (
-      <TouchableOpacity
-        onPress={() =>
-          navigation.navigate('ProductList', {
-            product_barcode_id: item?.barcode_id,
-          })
-        }
-        style={ProductCardStyles.cardD}
+      <View
+        style={{
+          width: responsive.width(170),
+        }}
       >
-        {/* Image + Heart */}
-        <View style={ProductCardStyles.imageContainerD}>
-          {item && (
-            <Text style={ProductCardStyles.refurbishedLabelD}>PRE-OWNED</Text>
-          )}
-
-          <Image
-            source={{ uri: item.feature_image }}
-            style={ProductCardStyles.imageD}
-            resizeMode='contain'
-          />
-
-          {/* ❤️ Wishlist Button */}
+        <View style={ProductCardStyles.cardShadow}>
           <TouchableOpacity
-            style={ProductCardStyles.heartIconD}
-            onPress={() => handleWishlistToggle()}
+            onPress={() =>
+              navigation.navigate('ProductList', {
+                product_barcode_id: item?.barcode_id,
+              })
+            }
+            style={ProductCardStyles.cardD}
           >
-            <AntDesign
-              name={isInWishlist ? 'heart' : 'hearto'}
-              size={moderateScale(20)}
-              color={isInWishlist ? '#E74C3C' : '#999'}
+            {/* Image + Heart */}
+
+            <Text style={ProductCardStyles.refurbishedLabelD}>PRE-OWNED</Text>
+
+            <Image
+              source={{ uri: item.feature_image }}
+              style={ProductCardStyles.imageD}
+              resizeMode="contain"
             />
+
+            {/* ❤️ Wishlist Button */}
+            <TouchableOpacity
+              style={ProductCardStyles.heartIconD}
+              onPress={() => handleWishlistToggle()}
+            >
+              <AntDesign
+                name={isInWishlist ? 'heart' : 'hearto'}
+                size={moderateScale(12)}
+                color={isInWishlist ? '#E74C3C' : '#999'}
+              />
+            </TouchableOpacity>
+            <Text style={ProductCardStyles.gradeText}>
+              Grade {item.grade_number}
+            </Text>
           </TouchableOpacity>
         </View>
 
-        {/* Grade Box */}
-        {/* <View style={ProductCardStyles.gradeBoxD}> */}
-        <Text style={ProductCardStyles.gradeTextD}>
-          Grade {item.grade_number}
-        </Text>
-        {/* </View> */}
-
-        {/* Product Info */}
-        <Text style={ProductCardStyles.productNameD}>{item.model_name}</Text>
-        <Text style={ProductCardStyles.colorTextD}>● {item.color_name}</Text>
-        <View style={ProductCardStyles.priceRowD}>
-          <Text style={ProductCardStyles.priceD}>₹ {item.price}</Text>
-        </View>
-      </TouchableOpacity>
+        <Text style={ProductCardStyles.productName}>{item.model_name}</Text>
+        <Text style={ProductCardStyles.colorText}>● {item.color_name}</Text>
+        <Text style={ProductCardStyles.price}>₹ {item.price}</Text>
+      </View>
     );
   };
+
+  const [modalKey, setModalKey] = useState(0);
 
   return (
     <View style={styles.container}>
@@ -538,11 +539,9 @@ const Recentlyadd = ({ tabId, catName, catId }) => {
         showsHorizontalScrollIndicator={false}
         numColumns={2}
         contentContainerStyle={{
-          paddingBottom: moderateScale(80),
-          marginHorizontal: 10,
-          justifyContent:
-            filteredProduct.length === 1 ? 'flex-start' : 'space-between',
+          paddingHorizontal: responsive.paddingHorizontal(10),
         }}
+        columnWrapperStyle={{ justifyContent: 'space-between' }}
         ListEmptyComponent={
           !loading && (
             <View
@@ -598,9 +597,17 @@ const Recentlyadd = ({ tabId, catName, catId }) => {
       />
 
       {/* Sort Modal */}
-      <Modal visible={showSortModal} transparent={false} animationType="slide">
-        <View style={styles.modalContainer}>
-          <View style={{ margin: 20, flex: 1 }}>
+      <Modal
+        visible={showSortModal}
+        presentationStyle="fullScreen" // ✅ iOS FIX
+        animationType="slide"
+        onShow={() => {
+          // 🔥 iOS layout fix
+          setModalKey(prev => prev + 1);
+        }}
+      >
+        <SafeAreaView key={modalKey} style={styles.modalContainer}>
+          <View style={{ margin: 20, flex: 1, }}>
             {/* Modal Header */}
             <View style={styles.modalHeader}>
               <TouchableOpacity onPress={() => setShowSortModal(false)}>
@@ -644,7 +651,7 @@ const Recentlyadd = ({ tabId, catName, catId }) => {
               <Text style={styles.applyText}>Apply</Text>
             </TouchableOpacity>
           </View>
-        </View>
+        </SafeAreaView>
       </Modal>
 
       {/* Filter Modal */}
@@ -652,8 +659,16 @@ const Recentlyadd = ({ tabId, catName, catId }) => {
         visible={showFilterModal}
         animationType="slide"
         transparent={false}
+        presentationStyle="fullScreen" // ✅ iOS FIX
+        onShow={() => {
+          // 🔥 iOS layout fix
+          setModalKey(prev => prev + 1);
+        }}
       >
-        <View style={FilterModalStyles_All.modalContainer}>
+        <SafeAreaView
+          key={modalKey}
+          style={FilterModalStyles_All.modalContainer}
+        >
           <View style={FilterModalStyles_All.header1}>
             <TouchableOpacity onPress={() => setFilterSortModal(false)}>
               <Ionicons name="close" size={moderateScale(24)} />
@@ -708,7 +723,7 @@ const Recentlyadd = ({ tabId, catName, catId }) => {
               <Text style={FilterModalStyles_All.applyText}>Apply</Text>
             </TouchableOpacity>
           </View>
-        </View>
+        </SafeAreaView>
       </Modal>
     </View>
   );
@@ -1206,7 +1221,7 @@ const styles = StyleSheet.create({
 
   modalContainer: {
     flex: 1,
-    backgroundColor: '#fff',
+    backgroundColor: '#fff'
   },
 
   modalHeader: {

@@ -2541,6 +2541,7 @@
 import { Dimensions, Platform, StyleSheet } from 'react-native';
 import { responsiveWidth } from 'react-native-responsive-dimensions';
 import { scale, verticalScale, moderateScale } from 'react-native-size-matters';
+import responsive from '../../constants/responsive';
 
 const { width } = Dimensions.get('window');
 const cardSize = width * 0.45;
@@ -2602,19 +2603,19 @@ const styles = StyleSheet.create({
   },
 
   heading: {
-    fontSize: moderateScale(18),
-    fontWeight: 'bold',
+    fontSize: responsive.fontSize(14),
+    fontWeight: '600',
     color: '#1A1A1A',
     marginBottom: verticalScale(6),
   },
   subheading: {
-    fontSize: moderateScale(15),
+    fontSize: responsive.fontSize(12),
     fontWeight: '500',
     color: '#333',
     marginBottom: verticalScale(8),
   },
   description: {
-    fontSize: moderateScale(15),
+    fontSize: responsive.fontSize(10),
     color: '#7E7E7E',
     marginBottom: verticalScale(20),
   },
@@ -2626,7 +2627,7 @@ const styles = StyleSheet.create({
     alignSelf: 'flex-start',
   },
   buttonText: {
-    fontSize: moderateScale(13),
+    fontSize: responsive.fontSize(12),
     color: '#000',
     fontWeight: '600',
   },
@@ -2636,7 +2637,7 @@ const styles = StyleSheet.create({
   },
 
    swiper: {
-    height: moderateScale(150),
+    height: responsive.height(180),
     // marginTop: moderateScale(5),
   },
   // card_Top: {
@@ -2648,14 +2649,14 @@ const styles = StyleSheet.create({
   //   alignSelf: 'center',
   // },
   image1: {
-    resizeMode: 'stretch',
+    // resizeMode: 'contain',
     // borderRadius: 16,
   },
 
 
   card_Top: {
     width: width,
-    height: moderateScale(150),
+    height: responsive.height(180),
     overflow: 'hidden',
     alignSelf: 'center',
   },
@@ -2802,7 +2803,7 @@ const styles = StyleSheet.create({
 
   // Product Info
   productNameD: {
-    fontSize: moderateScale(14),
+    fontSize: responsive.fontSize(15),
     fontWeight: 'bold',
     marginTop: verticalScale(0),
     marginHorizontal: scale(5),
@@ -3017,49 +3018,45 @@ const styles = StyleSheet.create({
     paddingBottom: verticalScale(24),
   },
   cardSUPPORT_CARDS: {
-    backgroundColor: '#ECE9E8',
-    borderRadius: moderateScale(16),
+    backgroundColor: '#EAE6E5',
+    borderRadius: responsive.borderRadius(16),
     padding: moderateScale(16),
     marginBottom: verticalScale(16),
   },
   iconCircleSUPPORT_CARDS: {
-    backgroundColor: '#23A455',
-    width: scale(36),
-    height: scale(36),
+    backgroundColor: '#1C9C48',
+    width: scale(30),
+    height: scale(30),
     borderRadius: scale(18),
     alignItems: 'center',
     justifyContent: 'center',
     marginBottom: verticalScale(12),
   },
   cardTitleSUPPORT_CARDS: {
-    fontSize: moderateScale(14),
+    fontSize: responsive.fontSize(15),
     fontWeight: '700',
     color: '#111',
     marginBottom: verticalScale(6),
   },
   cardDescriptionSUPPORT_CARDS: {
-    fontSize: moderateScale(13),
-    color: '#666',
+    fontSize: responsive.fontSize(15),
+    color: '#666666',
     lineHeight: verticalScale(18),
   },
 
   // Categories
   categoryCard: {
-    alignItems: 'center',
-    marginRight: scale(12),
-    marginHorizontal: scale(5),
-    marginTop: verticalScale(10),
+    marginTop: verticalScale(10), marginHorizontal: moderateScale(10),
   },
   categoryImage: {
-    width: scale(60),
-    height: scale(60),
-    resizeMode: 'contain',
-    borderRadius: moderateScale(15),
+    width: responsive.width(70),
+    height: responsive.height(70),
+    resizeMode: 'contain', 
   },
   categoryText: {
-    marginTop: verticalScale(6),
-    fontSize: moderateScale(12),
-    color: '#222',
+    fontSize: responsive.fontSize(10),
+    color: '#171D1C',
+    fontWeight:"bold", textAlign:'center'
   },
 
   // Banners
@@ -3078,7 +3075,7 @@ const styles = StyleSheet.create({
     borderBottomLeftRadius: moderateScale(12),
     borderBottomRightRadius: moderateScale(12),
   },
-  bannerText: { fontSize: moderateScale(18), fontWeight: '600', color: '#fff' },
+  bannerText: { fontSize: responsive.fontSize(20), fontWeight: '600', color: '#fff' },
 
   grid: {
     flexDirection: 'row',

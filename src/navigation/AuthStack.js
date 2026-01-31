@@ -12,6 +12,8 @@ import ConfirmSignup from '../screens/SignupScreen/ConfirmSignup';
 import ForgetOTP from '../screens/ForgetPassword/ForgetOTP';
 import setPassword from '../screens/ForgetPassword/setPassword';
 import Home from '../screens/Home/Home';
+import ForgetEmail from '../screens/ForgetEmail/ForgetEmail'
+import ForgetEmailDetils from '../screens/ForgetEmail/ForgetEmailDetils'
 
 
 const Stack = createNativeStackNavigator();
@@ -34,6 +36,8 @@ export default function AuthStack() {
       <Stack.Screen name="ConfirmSignup" component={ConfirmSignup} />
       <Stack.Screen name="ForgetOTP" component={ForgetOTP} />
       <Stack.Screen name="setPassword" component={setPassword} />
+      <Stack.Screen name="ForgetEmail" component={ForgetEmail} />
+      <Stack.Screen name="ForgetEmailDetils" component={ForgetEmailDetils} />
     </Stack.Navigator>
   );
 }

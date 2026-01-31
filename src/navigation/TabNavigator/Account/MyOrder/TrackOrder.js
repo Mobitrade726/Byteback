@@ -10,6 +10,8 @@ import Ionicons from 'react-native-vector-icons/Ionicons';
 import Header from '../../../../constants/Header';
 import {useDispatch, useSelector} from 'react-redux';
 import {fetchOrderStatusLogsAPI} from '../../../../redux/slices/orderSlice';
+import responsive from '../../../../constants/responsive';
+import { moderateScale } from 'react-native-size-matters';
 const {width, height} = Dimensions.get('window');
 
 const wp = p => (width * p) / 100;
@@ -31,7 +33,7 @@ const TrackOrder = ({navigation, route}) => {
     <View style={styles.stepContainer}>
       {/* Left column: Icon + Line */}
       <View style={styles.iconColumn}>
-        <Ionicons name="checkmark-circle" size={22} color="#28A745" />
+        <Ionicons name="checkmark-circle" size={moderateScale(15)} color="#28A745" />
 
         {index !== orderStatusLogs.length - 1 && (
           <View style={styles.verticalLine} />
@@ -56,7 +58,7 @@ const TrackOrder = ({navigation, route}) => {
 
       {/* Info */}
       <View style={{paddingHorizontal: 16, paddingBottom: 10}}>
-        <Text style={styles.infoText}>Delivered on – {orderStatusLogs?.delivery_date || '-'}</Text>
+        <Text style={styles.infoText}>Delivery date – {orderStatusLogs?.delivery_date || '-'}</Text>
         <Text style={styles.infoText}>
           Tracking Number :
           <Text style={styles.trackingNo}>{orderStatusLogs?.awb_details || '-'}</Text>
@@ -154,15 +156,15 @@ const styles = StyleSheet.create({
   },
 
   infoText: {
-    fontSize: wp(3.4), // 13 → responsive
-    color: '#444',
+    fontSize: responsive.fontSize(12), // 13 → responsive
+    color: '#171D1C',
     marginBottom: hp(0.6),
   },
 
   trackingNo: {
     fontWeight: 'bold',
     color: '#000',
-    fontSize: wp(3.6),
+    fontSize: responsive.fontSize(12),
   },
 
   // Timeline Styles
@@ -190,30 +192,29 @@ const styles = StyleSheet.create({
   },
 
   stepText: {
-    fontSize: wp(3.8), // 14 → responsive
-    color: '#222',
+    fontSize: responsive.fontSize(12), // 14 → responsive
+    color: '#171D1C',
     fontWeight: '500',
   },
 
   dateText: {
-    fontSize: wp(3.2), // 12 → responsive
-    color: '#888',
+    fontSize: responsive.fontSize(12), // 12 → responsive
+    color: '#666666',
     marginTop: hp(0.5),
   },
 
   continueBtn: {
-    marginTop: hp(2.5),
-    marginHorizontal: wp(4),
-    backgroundColor: '#28A745',
-    paddingVertical: hp(1.6),
-    borderRadius: wp(2.2),
+    backgroundColor: '#1C9C48',
+    padding: responsive.fontSize(12),
+    borderRadius: responsive.borderRadius(12),
     alignItems: 'center',
     marginBottom: hp(1),
+    marginHorizontal: wp(5),
   },
 
   continueText: {
-    color: '#fff',
-    fontSize: wp(4.3), // 16 → responsive
-    fontWeight: 'bold',
+  color: '#fff',
+    fontWeight: '500',
+    fontSize: responsive.fontSize(17),
   },
 });

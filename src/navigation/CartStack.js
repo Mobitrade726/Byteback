@@ -21,13 +21,14 @@ import TrackOrder from './TabNavigator/Account/MyOrder/TrackOrder';
 import Myorder from './TabNavigator/Account/MyOrder/Myorder';
 import MyorderDetails from './TabNavigator/Account/MyOrder/MyorderDetails';
 import Search from '../screens/Home/Search';
+import RecentlyView from '../screens/Home/RecentlyView/RecentlyView';
 
 const Stack = createNativeStackNavigator();
 
 export default function CartStack() {
   return (
     <Stack.Navigator screenOptions={{ headerShown: false }}>
-      <Stack.Screen name="CartMain" component={Cart} />
+      <Stack.Screen name="Cart" component={Cart} />
       <Stack.Screen name="Wallet" component={Wallet} />
       <Stack.Screen name="KycCompleteStatus" component={KycCompleteStatus} />
       <Stack.Screen name="WalletTransactions" component={WalletTransactions} />
@@ -48,6 +49,7 @@ export default function CartStack() {
       <Stack.Screen name="Myorder" component={Myorder} />
       <Stack.Screen name="MyorderDetails" component={MyorderDetails} />
       <Stack.Screen name="Search" component={Search} />
+      <Stack.Screen name="RecentlyView" component={RecentlyView} />
       
     </Stack.Navigator>
   );

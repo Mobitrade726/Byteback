@@ -5,6 +5,7 @@ import {
   TextInput,
   TouchableOpacity,
   StyleSheet,
+  SafeAreaView,
   ScrollView,
   Alert,
   ActivityIndicator,
@@ -24,7 +25,8 @@ import {
   responsiveFontSize as rf,
 } from 'react-native-responsive-dimensions';
 import { useSelector } from 'react-redux';
-import { moderateScale } from 'react-native-size-matters';
+import { moderateScale, scale } from 'react-native-size-matters';
+import responsive from '../../../../constants/responsive';
 
 export default function WithdrawScreen({ navigation }) {
   const [amount, setAmount] = useState('');
@@ -32,7 +34,9 @@ export default function WithdrawScreen({ navigation }) {
   const [accountno, setAccountno] = useState('');
   const [ifsccode, setIfsccode] = useState('');
   const [remark, setRemark] = useState('');
-  const [transactionType, setTransactionType] = useState('0');
+  const [transactionType, setTransactionType] = useState(
+    'Select Transaction Type',
+  );
   const [upi, setUPI] = useState('');
   const [loading, setLoading] = useState(false);
   const [historyLoading, setHistoryLoading] = useState(false);
@@ -165,29 +169,29 @@ export default function WithdrawScreen({ navigation }) {
     let icon = 'cash-multiple';
     let iconColor = '#000';
     let checkmarkIcon = 'checkmark-circle-outline';
-    let checkmarkColor = '#10B981';
+    let checkmarkColor = '#1C9C48';
     let displayAmount = Number(item.amount || 0).toLocaleString();
 
     switch (item.payment_status_text) {
       case 'Withdraw Verified':
         icon = 'cash-plus';
-        iconColor = '#10B981';
+        iconColor = '#1C9C48';
         checkmarkIcon = 'checkmark-circle-outline';
-        checkmarkColor = '#10B981';
+        checkmarkColor = '#1C9C48';
         displayAmount = `+ ₹ ${displayAmount}`;
         break;
       case 'Withdraw Pending':
         icon = 'timer-sand';
-        iconColor = '#FBBF24';
+        iconColor = '#F6C344';
         checkmarkIcon = 'time-outline';
-        checkmarkColor = '#FBBF24';
+        checkmarkColor = '#F6C344';
         displayAmount = `₹ ${displayAmount}`;
         break;
       case 'Withdraw Rejected':
         icon = 'close-octagon-outline';
-        iconColor = '#EF4444';
+        iconColor = '#CB444B';
         checkmarkIcon = 'close-circle-outline';
-        checkmarkColor = '#EF4444';
+        checkmarkColor = '#CB444B';
         displayAmount = `₹ ${displayAmount}`;
         break;
     }
@@ -196,7 +200,7 @@ export default function WithdrawScreen({ navigation }) {
       <View style={styles.transactionRow}>
         <MaterialCommunityIcons
           name={icon}
-          size={rf(3)}
+          size={rf(2)}
           color={iconColor}
           style={styles.transactionIcon}
         />
@@ -208,201 +212,12 @@ export default function WithdrawScreen({ navigation }) {
           <Text style={styles.date}>{item.payment_date}</Text>
           <Text style={styles.date}>{item.payment_remarks}</Text>
         </View>
-        <Ionicons name={checkmarkIcon} size={rf(3)} color={checkmarkColor} />
+        <Ionicons name={checkmarkIcon} size={rf(2)} color={checkmarkColor} />
       </View>
     );
   };
 
   return (
-    // <View style={styles.safeArea}>
-    //   <ScrollView contentContainerStyle={styles.container}>
-    //     <Header title="Withdraw" navigation={navigation} showBack={true} />
-
-    //     {/* Withdrawal Form */}
-    //     <View style={styles.card}>
-    //       <Text style={styles.sectionTitle}>Account Details</Text>
-    //       <Dropdown
-    //         style={styles.dropdown}
-    //         placeholderStyle={styles.placeholderStyle}
-    //         selectedTextStyle={styles.selectedTextStyle}
-    //         data={transactionOptions}
-    //         labelField="label"
-    //         valueField="value"
-    //         placeholder="Select Transaction Type"
-    //         value={transactionType}
-    //         onChange={item => setTransactionType(item.value)}
-    //       />
-    //       {transactionType === '0' ? (
-    //         <TextInput
-    //           style={styles.input}
-    //           placeholder="Enter UPI ID"
-    //           value={upi}
-    //           onChangeText={setUPI}
-    //         />
-    //       ) : (
-    //         <>
-    //           <TextInput
-    //             style={styles.input}
-    //             placeholder="Account Number"
-    //             value={accountno}
-    //             keyboardType="number-pad"
-    //             onChangeText={setAccountno}
-    //           />
-    //           <TextInput
-    //             style={styles.input}
-    //             placeholder="IFSC Code"
-    //             value={ifsccode}
-    //             autoCapitalize="characters"
-    //             onChangeText={setIfsccode}
-    //           />
-    //         </>
-    //       )}
-    //       <TextInput
-    //         style={styles.input}
-    //         placeholder="Account Holder Name"
-    //         value={acholdername}
-    //         onChangeText={setAcholdername}
-    //       />
-    //       <TextInput
-    //         style={styles.input}
-    //         placeholder="Amount"
-    //         keyboardType="numeric"
-    //         value={amount}
-    //         onChangeText={setAmount}
-    //       />
-    //       <TextInput
-    //         style={[styles.input, { height: rh(10) }]}
-    //         placeholder="Remark (optional)"
-    //         multiline
-    //         value={remark}
-    //         onChangeText={setRemark}
-    //       />
-    //       {/* <TouchableOpacity
-    //         style={styles.button}
-    //         onPress={handleWithdraw}
-    //         disabled={loading}
-    //       >
-    //         {loading ? (
-    //           <ActivityIndicator color="#fff" />
-    //         ) : (
-    //           <>
-    //             <Ionicons name="wallet-outline" size={rf(2.5)} color="#fff" />
-    //             <Text style={styles.buttonText}>Withdraw Now</Text>
-    //           </>
-    //         )}
-    //       </TouchableOpacity> */}
-
-    //       <TouchableOpacity
-    //         style={styles.button}
-    //         onPress={handleWithdraw}
-    //         disabled={loading}
-    //       >
-    //         {loading ? (
-    //           <ActivityIndicator color="#fff" />
-    //         ) : (
-    //           <>
-    //             <View style={{ marginTop: rf(2), paddingHorizontal: 10 }}>
-    //               {/* Balance Row */}
-    //               <View
-    //                 style={{
-    //                   flexDirection: 'row',
-    //                   justifyContent: 'space-between',
-    //                   alignItems: 'center',
-    //                   backgroundColor: '#f4f7ff',
-    //                   paddingVertical: 12,
-    //                   paddingHorizontal: 15,
-    //                   borderRadius: 10,
-    //                   marginBottom: 20,
-    //                   elevation: 2,
-    //                 }}
-    //               >
-    //                 <Text
-    // style={{
-    //   fontSize: rf(2),
-    //   marginHorizontal: 5,
-    //   fontWeight: '600',
-    //   color: '#333',
-    // }}
-    //                 >
-    //                   Available Wallet Balance
-    //                 </Text>
-
-    //                 <Text
-    //                   style={{
-    // fontSize: rf(2.5),
-    // fontWeight: '700',
-    // color: '#1e90ff',
-    //                   }}
-    //                 >
-    //                   ₹{balance}
-    //                 </Text>
-    //               </View>
-
-    //               {/* Withdraw Button */}
-    //               <TouchableOpacity
-    //                 style={{
-    // flexDirection: 'row',
-    // alignItems: 'center',
-    // justifyContent: 'center',
-    // backgroundColor: '#1e90ff',
-    // paddingVertical: 14,
-    // borderRadius: 10,
-    //                 }}
-    //                 onPress={handleWithdraw}
-    //                 disabled={loading}
-    //               >
-    //                 {loading ? (
-    //                   <ActivityIndicator color="#fff" />
-    //                 ) : (
-    //                   <>
-    //                     <Ionicons
-    //                       name="wallet-outline"
-    //                       size={rf(2.5)}
-    //                       color="#fff"
-    //                       style={{ marginRight: 8 }}
-    //                     />
-    //                     <Text
-    //                       style={{
-    // fontSize: rf(2.3),
-    // color: '#fff',
-    // fontWeight: '600',
-    //                       }}
-    //                     >
-    //                       Withdraw Now
-    //                     </Text>
-    //                   </>
-    //                 )}
-    //               </TouchableOpacity>
-    //             </View>
-    //           </>
-    //         )}
-    //       </TouchableOpacity>
-    //     </View>
-
-    //     {/* History */}
-    //     <View style={styles.historyCard}>
-    //       <Text style={styles.sectionTitle}>
-    //         History{' '}
-    //         <Text style={{ fontSize: rf(1.2) }}>(Withdrawal transactions)</Text>
-    //       </Text>
-    //       {historyLoading ? (
-    //         <ActivityIndicator color="#14AE5C" size="large" />
-    //       ) : refundHistory.length === 0 ? (
-    //         <Text style={styles.noHistory}>No withdrawal history found.</Text>
-    //       ) : (
-    //         <FlatList
-    //           data={refundHistory}
-    //           renderItem={renderTransaction}
-    //           keyExtractor={item =>
-    //             item.id?.toString() || Math.random().toString()
-    //           }
-    //           showsVerticalScrollIndicator={false}
-    //           ItemSeparatorComponent={() => <View style={styles.separator} />}
-    //         />
-    //       )}
-    //     </View>
-    //   </ScrollView>
-    // </View>
     <View style={styles.safeArea}>
       <Header title="Withdraw" navigation={navigation} showBack />
 
@@ -411,118 +226,142 @@ export default function WithdrawScreen({ navigation }) {
         renderItem={renderTransaction}
         keyExtractor={item => item.id?.toString()}
         showsVerticalScrollIndicator={false}
-        ItemSeparatorComponent={() => <View style={styles.separator} />}
-        contentContainerStyle={{ marginHorizontal: 10 }}
         // 🔝 WITHDRAW FORM
         ListHeaderComponent={
           <>
-            <View style={styles.card}>
-              <Text style={styles.sectionTitle}>Account Details</Text>
+            <View style={{ marginHorizontal: responsive.marginHorizontal(10) }}>
+              <View style={styles.balanceContainer}>
+                <Text style={styles.balanceLabel}>Current Balance</Text>
+                {loading ? (
+                  <ActivityIndicator color="#14AE5C" />
+                ) : (
+                  <Text style={styles.balanceValue}>₹{balance}</Text>
+                )}
+              </View>
+              <View style={styles.card}>
+                <Dropdown
+                  style={styles.dropdown}
+                  placeholderStyle={styles.placeholderStyle}
+                  selectedTextStyle={styles.selectedTextStyle}
+                  data={transactionOptions}
+                  labelField="label"
+                  valueField="value"
+                  placeholder="Select Transaction Type"
+                  value={transactionType}
+                  onChange={item => setTransactionType(item.value)}
+                />
 
-              <Dropdown
-                style={styles.dropdown}
-                placeholderStyle={styles.placeholderStyle}
-                selectedTextStyle={styles.selectedTextStyle}
-                data={transactionOptions}
-                labelField="label"
-                valueField="value"
-                placeholder="Select Transaction Type"
-                value={transactionType}
-                onChange={item => setTransactionType(item.value)}
-              />
+                {transactionType === '0' ? (
+                  <>
+                    <Text style={styles.labelinput}>Enter UPI ID</Text>
+                    <TextInput
+                      style={styles.input}
+                      placeholder="XXXXXXXXX"
+                      value={upi}
+                      onChangeText={setUPI}
+                      placeholderTextColor={'#1C9C48'}
+                    />
+                  </>
+                ) : (
+                  <>
+                    <View style={styles.row}>
+                      <View style={styles.inputWrapper}>
+                        <Text style={styles.labelinput}>Account Number</Text>
+                        <TextInput
+                          style={styles.input}
+                          placeholder="XXXXXXXXX"
+                          keyboardType="number-pad"
+                          value={accountno}
+                          onChangeText={setAccountno}
+                          placeholderTextColor={'#1C9C48'}
+                        />
+                      </View>
+                      <View style={styles.inputWrapper}>
+                        <Text style={styles.labelinput}>IFSC Code</Text>
 
-              {transactionType === '0' ? (
+                        <TextInput
+                          style={styles.input}
+                          placeholder="XXXXXXXXX"
+                          autoCapitalize="characters"
+                          value={ifsccode}
+                          onChangeText={setIfsccode}
+                          placeholderTextColor={'#1C9C48'}
+                        />
+                      </View>
+                    </View>
+                  </>
+                )}
+                <Text style={styles.labelinput}>Account Holder Name</Text>
                 <TextInput
                   style={styles.input}
-                  placeholder="Enter UPI ID"
-                  value={upi}
-                  onChangeText={setUPI}
-                  placeholderTextColor={'#000'}
+                  placeholder="XXXXXXXXX"
+                  value={acholdername}
+                  onChangeText={setAcholdername}
+                  placeholderTextColor={'#1C9C48'}
                 />
-              ) : (
-                <>
-                  <TextInput
-                    style={styles.input}
-                    placeholder="Account Number"
-                    keyboardType="number-pad"
-                    value={accountno}
-                    onChangeText={setAccountno}
-                     placeholderTextColor={'#000'}
-                  />
-                  <TextInput
-                    style={styles.input}
-                    placeholder="IFSC Code"
-                    autoCapitalize="characters"
-                    value={ifsccode}
-                    onChangeText={setIfsccode}
-                     placeholderTextColor={'#000'}
-                  />
-                </>
-              )}
+                <Text style={styles.labelinput}>Amount</Text>
+                <TextInput
+                  style={styles.input}
+                  placeholder="XXXXXXXXX"
+                  keyboardType="numeric"
+                  value={amount}
+                  onChangeText={setAmount}
+                  placeholderTextColor={'#1C9C48'}
+                />
+                <Text style={styles.labelinput}>Remark</Text>
+                <TextInput
+                  style={[styles.input]}
+                  placeholder="XXXXXXXXX"
+                  multiline
+                  value={remark}
+                  onChangeText={setRemark}
+                  placeholderTextColor={'#1C9C48'}
+                />
 
-              <TextInput
-                style={styles.input}
-                placeholder="Account Holder Name"
-                value={acholdername}
-                onChangeText={setAcholdername}
-                 placeholderTextColor={'#000'}
-              />
-
-              <TextInput
-                style={styles.input}
-                placeholder="Amount"
-                keyboardType="numeric"
-                value={amount}
-                onChangeText={setAmount}
-                 placeholderTextColor={'#000'}
-              />
-
-              <TextInput
-                style={[styles.input, { height: rh(10) }]}
-                placeholder="Remark (optional)"
-                multiline
-                value={remark}
-                onChangeText={setRemark}
-                 placeholderTextColor={'#000'}
-              />
-
-              {/* BALANCE + BUTTON */}
-              <View
-                style={{
-                  backgroundColor: '#333',
-                  borderRadius: moderateScale(10),
-                }}
-              >
-                <View style={styles.balanceRow}>
-                  <Text style={styles.balanceLabel}>
-                    Available Wallet Balance
-                  </Text>
-                  <Text style={styles.balanceValue}>₹{balance}</Text>
+                <View
+                  style={{
+                    borderRadius: moderateScale(10),
+                  }}
+                >
+                  <TouchableOpacity
+                    style={styles.withdrawBtn}
+                    onPress={handleWithdraw}
+                  >
+                    {loading ? (
+                      <ActivityIndicator color="#fff" />
+                    ) : (
+                      <>
+                        <Text style={styles.withdrawText}>
+                          Request Withdraw
+                        </Text>
+                      </>
+                    )}
+                  </TouchableOpacity>
                 </View>
 
-                <TouchableOpacity
-                  style={styles.withdrawBtn}
-                  onPress={handleWithdraw}
-                >
-                  {loading ? (
-                    <ActivityIndicator color="#fff" />
-                  ) : (
-                    <>
-                      <Ionicons
-                        name="wallet-outline"
-                        size={rf(2.4)}
-                        color="#fff"
-                      />
-                      <Text style={styles.withdrawText}>Withdraw Now</Text>
-                    </>
-                  )}
-                </TouchableOpacity>
+                <View style={styles.noteContainer}>
+                  <Text style={styles.bulletText}>
+                    • Funds will be credited within 3–7 business days.
+                  </Text>
+                  <Text style={styles.bulletText}>
+                    • Minimum withdrawal amount is ₹100.
+                  </Text>
+                  <Text style={styles.bulletText}>
+                    • Amount can be withdrawn in the favor of account holder
+                    only.
+                  </Text>
+                </View>
               </View>
             </View>
 
             {/* HISTORY TITLE */}
             <Text style={styles.sectionTitle}>
-              History <Text style={{ fontSize: rf(1.2) }}>(Withdrawal)</Text>
+              History{' '}
+              <Text
+                style={{ fontSize: responsive.fontSize(10), fontWeight: '400' }}
+              >
+                (Showing only Withdrawal transactions)
+              </Text>
             </Text>
 
             {historyLoading && (
@@ -545,18 +384,19 @@ export default function WithdrawScreen({ navigation }) {
 
 // Responsive Styles
 const styles = StyleSheet.create({
-  safeArea: { flex: 1, backgroundColor: '#fff' },
-  container: { paddingBottom: rh(4) },
+  safeArea: { flex: 1, backgroundColor: '#FFFFFF' },
   card: {
     backgroundColor: '#fff',
     borderRadius: rw(3),
-    marginBottom: rh(2),
   },
   sectionTitle: {
-    fontSize: rf(2),
-    fontWeight: '600',
+    fontSize: responsive.fontSize(16),
+    fontWeight: '450',
     marginBottom: rh(1),
-    color: '#333',
+    color: '#171D1C',
+    backgroundColor: '#EAE6E5',
+    padding: responsive.padding(8),
+    borderTopWidth: scale(0.5),
   },
   balanceRow: {
     flexDirection: 'row',
@@ -568,41 +408,27 @@ const styles = StyleSheet.create({
     marginHorizontal: 10,
     // marginVertical: 10,
   },
-  balanceLabel: {
-    fontSize: rf(1.5),
-    marginHorizontal: 5,
-    fontWeight: '600',
-    color: '#fff',
-  },
-  balanceValue: {
-    fontSize: rf(2),
-    fontWeight: '700',
-    color: '#fff',
-  },
   withdrawBtn: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'center',
-    backgroundColor: '#14AE5C',
-    paddingVertical: 14,
-    borderBottomRightRadius:10,
-    borderBottomLeftRadius:10
+    backgroundColor: '#171D1C',
+    paddingVertical: responsive.paddingVertical(10),
+    borderRadius: responsive.borderRadius(12),
   },
   withdrawText: {
-    fontSize: rf(1.5),
+    fontSize: responsive.fontSize(17),
     color: '#fff',
     fontWeight: '600',
     marginHorizontal: 5,
+    textAlign: 'center',
   },
   input: {
-    backgroundColor: '#f9f9f9',
+    backgroundColor: '#FFFBFA',
     borderRadius: rw(2),
     borderWidth: 1,
-    borderColor: '#ddd',
-    paddingHorizontal: rw(3),
-    paddingVertical: rh(1.5),
+    borderColor: '#EAE6E5',
+    paddingHorizontal: responsive.paddingHorizontal(10),
+    paddingVertical: responsive.paddingVertical(12),
     marginBottom: rh(1.5),
-    fontSize: rf(1.8),
+    fontSize: responsive.fontSize(12),
   },
   dropdown: {
     backgroundColor: '#f9f9f9',
@@ -613,8 +439,8 @@ const styles = StyleSheet.create({
     paddingVertical: rh(1.5),
     marginBottom: rh(1.5),
   },
-  placeholderStyle: { fontSize: rf(1.8), color: '#999' },
-  selectedTextStyle: { fontSize: rf(1.8), color: '#111' },
+  placeholderStyle: { fontSize: rf(1.8), color: '#666666' },
+  selectedTextStyle: { fontSize: rf(1.8), color: '#666666' },
   button: {
     backgroundColor: '#007bff',
     flexDirection: 'row',
@@ -640,11 +466,65 @@ const styles = StyleSheet.create({
   transactionRow: {
     flexDirection: 'row',
     alignItems: 'center',
-    paddingVertical: rh(1.5),
+    paddingVertical: responsive.paddingVertical(5),
+    paddingHorizontal: responsive.paddingHorizontal(10),
+    borderColor: 'grey',
+    borderBottomWidth: scale(0.3),
+    marginBottom: responsive.marginBottom(5),
   },
   transactionIcon: { marginRight: rw(3) },
-  amount: { fontSize: rf(1.8), fontWeight: '700' },
-  label: { fontSize: rf(1.6), color: '#000' },
-  date: { fontSize: rf(1.4), color: 'gray' },
-  separator: { height: 1, backgroundColor: '#eee', marginVertical: rh(1) },
+  amount: { fontSize: responsive.fontSize(17), fontWeight: '500' },
+  label: {
+    fontSize: responsive.fontSize(12),
+    color: '#171D1C',
+    fontWeight: '300',
+  },
+  date: { fontSize: responsive.fontSize(12), color: '#333333' },
+
+  balanceContainer: {
+    backgroundColor: '#FBFEFC',
+    borderRadius: responsive.borderRadius(12),
+    padding: scale(15),
+    elevation: 2,
+    marginTop: responsive.marginTop(2),
+    marginBottom: responsive.marginBottom(10),
+
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 4 },
+    shadowOpacity: 0.15,
+    shadowRadius: 6,
+  },
+  balanceLabel: {
+    fontSize: responsive.fontSize(16),
+    color: '#888',
+  },
+  balanceValue: {
+    fontSize: responsive.fontSize(25),
+    fontWeight: 'bold',
+    color: '#1A1A2D',
+  },
+  labelinput: {
+    color: '#171D1C',
+    marginBottom: responsive.marginBottom(10),
+    fontSize: responsive.fontSize(16),
+  },
+  noteContainer: {
+    paddingVertical: 8,
+  },
+
+  bulletText: {
+    fontSize: responsive.fontSize(10),
+    color: '#0D1C1C',
+    lineHeight: 10,
+    marginBottom: responsive.marginBottom(6),
+  },
+  row: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    gap:10
+  },
+
+  inputWrapper: {
+    flex: 1,
+  },
 });

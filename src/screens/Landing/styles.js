@@ -80,12 +80,11 @@
 
 // export default styles;
 
+import { StyleSheet, Dimensions } from 'react-native';
+import { moderateScale } from 'react-native-size-matters';
+import responsive from '../../constants/responsive';
 
-
-import { StyleSheet, Dimensions } from "react-native";
-import { moderateScale } from "react-native-size-matters";
-
-const { width, height } = Dimensions.get("window");
+const { width, height } = Dimensions.get('window');
 
 // Responsive helper functions
 const wp = p => (width * p) / 100;
@@ -94,64 +93,69 @@ const hp = p => (height * p) / 100;
 export default StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: "#fff",
+    backgroundColor: '#fff',
     paddingHorizontal: wp(5), // responsive padding
     paddingTop: hp(2),
   },
+  containermain: {
+    flex: 1,
+    backgroundColor: '#fff',
+  },
 
   header: {
-    flexDirection: "row",
-    alignItems: "center",
+    flexDirection: 'row',
+    alignItems: 'center',
     marginBottom: hp(3),
   },
 
   headerTitle: {
     fontSize: width > 600 ? 22 : 17, // tablet & desktop bigger
-    fontWeight: "600",
+    fontWeight: '600',
     marginLeft: width > 600 ? wp(15) : wp(20),
-    fontFamily: "Source Serif 4",
+    fontFamily: 'Source Serif 4',
   },
 
   title: {
     fontSize: width > 600 ? 28 : 22,
-    fontWeight: "600",
-    color: "#000",
+    fontWeight: '600',
+    color: '#000',
     marginBottom: hp(0.8),
   },
 
   subtitle: {
     fontSize: width > 600 ? 20 : 17,
-    color: "gray",
+    color: 'gray',
     marginBottom: hp(3),
-    fontFamily: "Source Serif 4",
+    fontFamily: 'Source Serif 4',
   },
 
   optionContainer: {
-    flexDirection: "row",
-    alignItems: "center",
-    paddingVertical: hp(2),
-    paddingHorizontal: hp(2),
-    borderBottomWidth: 1,
-    borderBottomColor: "#eee",
-    backgroundColor:"#f1f1f1",
-    marginVertical:moderateScale(3),
-    borderRadius: moderateScale(12)
+    flexDirection: 'row',
+    alignItems: 'center',
+    paddingVertical: hp(1),
+    paddingHorizontal: hp(1),
+  },
+
+  selectedOptionBorder: {
+    borderWidth: 2,
+    borderColor: '#2E7D32', // ✅ green
+    borderRadius: responsive.borderRadius(16), marginBottom: responsive.marginBottom(5),
   },
 
   icon: {
     width: wp(12), // 12% of screen width
     height: wp(12),
     marginRight: wp(3),
-    resizeMode: "contain",
+    resizeMode: 'contain',
     // tintColor:"#478F4E",
   },
 
   optionText: {
     flex: 1,
     fontSize: width > 600 ? 20 : 16,
-    color: "#000",
-    fontFamily: "Source Serif 4",
-    fontWeight: "600",
+    color: '#000',
+    fontFamily: 'Source Serif 4',
+    fontWeight: '600',
   },
 
   radioCircle: {
@@ -159,30 +163,44 @@ export default StyleSheet.create({
     width: width > 600 ? 26 : 20,
     borderRadius: width > 600 ? 13 : 10,
     borderWidth: 1.4,
-    borderColor: "green",
-    alignItems: "center",
-    justifyContent: "center",
+    borderColor: 'green',
+    alignItems: 'center',
+    justifyContent: 'center',
   },
 
   selectedDot: {
     height: width > 600 ? 14 : 10,
     width: width > 600 ? 14 : 10,
     borderRadius: width > 600 ? 7 : 5,
-    backgroundColor: "#478F4E",
+    backgroundColor: '#478F4E',
   },
 
   button: {
-    backgroundColor: "#478F4E",
-    paddingVertical: hp(2.2),
+    backgroundColor: '#4B9AC1',
+    paddingVertical: hp(2),
     borderRadius: 10,
     marginBottom: hp(6),
-    alignItems: "center",
+    alignItems: 'center',
+    marginHorizontal: wp(5),
   },
 
   buttonText: {
-    color: "#fff",
-    fontSize: width > 600 ? 20 : 16,
-    fontWeight: "600",
-    fontFamily: "Source Serif 4",
+    color: '#fff',
+    fontSize: responsive.fontSize(17),
+    fontWeight: 'bold',
+    fontFamily: 'Source Serif 4',
+  },
+  buttonTextLebel: {
+    color: '#171D1C',
+    fontSize: responsive.fontSize(22),
+    fontWeight: 'bold',
+    fontFamily: 'Source Serif 4',
+  },
+  buttonTextOptions: {
+    color: '#171D1C',
+    fontSize: responsive.fontSize(17),
+    fontFamily: 'Source Serif 4',
+    marginTop: 5,
+    marginBottom: responsive.marginBottom(30),
   },
 });

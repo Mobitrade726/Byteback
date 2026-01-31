@@ -29,6 +29,36 @@ export const forgotPasswordAPI = createAsyncThunk(
     }
   },
 );
+/* =========================================================
+   ✅ SEND OTP (FORGOT PASSWORD)
+   ========================================================= */
+export const forgotEmailAPI = createAsyncThunk(
+  'auth/forgotEmailAPI',
+  async (mobile, { rejectWithValue }) => {
+    console.log('mobile---------------->', mobile);
+    try {
+      const response = await axios.post(
+        `${API_BASE_URL}/forget-email`,
+        {contact_number: mobile }, // 👈 email in body
+        {
+          headers: {
+            'Content-Type': 'application/json',
+            Accept: 'application/json',
+          },
+        },
+      );
+      console.log('res++++++++++++++++++++++++', response?.data);
+      if (response.data?.status) {
+        return response.data;
+      } else {
+        return rejectWithValue(response.data?.message || 'Failed to send OTP');
+      }
+    } catch (error) {
+      console.log('error++++++++++++++++++++++++', error?.response);
+      return rejectWithValue(error.response?.data?.message || 'Network error');
+    }
+  },
+);
 
 /* =========================================================
    ✅ VERIFY OTP
@@ -94,6 +124,7 @@ const forgotPasswordSlice = createSlice({
     data: null, // send OTP response
     verifyData: null, // verify OTP response
     resetData: null, // reset password response
+    resetDataEmail: null, // reset password response
   },
 
   reducers: {
@@ -153,6 +184,22 @@ const forgotPasswordSlice = createSlice({
         state.resetData = action.payload;
       })
       .addCase(resetPasswordAPI.rejected, (state, action) => {
+        state.loading = false;
+        state.success = false;
+        state.error = action.payload?.message || 'Something went wrong';
+      });
+    /* ================= Email Forget ================= */
+    builder
+      .addCase(forgotEmailAPI.pending, state => {
+        state.loading = true;
+        state.error = null;
+      })
+      .addCase(forgotEmailAPI.fulfilled, (state, action) => {
+        state.loading = false;
+        state.success = true;
+        state.resetDataEmail = action.payload;
+      })
+      .addCase(forgotEmailAPI.rejected, (state, action) => {
         state.loading = false;
         state.success = false;
         state.error = action.payload?.message || 'Something went wrong';

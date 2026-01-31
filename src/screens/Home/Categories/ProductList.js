@@ -8,6 +8,7 @@ import {
   ScrollView,
   Alert,
   FlatList,
+  Dimensions,
 } from 'react-native';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import SimpleLineIcons from 'react-native-vector-icons/SimpleLineIcons';
@@ -49,6 +50,7 @@ import {
   fetchWishlist,
 } from '../../../redux/slices/wishlistSlice';
 
+const { width } = Dimensions.get('window');
 const OUTER_SIZE = responsive.width(52);
 const INNER_SIZE = responsive.width(36);
 const ICON_SIZE = responsive.width(36);
@@ -61,7 +63,7 @@ const isGoodStatus = status => {
     'minor sign of usage',
     'available',
     'working',
-    'no bent'
+    'no bent',
   ];
 
   return goodStatuses.includes(status.toLowerCase());
@@ -143,8 +145,8 @@ const InfoCard = ({ iconType, icon, text }) => {
       <View
         style={{
           backgroundColor: '#EAE6E5',
-          padding: moderateScale(7), // responsive padding
-          borderRadius: moderateScale(5), // responsive border radius
+          padding: moderateScale(7),
+          borderRadius: moderateScale(5),
         }}
       >
         <Icon name={icon} size={moderateScale(12)} color="#000" />
@@ -509,7 +511,6 @@ const ProductList = ({ route, iconType, icon, text }) => {
     '30 Days ByteBack Warranty',
     '52 parameters Quality Check',
     'Valid GST Bill',
-    '24/7 Customer Support',
   ];
 
   const paymentMethods = [
@@ -544,6 +545,8 @@ const ProductList = ({ route, iconType, icon, text }) => {
       icon: require('../../../../assets/images/Bank--Streamline-Kameleon.png'),
     },
   ];
+
+  const screenDefects = details.filter(d => d.defect_type === 'Screen Defects');
 
   return (
     <View style={styles.container}>
@@ -720,10 +723,10 @@ const ProductList = ({ route, iconType, icon, text }) => {
                 </View>
               </View>
             </View>
-            <View style={{ marginRight: moderateScale(20) }}>
+            <View style={{ marginRight: moderateScale(0) }}>
               <Text
                 style={{
-                  fontSize: responsive.fontSize(48),
+                  fontSize: responsive.fontSize(30),
                   fontWeight: 'bold',
                 }}
               >
@@ -838,7 +841,7 @@ const ProductList = ({ route, iconType, icon, text }) => {
               flexDirection: 'row',
               justifyContent: 'space-between',
               marginHorizontal: responsive.marginHorizontal(8),
-              marginTop: moderateScale(8),
+              marginTop: moderateScale(10),
             }}
           >
             <Text
@@ -1052,7 +1055,7 @@ const ProductList = ({ route, iconType, icon, text }) => {
               flexDirection: 'row',
               justifyContent: 'space-between',
               marginHorizontal: responsive.marginHorizontal(8),
-              marginVertical: moderateScale(8),
+              marginVertical: moderateScale(10),
             }}
           >
             <Text
@@ -1108,9 +1111,14 @@ const ProductList = ({ route, iconType, icon, text }) => {
                   <Text style={styles.headlinesviewspecifications}>
                     Accessories
                   </Text>
+                  <View style={styles.dividerspecification} />
 
-                  {accessories.map((d, idx) => (
-                    <InfoItem key={idx} label={d?.accessory_name || 'N/A'} />
+                  {accessories.map((d, idx, arr) => (
+                    <InfoItem
+                      key={idx}
+                      label={d?.accessory_name || 'N/A'}
+                      showDivider={idx !== arr.length - 1} // 🔑 last pe nahi
+                    />
                   ))}
                 </>
               )}
@@ -1142,7 +1150,7 @@ const ProductList = ({ route, iconType, icon, text }) => {
               <View style={styles.dividerspecification} />
               {details
                 .filter(d => d.defect_type === 'Screen Defects')
-                .map((d, idx) => {
+                .map((d, idx, arr) => {
                   const status = d.parameter_status?.parameter_status_name;
 
                   return (
@@ -1151,12 +1159,15 @@ const ProductList = ({ route, iconType, icon, text }) => {
                       label={d.parameter?.parameter_name || 'N/A'}
                       value={status || 'N/A'}
                       working={isGoodStatus(status)}
+                      showDivider={idx !== arr.length - 1} // 🔑 last pe nahi
                     />
                   );
                 })}
               <Text style={styles.headlinesviewspecifications}>
                 Functional Defects
               </Text>
+              <View style={styles.dividerspecification} />
+
               {details
                 .filter(d => d.defect_type === 'Functional Problems')
                 .map((d, idx) => {
@@ -1173,6 +1184,39 @@ const ProductList = ({ route, iconType, icon, text }) => {
                 })}
             </>
           )}
+        </View>
+
+        <View
+          style={{
+            marginBottom: moderateScale(5),
+            flexDirection: 'row',
+            alignSelf: 'center',
+            borderRadius: 8,
+            marginHorizontal: moderateScale(10),
+            marginTop: scale(10),
+          }}
+        >
+          <View style={styles.leftContainer}>
+            <Text style={styles.heading}>What is A1 to A9 Grade?</Text>
+            <Text style={styles.subheading}>How Does Our Grading Work?</Text>
+            <Text style={styles.description}>
+              Grading ranges from A1 (like new) to A9 (heavily used).
+            </Text>
+
+            <TouchableOpacity
+              onPress={() => navigation.navigate('Grade')}
+              style={styles.button}
+            >
+              <Text style={styles.buttonText}>Learn More</Text>
+            </TouchableOpacity>
+          </View>
+
+          {/* Right Image Section */}
+          <Image
+            source={require('../../../../assets/images/mini.png')} // Replace with your image path
+            style={styles.imageG}
+            resizeMode="contain"
+          />
         </View>
 
         <Text
@@ -1200,7 +1244,7 @@ const ProductList = ({ route, iconType, icon, text }) => {
             fontSize: responsive.fontSize(16),
             marginTop: responsive.marginTop(10),
             marginHorizontal: responsive.marginHorizontal(10),
-            marginVertical: responsive.marginVertical(8),
+            marginVertical: responsive.marginVertical(12),
             fontWeight: 'bold',
           }}
         >
@@ -1267,7 +1311,11 @@ const ProductList = ({ route, iconType, icon, text }) => {
         </View>
 
         <Text style={[styles.subHeadingD]}>Your Trust, Our Commitment</Text>
-        <ScrollView horizontal showsHorizontalScrollIndicator={false}>
+        <ScrollView
+          style={{ marginHorizontal: responsive.marginHorizontal(10) }}
+          horizontal
+          showsHorizontalScrollIndicator={false}
+        >
           {trustFeatures.map(item => (
             <InfoCard
               key={item.id}
@@ -1396,7 +1444,7 @@ export const styles = StyleSheet.create({
   },
 
   activeThumbnail: {
-    borderColor: '#000',
+    borderColor: '#1C9C48',
     borderWidth: 2,
   },
 
@@ -1435,6 +1483,7 @@ export const styles = StyleSheet.create({
     fontWeight: 'semibold',
     color: '#333333',
     fontSize: responsive.fontSize(14),
+    marginTop: -5,
   },
   variant: { fontSize: rf(2), color: '#333', marginBottom: verticalScale(1) },
   buttonRow: {
@@ -1651,33 +1700,43 @@ export const styles = StyleSheet.create({
     marginBottom: verticalScale(0.5),
   },
 
-  leftContainer: { flex: 1, paddingRight: rw(2.5) },
+  leftContainer: {
+    flex: 1,
+    paddingRight: scale(10),
+  },
   heading: {
-    fontSize: rf(2),
+    fontSize: responsive.fontSize(14),
     fontWeight: 'bold',
     color: '#1A1A1A',
-    marginBottom: verticalScale(2),
+    marginBottom: verticalScale(6),
   },
   subheading: {
-    fontSize: rf(1.8),
+    fontSize: responsive.fontSize(12),
     fontWeight: '500',
     color: '#333',
-    marginBottom: verticalScale(2),
+    marginBottom: verticalScale(8),
   },
   description: {
-    fontSize: rf(1.5),
+    fontSize: responsive.fontSize(10),
     color: '#7E7E7E',
-    marginBottom: verticalScale(8),
+    marginBottom: verticalScale(20),
   },
   button: {
     backgroundColor: '#EAE8E8',
-    paddingVertical: verticalScale(5),
-    paddingHorizontal: rw(5),
-    borderRadius: scale(16),
+    paddingVertical: verticalScale(8),
+    paddingHorizontal: scale(24),
+    borderRadius: moderateScale(16),
     alignSelf: 'flex-start',
   },
-  buttonText: { fontSize: rf(2), color: '#000', fontWeight: '600' },
-  imageG: { width: rw(30), height: rw(30) },
+  buttonText: {
+    fontSize: responsive.fontSize(12),
+    color: '#000',
+    fontWeight: '600',
+  },
+  imageG: {
+    width: width * 0.3,
+    height: width * 0.3,
+  },
 
   headingD: {
     fontSize: rf(2.2),
@@ -1721,14 +1780,14 @@ export const styles = StyleSheet.create({
     gap: 5,
   },
   infoCardD: {
-    width: '20%',
+    width: responsive.width(160),
     flexDirection: 'row',
     alignItems: 'center',
     padding: moderateScale(5),
     borderRadius: scale(5),
-    margin: rw(1.5),
+    margin: rw(1),
     borderWidth: 1,
-    marginHorizontal: responsive.marginHorizontal(10),
+    marginHorizontal: responsive.marginHorizontal(2),
   },
   infoTextD: { marginLeft: rw(1.5), fontSize: rf(1) },
   cardDe: {

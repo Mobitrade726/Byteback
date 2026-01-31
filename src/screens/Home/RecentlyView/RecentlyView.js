@@ -672,6 +672,7 @@ import {
 import Header from '../../../constants/Header';
 const { width, height } = Dimensions.get('window');
 import { ProductCardStyles } from '../../../constants/ProductCardStyles';
+import responsive from '../../../constants/responsive';
 
 // Scale function for fonts
 const scaleFont = size => (size * width) / 375;
@@ -702,53 +703,56 @@ const RecentlyView = ({ navigation }) => {
     };
 
     return (
-      <TouchableOpacity
-        onPress={() =>
-          navigation.navigate('ProductList', {
-            product_barcode_id: item?.barcode_id,
-          })
-        }
-        style={ProductCardStyles.cardD}
+      <View
+        style={{
+          width: responsive.width(170),
+        }}
       >
-        {/* Image + Heart */}
-        <View style={ProductCardStyles.imageContainerD}>
-          {item && (
-            <Text style={ProductCardStyles.refurbishedLabelD}>PRE-OWNED</Text>
-          )}
-
-          <Image
-            source={{ uri: item.feature_image }}
-            style={ProductCardStyles.imageD}
-            resizeMode='contain'
-          />
-
-          {/* ❤️ Wishlist Button */}
+        <View style={ProductCardStyles.cardShadow}>
           <TouchableOpacity
-            style={ProductCardStyles.heartIconD}
-            onPress={() => handleWishlistToggle()}
+            onPress={() =>
+              navigation.navigate('ProductList', {
+                product_barcode_id: item?.barcode_id,
+              })
+            }
+            style={ProductCardStyles.cardD}
           >
-            <AntDesign
-              name={isInWishlist ? 'heart' : 'hearto'}
-              size={moderateScale(20)}
-              color={isInWishlist ? '#E74C3C' : '#999'}
-            />
+            {/* Image + Heart */}
+            <View style={ProductCardStyles.imageContainerD}>
+              {item && (
+                <Text style={ProductCardStyles.refurbishedLabelD}>
+                  PRE-OWNED
+                </Text>
+              )}
+
+              <Image
+                source={{ uri: item.feature_image }}
+                style={ProductCardStyles.imageD}
+                resizeMode="contain"
+              />
+
+              {/* ❤️ Wishlist Button */}
+              <TouchableOpacity
+                style={ProductCardStyles.heartIconD}
+                onPress={() => handleWishlistToggle()}
+              >
+                <AntDesign
+                  name={isInWishlist ? 'heart' : 'hearto'}
+                  size={moderateScale(20)}
+                  color={isInWishlist ? '#E74C3C' : '#999'}
+                />
+              </TouchableOpacity>
+            </View>
+            <Text style={ProductCardStyles.gradeText}>
+              Grade {item.grade_number}
+            </Text>
           </TouchableOpacity>
         </View>
 
-        {/* Grade Box */}
-        {/* <View style={ProductCardStyles.gradeBoxD}> */}
-        <Text style={ProductCardStyles.gradeTextD}>
-          Grade {item.grade_number}
-        </Text>
-        {/* </View> */}
-
-        {/* Product Info */}
-        <Text style={ProductCardStyles.productNameD}>{item.model_name}</Text>
-        <Text style={ProductCardStyles.colorTextD}>● {item.color_name}</Text>
-        <View style={ProductCardStyles.priceRowD}>
-          <Text style={ProductCardStyles.priceD}>₹ {item.price}</Text>
-        </View>
-      </TouchableOpacity>
+        <Text style={ProductCardStyles.productName}>{item.model_name}</Text>
+        <Text style={ProductCardStyles.colorText}>● {item.color_name}</Text>
+        <Text style={ProductCardStyles.price}>₹ {item.price}</Text>
+      </View>
     );
   };
 
@@ -767,11 +771,12 @@ const RecentlyView = ({ navigation }) => {
         keyExtractor={(item, index) =>
           item.id ? item.id.toString() : index.toString()
         }
-        showsHorizontalScrollIndicator={false}
-        numColumns={2}
+        columnWrapperStyle={{ justifyContent: 'space-between' }}
         contentContainerStyle={{
-         alignSelf:'center'
+          paddingHorizontal: responsive.paddingHorizontal(10),
         }}
+        showsVerticalScrollIndicator={false}
+        numColumns={2}
       />
     </View>
   );

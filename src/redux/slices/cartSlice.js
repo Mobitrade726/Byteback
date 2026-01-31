@@ -329,6 +329,7 @@ export const fetchCartAPI = createAsyncThunk(
           quantity: item.quantity || '',
           cart_id: response.data.data?.cart_id,
           variant: item.variant,
+          grade_number: item.grade_number || '',
         }));
       } else {
         return [];

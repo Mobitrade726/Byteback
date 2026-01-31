@@ -689,6 +689,7 @@ import responsive from '../constants/responsive';
 import { fetchRecentlyViewed } from './slices/productSlice';
 import { ProductCardStyles } from '../constants/ProductCardStyles';
 import AntDesign from 'react-native-vector-icons/AntDesign';
+import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 import Section from '../screens/Home/Section';
 import {
   addToWishlistAPI,
@@ -720,53 +721,57 @@ const Cart = () => {
     };
 
     return (
-      <TouchableOpacity
-        onPress={() =>
-          navigation.navigate('ProductList', {
-            product_barcode_id: item?.barcode_id,
-          })
-        }
-        style={ProductCardStyles.cardD}
+      <View
+        style={{
+          width: responsive.width(170),
+          marginHorizontal: responsive.marginHorizontal(5),
+        }}
       >
-        {/* Image + Heart */}
-        <View style={ProductCardStyles.imageContainerD}>
-          {item && (
-            <Text style={ProductCardStyles.refurbishedLabelD}>PRE-OWNED</Text>
-          )}
-
-          <Image
-            source={{ uri: item.feature_image }}
-            style={ProductCardStyles.imageD}
-            resizeMode="contain"
-          />
-
-          {/* ❤️ Wishlist Button */}
+        <View style={ProductCardStyles.cardShadow}>
           <TouchableOpacity
-            style={ProductCardStyles.heartIconD}
-            onPress={() => handleWishlistToggle()}
+            onPress={() =>
+              navigation.navigate('ProductList', {
+                product_barcode_id: item?.barcode_id,
+              })
+            }
+            style={ProductCardStyles.cardD}
           >
-            <AntDesign
-              name={isInWishlist ? 'heart' : 'hearto'}
-              size={moderateScale(20)}
-              color={isInWishlist ? '#E74C3C' : '#999'}
-            />
+            {/* Image + Heart */}
+            <View style={ProductCardStyles.imageContainerD}>
+              {item && (
+                <Text style={ProductCardStyles.refurbishedLabelD}>
+                  PRE-OWNED
+                </Text>
+              )}
+
+              <Image
+                source={{ uri: item.feature_image }}
+                style={ProductCardStyles.imageD}
+                resizeMode="contain"
+              />
+
+              {/* ❤️ Wishlist Button */}
+              <TouchableOpacity
+                style={ProductCardStyles.heartIconD}
+                onPress={() => handleWishlistToggle()}
+              >
+                <AntDesign
+                  name={isInWishlist ? 'heart' : 'hearto'}
+                  size={moderateScale(12)}
+                  color={isInWishlist ? '#E74C3C' : '#999'}
+                />
+              </TouchableOpacity>
+              <Text style={ProductCardStyles.gradeText}>
+                Grade {item.grade_number}
+              </Text>
+            </View>
           </TouchableOpacity>
         </View>
 
-        {/* Grade Box */}
-        {/* <View style={ProductCardStyles.gradeBoxD}> */}
-        <Text style={ProductCardStyles.gradeTextD}>
-          Grade {item.grade_number}
-        </Text>
-        {/* </View> */}
-
-        {/* Product Info */}
-        <Text style={ProductCardStyles.productNameD}>{item.model_name}</Text>
-        <Text style={ProductCardStyles.colorTextD}>● {item.color_name}</Text>
-        <View style={ProductCardStyles.priceRowD}>
-          <Text style={ProductCardStyles.priceD}>₹ {item.price}</Text>
-        </View>
-      </TouchableOpacity>
+        <Text style={ProductCardStyles.productName}>{item.model_name}</Text>
+        <Text style={ProductCardStyles.colorText}>● {item.color_name}</Text>
+        <Text style={ProductCardStyles.price}>₹ {item.price}</Text>
+      </View>
     );
   };
   const isKYCIncomplete = !data?.vendordocuments?.proof_of_identity;
@@ -823,12 +828,12 @@ const Cart = () => {
         </Text>
 
         <Text style={styles.price}>₹{item.price.toFixed(2)}</Text>
-        <View
+        {/* <View
           style={{
             backgroundColor: '#EAE6E5',
             width: responsive.width(100),
             borderRadius: responsive.borderRadius(12),
-            marginTop: responsive.marginTop(5),
+            marginTop: responsive.marginTop(8),
           }}
         >
           <Text
@@ -840,7 +845,7 @@ const Cart = () => {
           >
             Save for Later
           </Text>
-        </View>
+        </View> */}
       </View>
       <View style={styles.imageback}>
         <Image
@@ -895,12 +900,7 @@ const Cart = () => {
       <View style={[styles.card, { backgroundColor: bgColor }]}>
         <View style={styles.cardHeader}>
           <Text style={[styles.titleS, { color: textColor }]}>{title}</Text>
-          <Ionicons
-            name={icon}
-            size={moderateScale(24)}
-            color={iconColor}
-            style={styles.iconCircle}
-          />
+          <Ionicons name={icon} size={moderateScale(20)} color={iconColor} />
         </View>
         <View style={styles.cardFooter}>
           <Text style={[styles.subtitle, { color: textColor }]}>
@@ -950,12 +950,19 @@ const Cart = () => {
                 </Text>
                 <Text style={styles.bannerSubtitle}>bulk order options.</Text>
               </View>
-              <View
-                onPress={() => navigation.navigate('UpgradeNow')}
+              <TouchableOpacity
+                // onPress={() => navigation.navigate('UpgradeNow')}
+                onPress={() => {
+                  Alert.alert(
+                    'Feature Not Available',
+                    'This feature is not available yet.',
+                    [{ text: 'OK' }],
+                  );
+                }}
                 style={styles.upgradeBtn}
               >
                 <Text style={styles.upgradeText}>Upgrade Now</Text>
-              </View>
+              </TouchableOpacity>
             </View>
           </View>
         </ImageBackground>
@@ -980,7 +987,7 @@ const Cart = () => {
             <View style={styles.emptyContainer}>
               <View style={styles.emptyCard}>
                 <View style={styles.iconCircle}>
-                  <Text style={{ fontSize: responsiveFontSize(5) }}>🛒</Text>
+                  <Text style={{ fontSize: responsive.fontSize(25) }}>🛒</Text>
                 </View>
 
                 <Text style={styles.emptyTitle}>Your Cart is Empty</Text>
@@ -1015,7 +1022,13 @@ const Cart = () => {
             cartItems.length > 0 ? (
               <View style={styles.footerContainer}>
                 <TouchableOpacity style={styles.clearBtn} onPress={handleClear}>
-                  <Text style={styles.clearText}>🗑️ Clear Cart</Text>
+                  {/* <Text style={styles.clearText}>🗑️ Clear Cart</Text> */}
+                  <MaterialCommunityIcons
+                    name="trash-can-outline"
+                    size={18}
+                    color="#fff"
+                  />
+                  <Text style={styles.clearText}> Clear Cart</Text>
                 </TouchableOpacity>
 
                 {/* <TouchableOpacity
@@ -1036,7 +1049,7 @@ const Cart = () => {
                 flexDirection: 'row',
                 justifyContent: 'space-between',
                 marginHorizontal: responsive.width(10),
-                marginVertical: responsive.marginVertical(10),
+                marginBottom: responsive.marginBottom(10),
               }}
             >
               <Text style={{ fontSize: responsive.fontSize(16) }}>
@@ -1055,8 +1068,7 @@ const Cart = () => {
               keyExtractor={item => item.barcode_id?.toString()}
               showsHorizontalScrollIndicator={false}
               contentContainerStyle={{
-                alignItems: 'center',
-                paddingHorizontal: responsive.width(10),
+                paddingHorizontal: responsive.paddingHorizontal(10),
               }}
             />
           </>
@@ -1094,8 +1106,7 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
     flexDirection: 'row',
     marginHorizontal: moderateScale(10),
-    bottom: moderateScale(5),
-    marginTop: moderateScale(10),
+    marginVertical: responsive.marginVertical(15),
   },
   banner: {
     backgroundColor: '#F6EAD9',
@@ -1137,19 +1148,19 @@ const styles = StyleSheet.create({
     borderRadius: moderateScale(8),
     marginBottom: verticalScale(1.5),
     marginHorizontal: moderateScale(10),
-    marginVertical: moderateScale(15),
+    marginVertical: moderateScale(0),
   },
   imageback: {
     backgroundColor: '#fff',
     borderWidth: 1,
     borderColor: '#f5f6f6',
-    borderRadius: responsive.borderRadius(12),
+    // borderRadius: responsive.borderRadius(12),
     padding: responsive.padding(10),
   },
   image: {
     width: responsiveWidth(18),
     height: responsiveWidth(18),
-    borderRadius: responsive.borderRadius(12),
+    // borderRadius: responsive.borderRadius(12),
   },
   removeBtn: {
     // alignItems: 'center',
@@ -1158,14 +1169,14 @@ const styles = StyleSheet.create({
   },
   details: { flex: 1 },
   name: {
-    fontSize: responsive.fontSize(16),
+    fontSize: responsive.fontSize(12),
     fontWeight: '600',
     marginTop: verticalScale(1),
   },
   price: {
     color: '#444',
     marginTop: verticalScale(1),
-    fontSize: responsive.fontSize(14),
+    fontSize: responsive.fontSize(12),
   },
   grade: {
     color: '#444',
@@ -1178,7 +1189,6 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
     paddingHorizontal: responsiveWidth(5),
-    marginTop: moderateScale(10),
     // backgroundColor: '#f8f9fb',
   },
 
@@ -1186,40 +1196,19 @@ const styles = StyleSheet.create({
     width: '100%',
     backgroundColor: '#fff',
     borderRadius: 20,
-    paddingVertical: responsiveHeight(4),
     paddingHorizontal: responsiveWidth(5),
     alignItems: 'center',
-    borderWidth: 1,
-    borderColor: '#c1c1c1',
-
-    // Soft shadow
-    // shadowColor: '#000',
-    // shadowOpacity: 0.08,
-    // shadowRadius: 10,
-    // shadowOffset: { width: 0, height: 4 },
-    // elevation: 3,
-  },
-
-  iconCircle: {
-    width: responsiveHeight(12),
-    height: responsiveHeight(12),
-    borderRadius: responsiveHeight(6),
-    backgroundColor: '#eaf3ff',
-    justifyContent: 'center',
-    alignItems: 'center',
-
-    marginBottom: responsiveHeight(2),
   },
 
   emptyTitle: {
-    fontSize: responsiveFontSize(2.5),
+    fontSize: responsive.fontSize(16),
     fontWeight: '700',
     color: '#222',
     marginTop: responsiveHeight(1),
   },
 
   emptySubtitle: {
-    fontSize: responsiveFontSize(1.8),
+    fontSize: responsive.fontSize(12),
     color: '#666',
     textAlign: 'center',
     marginTop: responsiveHeight(1),
@@ -1261,20 +1250,15 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   titleS: {
-    fontSize: responsiveFontSize(2),
+    fontSize: responsive.fontSize(24),
     fontWeight: '700',
     flex: 1,
     paddingRight: responsiveWidth(2),
   },
   subtitle: {
-    fontSize: responsiveFontSize(1.5),
+    fontSize: responsive.fontSize(12),
     marginVertical: verticalScale(1),
     width: '50%',
-  },
-  iconCircle: {
-    backgroundColor: '#ffffff20',
-    padding: moderateScale(6),
-    borderRadius: moderateScale(20),
   },
   cardFooter: {
     flexDirection: 'row',
@@ -1284,12 +1268,13 @@ const styles = StyleSheet.create({
   button: {
     alignSelf: 'flex-start',
     paddingHorizontal: moderateScale(12),
-    paddingVertical: verticalScale(1.5),
+    paddingVertical: verticalScale(5),
     borderRadius: moderateScale(20),
+    marginTop: responsive.marginTop(20),
   },
   buttonText: {
     fontWeight: '600',
-    fontSize: responsiveFontSize(1.4),
+    fontSize: responsive.fontSize(12),
     color: '#000',
   },
   carousel: {
@@ -1300,20 +1285,24 @@ const styles = StyleSheet.create({
   },
   footerBtn: {
     backgroundColor: '#ffe5e5',
-    borderRadius: moderateScale(8),
-    marginTop: 10,
+    borderRadius: responsive.borderRadius(12),
+    marginTop: verticalScale(16),
+    padding: responsive.padding(12),
   },
   clearBtn: {
     backgroundColor: '#CB444B',
     borderRadius: moderateScale(8),
     width: responsive.width(100),
+    flexDirection: 'row',
+    alignItems: 'center',
+    paddingHorizontal: 5,
+    paddingVertical: 2,
   },
   footerBtnText: {
     color: '#fff',
-    fontWeight: '600',
-    fontSize: responsiveFontSize(1.5),
+    fontWeight: 'bold',
+    fontSize: responsive.fontSize(16),
     textAlign: 'center',
-    padding: verticalScale(10),
   },
   clearText: {
     color: '#FFFBFA',

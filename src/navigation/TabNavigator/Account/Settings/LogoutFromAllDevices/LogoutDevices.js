@@ -28,6 +28,7 @@ import {
 } from '../../../../../redux/slices/logoutDevicesSlice';
 import { logout } from '../../../../../redux/slices/authSlice';
 import { clearAuthStorage } from '../../../../../utils/authStorage';
+import responsive from '../../../../../constants/responsive';
 
 const LogoutDevices = ({ navigation }) => {
   const dispatch = useDispatch();
@@ -107,7 +108,7 @@ const LogoutDevices = ({ navigation }) => {
         <View style={styles.rowBetween}>
           <Text style={styles.deviceName}>{item.name}</Text>
           <TouchableOpacity onPress={() => handleLogoutDevice(item.device_id)}>
-            <SimpleLineIcons name="logout" size={scale(20)} color="#C84040" />
+            <SimpleLineIcons name="logout" size={scale(15)} color="#C84040" />
           </TouchableOpacity>
         </View>
         <Text style={styles.deviceLocation}>Location: {item.location}</Text>
@@ -147,7 +148,7 @@ const LogoutDevices = ({ navigation }) => {
         onPress={() => handleLogoutAllDevices()}
         style={styles.logoutAllButton}
       >
-        <SimpleLineIcons name="logout" size={scale(18)} color="#fff" />
+        <SimpleLineIcons name="logout" size={scale(12)} color="#fff" />
         <Text style={styles.logoutAllText}> Log out of all devices</Text>
       </TouchableOpacity>
     </View>
@@ -179,18 +180,18 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   lastActiveText: {
-    fontSize: RF(1.2),
+    fontSize: responsive.fontSize(15),
     color: '#666',
     fontWeight: '500',
-    marginLeft: RW(1),
+    marginLeft: RW(1), width:'75%'
   },
   deviceName: {
-    fontSize: RF(2),
+    fontSize: responsive.fontSize(17),
     fontWeight: '600',
     color: '#000',
     marginBottom: RH(0.5),
   },
-  deviceLocation: { fontSize: RF(1.6), color: '#444', fontWeight: '400' },
+  deviceLocation: { fontSize: responsive.fontSize(15), color: '#444', fontWeight: '400' },
   logoutAllButton: {
     flexDirection: 'row',
     backgroundColor: '#C84040',
@@ -203,7 +204,7 @@ const styles = StyleSheet.create({
   },
   logoutAllText: {
     color: '#fff',
-    fontSize: RF(1.8),
+    fontSize: responsive.fontSize(17),
     fontWeight: '500',
     marginHorizontal: RW(1),
   },

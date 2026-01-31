@@ -7,7 +7,6 @@
 //   FlatList,
 //   Image,
 //   StyleSheet,
-//   View,
 //   Dimensions,
 // } from 'react-native';
 // import Ionicons from 'react-native-vector-icons/Ionicons';
@@ -398,414 +397,413 @@
 
 // export default ShopByBudget;
 
-// // import React, { useEffect, useMemo, useState } from 'react';
-// // import {
-// //   View,
-// //   Text,
-// //   Image,
-// //   ScrollView,
-// //   StyleSheet,
-// //   TouchableOpacity,
-// //   FlatList,
-// //   View,
-// // } from 'react-native';
-// // import Ionicons from 'react-native-vector-icons/Ionicons';
-// // import AntDesign from 'react-native-vector-icons/AntDesign';
+// import React, { useEffect, useMemo, useState } from 'react';
+// import {
+//   View,
+//   Text,
+//   Image,
+//   ScrollView,
+//   StyleSheet,
+//   TouchableOpacity,
+//   FlatList,
+// } from 'react-native';
+// import Ionicons from 'react-native-vector-icons/Ionicons';
+// import AntDesign from 'react-native-vector-icons/AntDesign';
 
-// // import { useRoute } from '@react-navigation/native';
-// // import { useDispatch, useSelector } from 'react-redux';
-// // import {
-// //   addToWishlistAPI,
-// //   removeFromWishlistAPI,
-// //   fetchWishlist,
-// // } from '../../../redux/slices/wishlistSlice';
-// // import { fetchProductList, loading } from '../../../redux/slices/productSlice';
-// // import Header from '../../../constants/Header';
-// // import { ProductCardStyles } from '../../../constants/ProductCardStyles';
-// // import { moderateScale } from 'react-native-size-matters';
+// import { useRoute } from '@react-navigation/native';
+// import { useDispatch, useSelector } from 'react-redux';
+// import {
+//   addToWishlistAPI,
+//   removeFromWishlistAPI,
+//   fetchWishlist,
+// } from '../../../redux/slices/wishlistSlice';
+// import { fetchProductList, loading } from '../../../redux/slices/productSlice';
+// import Header from '../../../constants/Header';
+// import { ProductCardStyles } from '../../../constants/ProductCardStyles';
+// import { moderateScale } from 'react-native-size-matters';
 
-// // const budgetOptions = [
-// //   { id: 1, label: 'Under ₹10,000' },
-// //   { id: 2, label: '₹10,000 - ₹20,000' },
-// //   { id: 3, label: '₹20,000 - ₹30,000' },
-// //   { id: 4, label: 'Above ₹30,000' },
-// // ];
+// const budgetOptions = [
+//   { id: 1, label: 'Under ₹10,000' },
+//   { id: 2, label: '₹10,000 - ₹20,000' },
+//   { id: 3, label: '₹20,000 - ₹30,000' },
+//   { id: 4, label: 'Above ₹30,000' },
+// ];
 
-// // const HomeShopByBudget = ({ navigation }) => {
-// //   const route = useRoute();
-// //   const {
-// //     budget,
-// //     osname,
-// //     arrayosname,
-// //     priceId,
-// //     rangeLabel,
-// //     rangeLabeldefault,
-// //   } = route.params || {};
-// //   const [filteredProducts, setFilteredProducts] = useState([]);
-// //   const [selected, setSelected] = useState(rangeLabel || rangeLabeldefault);
-// //   const dispatch = useDispatch();
-// //   const { productData } = useSelector(state => state.product);
-// //   const wishlistItems = useSelector(state => state.wishlist.items);
+// const HomeShopByBudget = ({ navigation }) => {
+//   const route = useRoute();
+//   const {
+//     budget,
+//     osname,
+//     arrayosname,
+//     priceId,
+//     rangeLabel,
+//     rangeLabeldefault,
+//   } = route.params || {};
+//   const [filteredProducts, setFilteredProducts] = useState([]);
+//   const [selected, setSelected] = useState(rangeLabel || rangeLabeldefault);
+//   const dispatch = useDispatch();
+//   const { productData } = useSelector(state => state.product);
+//   const wishlistItems = useSelector(state => state.wishlist.items);
 
-// //   // Set selected budget from route param
-// //   useEffect(() => {
-// //     if (priceId) {
-// //       const selectedBudget = budgetOptions.find(item => item.id === priceId);
-// //       if (selectedBudget) setSelected(selectedBudget.label);
-// //     }
-// //     if (budget) setSelected(budget);
-// //   }, [priceId, budget]);
+//   // Set selected budget from route param
+//   useEffect(() => {
+//     if (priceId) {
+//       const selectedBudget = budgetOptions.find(item => item.id === priceId);
+//       if (selectedBudget) setSelected(selectedBudget.label);
+//     }
+//     if (budget) setSelected(budget);
+//   }, [priceId, budget]);
 
-// //   useEffect(() => {
-// //     dispatch(fetchWishlist()); // fetch wishlist on screen load
-// //     dispatch(fetchProductList()); // fetch wishlist on screen load
-// //   }, [dispatch]);
+//   useEffect(() => {
+//     dispatch(fetchWishlist()); // fetch wishlist on screen load
+//     dispatch(fetchProductList()); // fetch wishlist on screen load
+//   }, [dispatch]);
 
-// //   // Filter products by OS
-// //   const products = useMemo(() => {
-// //     if (!productData || productData.length === 0) return [];
+//   // Filter products by OS
+//   const products = useMemo(() => {
+//     if (!productData || productData.length === 0) return [];
 
-// //     if (arrayosname && Array.isArray(arrayosname) && arrayosname.length > 0) {
-// //       return productData.filter(item =>
-// //         arrayosname.some(
-// //           os =>
-// //             item.operating_systems &&
-// //             String(item.operating_systems).toLowerCase() ===
-// //               String(os).toLowerCase(),
-// //         ),
-// //       );
-// //     }
-// //     if (osname) {
-// //       return productData.filter(
-// //         item =>
-// //           item.operating_systems &&
-// //           String(item.operating_systems).toLowerCase() ===
-// //             String(osname).toLowerCase(),
-// //       );
-// //     }
-// //     return productData;
-// //   }, [productData, osname, arrayosname]);
+//     if (arrayosname && Array.isArray(arrayosname) && arrayosname.length > 0) {
+//       return productData.filter(item =>
+//         arrayosname.some(
+//           os =>
+//             item.operating_systems &&
+//             String(item.operating_systems).toLowerCase() ===
+//               String(os).toLowerCase(),
+//         ),
+//       );
+//     }
+//     if (osname) {
+//       return productData.filter(
+//         item =>
+//           item.operating_systems &&
+//           String(item.operating_systems).toLowerCase() ===
+//             String(osname).toLowerCase(),
+//       );
+//     }
+//     return productData;
+//   }, [productData, osname, arrayosname]);
 
-// //   // Filter by price
-// //   useEffect(() => {
-// //     if (!products || products.length === 0) {
-// //       setFilteredProducts([]);
-// //       return;
-// //     }
+//   // Filter by price
+//   useEffect(() => {
+//     if (!products || products.length === 0) {
+//       setFilteredProducts([]);
+//       return;
+//     }
 
-// //     let filtered = [];
-// //     switch (selected) {
-// //       case 'Under ₹10,000':
-// //         filtered = products.filter(item => parseFloat(item.price) < 10000);
-// //         break;
-// //       case '₹10,000 - ₹20,000':
-// //         filtered = products.filter(
-// //           item =>
-// //             parseFloat(item.price) >= 10000 && parseFloat(item.price) <= 20000,
-// //         );
-// //         break;
-// //       case '₹20,000 - ₹30,000':
-// //         filtered = products.filter(
-// //           item =>
-// //             parseFloat(item.price) > 20000 && parseFloat(item.price) <= 30000,
-// //         );
-// //         break;
-// //       case 'Above ₹30,000':
-// //         filtered = products.filter(item => parseFloat(item.price) > 30000);
-// //         break;
-// //     }
-// //     setFilteredProducts(filtered);
-// //   }, [selected, products]);
+//     let filtered = [];
+//     switch (selected) {
+//       case 'Under ₹10,000':
+//         filtered = products.filter(item => parseFloat(item.price) < 10000);
+//         break;
+//       case '₹10,000 - ₹20,000':
+//         filtered = products.filter(
+//           item =>
+//             parseFloat(item.price) >= 10000 && parseFloat(item.price) <= 20000,
+//         );
+//         break;
+//       case '₹20,000 - ₹30,000':
+//         filtered = products.filter(
+//           item =>
+//             parseFloat(item.price) > 20000 && parseFloat(item.price) <= 30000,
+//         );
+//         break;
+//       case 'Above ₹30,000':
+//         filtered = products.filter(item => parseFloat(item.price) > 30000);
+//         break;
+//     }
+//     setFilteredProducts(filtered);
+//   }, [selected, products]);
 
-// //   // Product card component
-// //   const ProductCardFilter = ({ item }) => {
-// //     const isInWishlist = wishlistItems.some(
-// //       w => w.barcode_id === item.barcode_id,
-// //     );
+//   // Product card component
+//   const ProductCardFilter = ({ item }) => {
+//     const isInWishlist = wishlistItems.some(
+//       w => w.barcode_id === item.barcode_id,
+//     );
 
-// //     const handleWishlistToggle = () => {
-// //       if (isInWishlist) dispatch(removeFromWishlistAPI(item));
-// //       else dispatch(addToWishlistAPI(item));
-// //     };
+//     const handleWishlistToggle = () => {
+//       if (isInWishlist) dispatch(removeFromWishlistAPI(item));
+//       else dispatch(addToWishlistAPI(item));
+//     };
 
-// //     return (
-// //       <TouchableOpacity
-// //         onPress={() =>
-// //           navigation.navigate('ProductList', {
-// //             product_barcode_id: item?.barcode_id,
-// //           })
-// //         }
-// //         style={ProductCardStyles.cardD}
-// //       >
-// //         <View style={ProductCardStyles.imageContainerD}>
-// //           {item && (
-// //             <Text style={ProductCardStyles.refurbishedLabelD}>
-// //               PRE-OWNED
-// //             </Text>
-// //           )}
+//     return (
+//       <TouchableOpacity
+//         onPress={() =>
+//           navigation.navigate('ProductList', {
+//             product_barcode_id: item?.barcode_id,
+//           })
+//         }
+//         style={ProductCardStyles.cardD}
+//       >
+//         <View style={ProductCardStyles.imageContainerD}>
+//           {item && (
+//             <Text style={ProductCardStyles.refurbishedLabelD}>
+//               PRE-OWNED
+//             </Text>
+//           )}
 
-// //           <Image
-// //             source={{ uri: item.feature_image }}
-// //             style={ProductCardStyles.imageD}
-// //           />
+//           <Image
+//             source={{ uri: item.feature_image }}
+//             style={ProductCardStyles.imageD}
+//           />
 
-// //           <TouchableOpacity
-// //             style={ProductCardStyles.heartIconD}
-// //             onPress={handleWishlistToggle}
-// //           >
-// //             <AntDesign
-// //               name={isInWishlist ? 'heart' : 'hearto'}
-// //               size={20}
-// //               color={isInWishlist ? '#E74C3C' : '#999'}
-// //             />
-// //           </TouchableOpacity>
-// //         </View>
+//           <TouchableOpacity
+//             style={ProductCardStyles.heartIconD}
+//             onPress={handleWishlistToggle}
+//           >
+//             <AntDesign
+//               name={isInWishlist ? 'heart' : 'hearto'}
+//               size={20}
+//               color={isInWishlist ? '#E74C3C' : '#999'}
+//             />
+//           </TouchableOpacity>
+//         </View>
 
-// //         {/* <View style={ProductCardStyles.gradeBoxD}> */}
-// //         <Text style={ProductCardStyles.gradeTextD}>
-// //           Grade {item.grade_number}
-// //         </Text>
-// //         {/* </View> */}
+//         {/* <View style={ProductCardStyles.gradeBoxD}> */}
+//         <Text style={ProductCardStyles.gradeTextD}>
+//           Grade {item.grade_number}
+//         </Text>
+//         {/* </View> */}
 
-// //         <Text style={ProductCardStyles.productNameD}>{item.model_name}</Text>
-// //         <Text style={ProductCardStyles.colorTextD}>● {item.color_name}</Text>
-// //         <View style={ProductCardStyles.priceRowD}>
-// //           <Text style={ProductCardStyles.priceD}>₹ {item.price}</Text>
-// //         </View>
-// //       </TouchableOpacity>
-// //     );
-// //   };
+//         <Text style={ProductCardStyles.productNameD}>{item.model_name}</Text>
+//         <Text style={ProductCardStyles.colorTextD}>● {item.color_name}</Text>
+//         <View style={ProductCardStyles.priceRowD}>
+//           <Text style={ProductCardStyles.priceD}>₹ {item.price}</Text>
+//         </View>
+//       </TouchableOpacity>
+//     );
+//   };
 
-// //   // return (
-// //   //   <View style={styles.container}>
-// //   //     <ScrollView>
-// //   //       <Header
-// //   //         title="Shop by Budget"
-// //   //         navigation={navigation}
-// //   //         showBack={true}
-// //   //       />
-// //   //       <Text style={{ fontWeight: 'bold', marginBottom: 10, marginLeft: 15 }}>
-// //   //         {osname}
-// //   //       </Text>
+//   // return (
+//   //   <View style={styles.container}>
+//   //     <ScrollView>
+//   //       <Header
+//   //         title="Shop by Budget"
+//   //         navigation={navigation}
+//   //         showBack={true}
+//   //       />
+//   //       <Text style={{ fontWeight: 'bold', marginBottom: 10, marginLeft: 15 }}>
+//   //         {osname}
+//   //       </Text>
 
-// //   //       {/* Price Range Pills */}
-// //   //       <ScrollView
-// //   //         horizontal
-// //   //         showsHorizontalScrollIndicator={false}
-// //   //         style={styles.container_shop}
-// //   //       >
-// //   //         {budgetOptions.map((range, index) => (
-// //   //           <TouchableOpacity
-// //   //             key={index}
-// //   //             style={[
-// //   //               styles.pill_shop,
-// //   //               selected === range.label
-// //   //                 ? styles.pillSelected_shop
-// //   //                 : styles.pillUnselected_shop,
-// //   //             ]}
-// //   //             onPress={() => setSelected(range.label)}
-// //   //           >
-// //   //             <Text
-// //   //               style={[
-// //   //                 styles.pillText_shop,
-// //   //                 selected === range.label
-// //   //                   ? styles.textSelected_shop
-// //   //                   : styles.textUnselected_shop,
-// //   //               ]}
-// //   //             >
-// //   //               {range.label}
-// //   //             </Text>
-// //   //           </TouchableOpacity>
-// //   //         ))}
-// //   //       </ScrollView>
+//   //       {/* Price Range Pills */}
+//   //       <ScrollView
+//   //         horizontal
+//   //         showsHorizontalScrollIndicator={false}
+//   //         style={styles.container_shop}
+//   //       >
+//   //         {budgetOptions.map((range, index) => (
+//   //           <TouchableOpacity
+//   //             key={index}
+//   //             style={[
+//   //               styles.pill_shop,
+//   //               selected === range.label
+//   //                 ? styles.pillSelected_shop
+//   //                 : styles.pillUnselected_shop,
+//   //             ]}
+//   //             onPress={() => setSelected(range.label)}
+//   //           >
+//   //             <Text
+//   //               style={[
+//   //                 styles.pillText_shop,
+//   //                 selected === range.label
+//   //                   ? styles.textSelected_shop
+//   //                   : styles.textUnselected_shop,
+//   //               ]}
+//   //             >
+//   //               {range.label}
+//   //             </Text>
+//   //           </TouchableOpacity>
+//   //         ))}
+//   //       </ScrollView>
 
-// //   //       {/* Product List */}
-// //   //       {filteredProducts.length > 0 ? (
-// //   //         <FlatList
-// //   //           data={filteredProducts}
-// //   //           renderItem={({ item }) => <ProductCardFilter item={item} />}
-// //   //           keyExtractor={(item, index) =>
-// //   //             item.id?.toString() ?? index.toString()
-// //   //           }
-// //   //           numColumns={2}
-// //   //           contentContainerStyle={{
-// //   //             paddingHorizontal: moderateScale(15),
-// //   //             paddingBottom: moderateScale(80),
-// //   //             justifyContent:
-// //   //               filteredProducts.length === 1 ? 'flex-start' : 'space-between',
-// //   //           }}
-// //   //         />
-// //   //       ) : (
-// //   //         <View style={{ alignItems: 'center', marginTop: 60 }}>
-// //   //           <Ionicons name="alert-circle-outline" size={50} color="#777" />
-// //   //           <Text style={{ fontSize: 16, color: '#777', marginTop: 10 }}>
-// //   //             No products available in this range.
-// //   //           </Text>
-// //   //         </View>
-// //   //       )}
-// //   //     </ScrollView>
-// //   //   </View>
-// //   // );
-// //   return (
-// //     <View style={styles.container}>
-// //       <FlatList
-// //         data={filteredProducts}
-// //         keyExtractor={(item, index) => item.id?.toString() ?? index.toString()}
-// //         numColumns={2}
-// //         renderItem={({ item }) => <ProductCardFilter item={item} />}
-// //         contentContainerStyle={{
-// //           paddingHorizontal: moderateScale(15),
-// //           paddingBottom: moderateScale(80),
-// //         }}
-// //         ListHeaderComponent={
-// //           <>
-// //             <Header
-// //               title="Shop by Budget"
-// //               navigation={navigation}
-// //               showBack={true}
-// //             />
+//   //       {/* Product List */}
+//   //       {filteredProducts.length > 0 ? (
+//   //         <FlatList
+//   //           data={filteredProducts}
+//   //           renderItem={({ item }) => <ProductCardFilter item={item} />}
+//   //           keyExtractor={(item, index) =>
+//   //             item.id?.toString() ?? index.toString()
+//   //           }
+//   //           numColumns={2}
+//   //           contentContainerStyle={{
+//   //             paddingHorizontal: moderateScale(15),
+//   //             paddingBottom: moderateScale(80),
+//   //             justifyContent:
+//   //               filteredProducts.length === 1 ? 'flex-start' : 'space-between',
+//   //           }}
+//   //         />
+//   //       ) : (
+//   //         <View style={{ alignItems: 'center', marginTop: 60 }}>
+//   //           <Ionicons name="alert-circle-outline" size={50} color="#777" />
+//   //           <Text style={{ fontSize: 16, color: '#777', marginTop: 10 }}>
+//   //             No products available in this range.
+//   //           </Text>
+//   //         </View>
+//   //       )}
+//   //     </ScrollView>
+//   //   </View>
+//   // );
+//   return (
+//     <View style={styles.container}>
+//       <FlatList
+//         data={filteredProducts}
+//         keyExtractor={(item, index) => item.id?.toString() ?? index.toString()}
+//         numColumns={2}
+//         renderItem={({ item }) => <ProductCardFilter item={item} />}
+//         contentContainerStyle={{
+//           paddingHorizontal: moderateScale(15),
+//           paddingBottom: moderateScale(80),
+//         }}
+//         ListHeaderComponent={
+//           <>
+//             <Header
+//               title="Shop by Budget"
+//               navigation={navigation}
+//               showBack={true}
+//             />
 
-// //             {osname ? <Text style={styles.osText}>{osname}</Text> : null}
+//             {osname ? <Text style={styles.osText}>{osname}</Text> : null}
 
-// //             {/* Budget Pills */}
-// //             <ScrollView
-// //               horizontal
-// //               showsHorizontalScrollIndicator={false}
-// //               contentContainerStyle={styles.container_shop}
-// //             >
-// //               {budgetOptions.map(range => (
-// //                 <TouchableOpacity
-// //                   key={range.id}
-// //                   style={[
-// //                     styles.pill_shop,
-// //                     selected === range.label
-// //                       ? styles.pillSelected_shop
-// //                       : styles.pillUnselected_shop,
-// //                   ]}
-// //                   onPress={() => setSelected(range.label)}
-// //                   activeOpacity={0.8}
-// //                 >
-// //                   <Text
-// //                     style={[
-// //                       styles.pillText_shop,
-// //                       selected === range.label
-// //                         ? styles.textSelected_shop
-// //                         : styles.textUnselected_shop,
-// //                     ]}
-// //                     numberOfLines={1}
-// //                   >
-// //                     {range.label}
-// //                   </Text>
-// //                 </TouchableOpacity>
-// //               ))}
-// //             </ScrollView>
-// //           </>
-// //         }
-// //         ListEmptyComponent={
-// //           <View style={styles.emptyBox}>
-// //             <Ionicons name="alert-circle-outline" size={50} color="#777" />
-// //             <Text style={styles.emptyText}>
-// //               No products available in this range.
-// //             </Text>
-// //           </View>
-// //         }
-// //       />
-// //     </View>
-// //   );
-// // };
+//             {/* Budget Pills */}
+//             <ScrollView
+//               horizontal
+//               showsHorizontalScrollIndicator={false}
+//               contentContainerStyle={styles.container_shop}
+//             >
+//               {budgetOptions.map(range => (
+//                 <TouchableOpacity
+//                   key={range.id}
+//                   style={[
+//                     styles.pill_shop,
+//                     selected === range.label
+//                       ? styles.pillSelected_shop
+//                       : styles.pillUnselected_shop,
+//                   ]}
+//                   onPress={() => setSelected(range.label)}
+//                   activeOpacity={0.8}
+//                 >
+//                   <Text
+//                     style={[
+//                       styles.pillText_shop,
+//                       selected === range.label
+//                         ? styles.textSelected_shop
+//                         : styles.textUnselected_shop,
+//                     ]}
+//                     numberOfLines={1}
+//                   >
+//                     {range.label}
+//                   </Text>
+//                 </TouchableOpacity>
+//               ))}
+//             </ScrollView>
+//           </>
+//         }
+//         ListEmptyComponent={
+//           <View style={styles.emptyBox}>
+//             <Ionicons name="alert-circle-outline" size={50} color="#777" />
+//             <Text style={styles.emptyText}>
+//               No products available in this range.
+//             </Text>
+//           </View>
+//         }
+//       />
+//     </View>
+//   );
+// };
 
-// // const styles = StyleSheet.create({
-// //   container: { backgroundColor: '#fff', flex: 1 },
-// //   header: {
-// //     flexDirection: 'row',
-// //     alignItems: 'center',
-// //     paddingVertical: 10,
-// //     justifyContent: 'space-between',
-// //     marginHorizontal: 10,
-// //   },
-// //   backButton: { backgroundColor: '#f5f5f5', borderRadius: 20, padding: 6 },
-// //   headerTitle: { fontSize: 16, fontWeight: '500', color: '#000' },
-// //   imageContainerD: { position: 'relative', backgroundColor: '#f4f4f4' },
-// //   imageD: { width: '100%', height: 250, resizeMode: 'stretch' },
-// //   cardD: {
-// //     width: 190,
-// //     backgroundColor: '#fff',
-// //     borderRadius: 12,
-// //     overflow: 'hidden',
-// //     shadowRadius: 4,
-// //     marginHorizontal: 5,
-// //   },
-// //   refurbishedLabelD: {
-// //     position: 'absolute',
-// //     alignSelf: 'center',
-// //     fontSize: 12,
-// //     color: '#000',
-// //     backgroundColor: '#EAE6E5',
-// //     width: '100%',
-// //     textAlign: 'center',
-// //     padding: 5,
-// //   },
-// //   gradeBoxD: {
-// //     paddingVertical: 2,
-// //     position: 'absolute',
-// //     marginTop: 225,
-// //     alignSelf: 'center',
-// //     backgroundColor: '#fff',
-// //     width: '100%',
-// //     borderRadius: 10,
-// //     borderWidth: 0.2,
-// //   },
-// //   gradeTextD: {
-// //     fontSize: 12,
-// //     fontWeight: '500',
-// //     color: '#555',
-// //     textAlign: 'center',
-// //   },
-// //   productNameD: {
-// //     fontSize: 14,
-// //     fontWeight: 'bold',
-// //     marginTop: 6,
-// //     marginHorizontal: 10,
-// //     color: '#000',
-// //   },
-// //   colorTextD: {
-// //     fontSize: 13,
-// //     color: '#000',
-// //     marginHorizontal: 10,
-// //     marginTop: 2,
-// //   },
-// //   priceRowD: {
-// //     flexDirection: 'row',
-// //     alignItems: 'center',
-// //     marginHorizontal: 10,
-// //     marginTop: 4,
-// //     marginBottom: 10,
-// //   },
-// //   priceD: { fontSize: 14, fontWeight: 'bold', color: '#000', marginRight: 6 },
-// //   heartIconD: {
-// //     position: 'absolute',
-// //     top: 28,
-// //     right: 6,
-// //     backgroundColor: '#fff',
-// //     borderRadius: 20,
-// //     padding: 5,
-// //     elevation: 2,
-// //   },
-// //   container_shop: { paddingHorizontal: 10, marginBottom: 10 },
-// //   pill_shop: {
-// //     paddingVertical: 15,
-// //     paddingHorizontal: 16,
-// //     borderRadius: 20,
-// //     marginRight: 10,
-// //   },
-// //   pillSelected_shop: { backgroundColor: '#4B4B4B' },
-// //   pillUnselected_shop: { backgroundColor: '#EFECEC' },
-// //   pillText_shop: { fontSize: 14, fontWeight: '600' },
-// //   textSelected_shop: { color: 'white' },
-// //   textUnselected_shop: { color: '#222' },
-// // });
+// const styles = StyleSheet.create({
+//   container: { backgroundColor: '#fff', flex: 1 },
+//   header: {
+//     flexDirection: 'row',
+//     alignItems: 'center',
+//     paddingVertical: 10,
+//     justifyContent: 'space-between',
+//     marginHorizontal: 10,
+//   },
+//   backButton: { backgroundColor: '#f5f5f5', borderRadius: 20, padding: 6 },
+//   headerTitle: { fontSize: 16, fontWeight: '500', color: '#000' },
+//   imageContainerD: { position: 'relative', backgroundColor: '#f4f4f4' },
+//   imageD: { width: '100%', height: 250, resizeMode: 'stretch' },
+//   cardD: {
+//     width: 190,
+//     backgroundColor: '#fff',
+//     borderRadius: 12,
+//     overflow: 'hidden',
+//     shadowRadius: 4,
+//     marginHorizontal: 5,
+//   },
+//   refurbishedLabelD: {
+//     position: 'absolute',
+//     alignSelf: 'center',
+//     fontSize: 12,
+//     color: '#000',
+//     backgroundColor: '#EAE6E5',
+//     width: '100%',
+//     textAlign: 'center',
+//     padding: 5,
+//   },
+//   gradeBoxD: {
+//     paddingVertical: 2,
+//     position: 'absolute',
+//     marginTop: 225,
+//     alignSelf: 'center',
+//     backgroundColor: '#fff',
+//     width: '100%',
+//     borderRadius: 10,
+//     borderWidth: 0.2,
+//   },
+//   gradeTextD: {
+//     fontSize: 12,
+//     fontWeight: '500',
+//     color: '#555',
+//     textAlign: 'center',
+//   },
+//   productNameD: {
+//     fontSize: 14,
+//     fontWeight: 'bold',
+//     marginTop: 6,
+//     marginHorizontal: 10,
+//     color: '#000',
+//   },
+//   colorTextD: {
+//     fontSize: 13,
+//     color: '#000',
+//     marginHorizontal: 10,
+//     marginTop: 2,
+//   },
+//   priceRowD: {
+//     flexDirection: 'row',
+//     alignItems: 'center',
+//     marginHorizontal: 10,
+//     marginTop: 4,
+//     marginBottom: 10,
+//   },
+//   priceD: { fontSize: 14, fontWeight: 'bold', color: '#000', marginRight: 6 },
+//   heartIconD: {
+//     position: 'absolute',
+//     top: 28,
+//     right: 6,
+//     backgroundColor: '#fff',
+//     borderRadius: 20,
+//     padding: 5,
+//     elevation: 2,
+//   },
+//   container_shop: { paddingHorizontal: 10, marginBottom: 10 },
+//   pill_shop: {
+//     paddingVertical: 15,
+//     paddingHorizontal: 16,
+//     borderRadius: 20,
+//     marginRight: 10,
+//   },
+//   pillSelected_shop: { backgroundColor: '#4B4B4B' },
+//   pillUnselected_shop: { backgroundColor: '#EFECEC' },
+//   pillText_shop: { fontSize: 14, fontWeight: '600' },
+//   textSelected_shop: { color: 'white' },
+//   textUnselected_shop: { color: '#222' },
+// });
 
-// // export default HomeShopByBudget;
+// export default HomeShopByBudget;
 
 // import React, { useEffect, useMemo, useState } from 'react';
 // import {
@@ -817,7 +815,6 @@
 //   FlatList,
 //   Dimensions,
 // } from 'react-native';
-// import { View } from 'react-native-safe-area-context';
 // import Ionicons from 'react-native-vector-icons/Ionicons';
 // import AntDesign from 'react-native-vector-icons/AntDesign';
 // import { useRoute } from '@react-navigation/native';
@@ -1137,6 +1134,7 @@ import {
 import { fetchProductList } from '../../../redux/slices/productSlice';
 import Header from '../../../constants/Header';
 import { ProductCardStyles } from '../../../constants/ProductCardStyles';
+import responsive from '../../../constants/responsive';
 
 const { width } = Dimensions.get('window');
 
@@ -1155,13 +1153,14 @@ const ShopByBudget = ({ navigation }) => {
   const route = useRoute();
   const { priceId, osname, arrayosname, rangeLabel, catName } =
     route.params || {};
-  const { catList, brands } = useSelector(state => state.home);
+
+  console.log('rangeLabel---------------------->', rangeLabel);
 
   const dispatch = useDispatch();
   const { productData } = useSelector(state => state.product);
   const wishlistItems = useSelector(state => state.wishlist.items);
 
-  const [selected, setSelected] = useState(rangeLabel || 'Under ₹10,000');
+  const [selected, setSelected] = useState(rangeLabel ?? null);
   const [filteredProducts, setFilteredProducts] = useState([]);
   const [page, setPage] = useState(1);
   const [paginatedData, setPaginatedData] = useState([]);
@@ -1179,32 +1178,6 @@ const ShopByBudget = ({ navigation }) => {
       if (match) setSelected(match.label);
     }
   }, [priceId]);
-
-  /* ================= OS FILTER ================= */
-
-  // const products = useMemo(() => {
-  //   if (!productData?.length) return [];
-
-  //   if (arrayosname?.length) {
-  //     return productData.filter(item =>
-  //       arrayosname.some(
-  //         os =>
-  //           item.operating_systems &&
-  //           item.operating_systems.toLowerCase() === os.toLowerCase(),
-  //       ),
-  //     );
-  //   }
-
-  //   if (osname) {
-  //     return productData.filter(
-  //       item =>
-  //         item.operating_systems &&
-  //         item.operating_systems.toLowerCase() === osname.toLowerCase(),
-  //     );
-  //   }
-
-  //   return productData;
-  // }, [productData, osname, arrayosname]);
 
   const products = useMemo(() => {
     if (!productData?.length) return [];
@@ -1240,30 +1213,69 @@ const ShopByBudget = ({ navigation }) => {
 
   /* ================= PRICE FILTER ================= */
 
+  // useEffect(() => {
+  //   let data = [];
+
+  //   switch (selected) {
+  //     case 'Under ₹10,000':
+  //       data = products.filter(p => Number(p.price) < 10000);
+  //       break;
+  //     case '₹10,000 - ₹20,000':
+  //       data = products.filter(
+  //         p => Number(p.price) >= 10000 && Number(p.price) <= 20000,
+  //       );
+  //       break;
+  //     case '₹20,000 - ₹30,000':
+  //       data = products.filter(
+  //         p => Number(p.price) > 20000 && Number(p.price) <= 30000,
+  //       );
+  //       break;
+  //     case 'Above ₹30,000':
+  //       data = products.filter(p => Number(p.price) > 30000);
+  //       break;
+  //   }
+
+  //   setFilteredProducts(data);
+  //   setPage(1); // 🔥 reset pagination
+  // }, [selected, products]);
+
   useEffect(() => {
+    // ✅ agar range select nahi hai → sab products dikhao
+    if (!selected) {
+      setFilteredProducts(products);
+      setPage(1);
+      return;
+    }
+
     let data = [];
 
     switch (selected) {
       case 'Under ₹10,000':
         data = products.filter(p => Number(p.price) < 10000);
         break;
+
       case '₹10,000 - ₹20,000':
         data = products.filter(
           p => Number(p.price) >= 10000 && Number(p.price) <= 20000,
         );
         break;
+
       case '₹20,000 - ₹30,000':
         data = products.filter(
           p => Number(p.price) > 20000 && Number(p.price) <= 30000,
         );
         break;
+
       case 'Above ₹30,000':
         data = products.filter(p => Number(p.price) > 30000);
         break;
+
+      default:
+        data = products;
     }
 
     setFilteredProducts(data);
-    setPage(1); // 🔥 reset pagination
+    setPage(1);
   }, [selected, products]);
 
   /* ================= PAGINATION ================= */
@@ -1285,49 +1297,58 @@ const ShopByBudget = ({ navigation }) => {
     const isLiked = wishlistItems.some(w => w.barcode_id === item.barcode_id);
 
     return (
-      <TouchableOpacity
-        style={[ProductCardStyles.cardD, { width: CARD_WIDTH }]}
-        onPress={() =>
-          navigation.navigate('ProductList', {
-            product_barcode_id: item.barcode_id,
-          })
-        }
-      >
-        <View style={ProductCardStyles.imageContainerD}>
-          <Text style={ProductCardStyles.refurbishedLabelD}>Refurbished</Text>
+      <>
+        <View
+          style={{
+            width: responsive.width(170),
+          }}
+        >
+          <View style={ProductCardStyles.cardShadow}>
+            <TouchableOpacity
+              style={[ProductCardStyles.cardD]}
+              onPress={() =>
+                navigation.navigate('ProductList', {
+                  product_barcode_id: item.barcode_id,
+                })
+              }
+            >
+              <Text style={ProductCardStyles.refurbishedLabelD}>
+                (Pre-Owned)
+              </Text>
+              <Image
+                source={{ uri: item.feature_image }}
+                style={ProductCardStyles.imageD}
+                resizeMode="contain"
+              />
 
-          <Image
-            source={{ uri: item.feature_image }}
-            style={ProductCardStyles.imageD}
-            resizeMode='contain'
-          />
+              <TouchableOpacity
+                style={ProductCardStyles.heartIconD}
+                onPress={() =>
+                  isLiked
+                    ? dispatch(removeFromWishlistAPI(item))
+                    : dispatch(addToWishlistAPI(item))
+                }
+              >
+                <AntDesign
+                  name={isLiked ? 'heart' : 'hearto'}
+                  size={moderateScale(12)}
+                  color={isLiked ? '#E74C3C' : '#999'}
+                />
+              </TouchableOpacity>
+              <Text style={ProductCardStyles.gradeText}>
+                Grade {item.grade_number}
+              </Text>
+            </TouchableOpacity>
+          </View>
 
-          <TouchableOpacity
-            style={ProductCardStyles.heartIconD}
-            onPress={() =>
-              isLiked
-                ? dispatch(removeFromWishlistAPI(item))
-                : dispatch(addToWishlistAPI(item))
-            }
-          >
-            <AntDesign
-              name={isLiked ? 'heart' : 'hearto'}
-              size={20}
-              color={isLiked ? '#E74C3C' : '#999'}
-            />
-          </TouchableOpacity>
+          <Text style={ProductCardStyles.productName} numberOfLines={1}>
+            {item.model_name}
+          </Text>
+          <Text style={ProductCardStyles.colorText}>● {item.color_name}</Text>
+
+          <Text style={ProductCardStyles.price}>₹ {item.price}</Text>
         </View>
-
-        <Text style={styles.gradeText}>Grade {item.grade_number}</Text>
-        <Text style={styles.productName} numberOfLines={1}>
-          {item.model_name}
-        </Text>
-        <Text style={styles.colorText}>● {item.color_name}</Text>
-
-        <View style={styles.priceRow}>
-          <Text style={styles.price}>₹ {item.price}</Text>
-        </View>
-      </TouchableOpacity>
+      </>
     );
   };
 
@@ -1341,25 +1362,26 @@ const ShopByBudget = ({ navigation }) => {
         data={paginatedData}
         numColumns={2}
         keyExtractor={item => String(item.barcode_id)}
-        columnWrapperStyle={{ justifyContent: 'space-between' }}
         showsVerticalScrollIndicator={false}
         contentContainerStyle={{
-          paddingHorizontal: GAP,
-          paddingBottom: moderateScale(80),
+          paddingHorizontal: responsive.paddingHorizontal(10),
         }}
+        columnWrapperStyle= {{justifyContent:'space-between'}}
         renderItem={({ item }) => <ProductCard item={item} />}
         onEndReachedThreshold={0.5}
         onEndReached={loadMore}
         ListHeaderComponent={
           <>
-            {osname && <Text style={styles.osText}>{osname}</Text>}
+            {catName && <Text style={styles.osText}>{catName}</Text>}
 
             <FlatList
               horizontal
               data={budgetOptions}
               keyExtractor={item => String(item.id)}
               showsHorizontalScrollIndicator={false}
-              contentContainerStyle={styles.pillContainer}
+              contentContainerStyle={{
+                paddingHorizontal: responsive.paddingHorizontal(15),
+              }}
               renderItem={({ item }) => (
                 <TouchableOpacity
                   style={[
@@ -1412,7 +1434,7 @@ const styles = StyleSheet.create({
   container: { flex: 1, backgroundColor: '#fff' },
 
   osText: {
-    fontSize: moderateScale(16),
+    fontSize: responsive.fontSize(20),
     fontWeight: '700',
     marginLeft: GAP,
     marginBottom: GAP,
@@ -1426,19 +1448,18 @@ const styles = StyleSheet.create({
 
   pill: {
     paddingHorizontal: moderateScale(16),
-    paddingVertical: moderateScale(10),
-    borderRadius: moderateScale(22),
+    paddingVertical: moderateScale(5),
+    borderRadius: responsive.borderRadius(12),
     marginRight: GAP,
     justifyContent: 'center',
     alignItems: 'center',
   },
 
-  pillActive: { backgroundColor: '#4B4B4B' },
-  pillInactive: { backgroundColor: '#EFECEC' },
+  pillActive: { backgroundColor: '#666666' },
+  pillInactive: { backgroundColor: '#EAE6E5' },
 
   pillText: {
-    fontSize: moderateScale(14),
-    fontWeight: '600',
+    fontSize: responsive.fontSize(14),
   },
 
   pillTextActive: { color: '#fff' },

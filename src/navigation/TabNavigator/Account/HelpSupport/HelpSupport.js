@@ -23,7 +23,7 @@ const HelpSupport = ({navigation}) => {
       style={styles.item}
       onPress={() => navigation.navigate(item.screen)}>
       <Text style={styles.itemText}>{item.title}</Text>
-      <Ionicons name="chevron-forward" size={moderateScale(20)} color="#000" />
+      <Ionicons name="chevron-forward" size={moderateScale(12)} color="#000" />
     </TouchableOpacity>
   );
 
@@ -92,6 +92,7 @@ const HelpSupport = ({navigation}) => {
 
 import {scale, verticalScale, moderateScale} from 'react-native-size-matters';
 import {responsiveFontSize} from 'react-native-responsive-dimensions';
+import responsive from '../../../../constants/responsive';
 
 const styles = StyleSheet.create({
   container: {
@@ -129,7 +130,7 @@ const styles = StyleSheet.create({
     borderBottomColor: '#eee',
   },
   itemText: {
-    fontSize: responsiveFontSize(1.9), // ~16
+    fontSize: responsive.fontSize(16), // ~16
     fontWeight: '500',
     color: '#171D1C',
   },

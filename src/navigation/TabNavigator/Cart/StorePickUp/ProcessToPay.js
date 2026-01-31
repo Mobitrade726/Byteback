@@ -14,6 +14,7 @@ import Header from '../../../../constants/Header';
 import { fetchOrderDetailsAPI } from '../../../../redux/slices/orderSlice';
 import { useDispatch, useSelector } from 'react-redux';
 import { useFocusEffect } from '@react-navigation/native';
+import responsive from '../../../../constants/responsive';
 const { width, height } = Dimensions.get('window');
 
 const wp = p => (width * p) / 100; // width percentage
@@ -105,7 +106,7 @@ const ProcessToPay = ({ navigation, route }) => {
           {orderDetails?.item_details?.map(item => (
             <View key={item.id} style={styles.productItem}>
               <View style={{ flex: 1 }}>
-                <Text style={styles.gradeText}>{item.grade || '--'}</Text>
+                <Text style={styles.gradeText}>Grade {item.grade || '--'}</Text>
                 <Text style={styles.productTitle}>{item.model_name}</Text>
                 <View style={styles.priceRow}>
                   <Text style={styles.price}>₹{item.price}</Text>
@@ -339,8 +340,8 @@ const styles = StyleSheet.create({
   orderId: {
     fontWeight: '500',
     textAlign: 'right',
-    fontSize: wp(3.5),
-    color: '#333',
+    fontSize: responsive.fontSize(17),
+    color: '#333333',
   },
 
   separator: {
@@ -361,24 +362,23 @@ const styles = StyleSheet.create({
   },
 
   blackButton: {
-    backgroundColor: '#222',
-    paddingHorizontal: wp(6),
-    paddingVertical: hp(1.4),
-    borderRadius: wp(2),
+    backgroundColor: '#333333',
+    padding: responsive.padding(12),
+    borderRadius: responsive.borderRadius(12), width:'48%'
   },
 
   buttonText: {
     color: '#fff',
     fontWeight: '600',
-    fontSize: wp(3.8),
+    fontSize: responsive.fontSize(16), textAlign:'center'
   },
 
   sectionTitle: {
-    fontSize: wp(4.2),
+    fontSize: responsive.fontSize(16),
     fontWeight: '600',
     marginBottom: hp(1),
     marginTop: hp(1),
-    color: '#000',
+    color: '#171D1C',
   },
 
   productItem: {
@@ -390,27 +390,26 @@ const styles = StyleSheet.create({
   },
 
   gradeText: {
-    fontSize: wp(3),
+    fontSize: responsive.fontSize(12),
     color: '#777',
   },
 
   productTitle: {
     fontWeight: '500',
-    fontSize: wp(3.6),
+    fontSize: responsive.fontSize(16),
     marginTop: hp(0.5),
   },
 
   priceRow: {
     flexDirection: 'row',
     alignItems: 'center',
-    marginTop: hp(0.8),
+    marginTop: hp(0.1),
   },
 
   price: {
-    fontWeight: '600',
-    color: '#000',
+    color: '#333333',
     marginRight: wp(2),
-    fontSize: wp(3.8),
+    fontSize: responsive.fontSize(14),
   },
 
   originalPrice: {
@@ -434,9 +433,9 @@ const styles = StyleSheet.create({
   },
 
   greenButton: {
-    backgroundColor: '#2E9B4F',
-    padding: hp(2),
-    borderRadius: wp(3),
+    backgroundColor: '#1C9C48',
+    padding: responsive.fontSize(12),
+    borderRadius: responsive.borderRadius(12),
     alignItems: 'center',
     marginBottom: hp(1),
     marginHorizontal: wp(5),
@@ -445,6 +444,6 @@ const styles = StyleSheet.create({
   greenButtonText: {
     color: '#fff',
     fontWeight: 'bold',
-    fontSize: wp(4),
+    fontSize: responsive.fontSize(17),
   },
 });

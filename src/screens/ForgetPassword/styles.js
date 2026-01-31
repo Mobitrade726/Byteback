@@ -303,10 +303,10 @@ import {
   responsiveWidth as rw,
   responsiveFontSize as rf,
 } from 'react-native-responsive-dimensions';
+import responsive from '../../constants/responsive';
 
 const { width } = Dimensions.get('window');
 const OTP_SIZE = Math.min(rw(12), (width - rw(20)) / 6);
-
 
 const styles_forgetotp = StyleSheet.create({
   container: {
@@ -331,20 +331,21 @@ const styles_forgetotp = StyleSheet.create({
     alignItems: 'center',
     paddingHorizontal: rw(6),
     paddingTop: rh(4),
+    backgroundColor: '#fff',
   },
 
   title: {
-    fontSize: rf(3.5),
+    fontSize: responsive.fontSize(30),
     fontWeight: '800',
     color: '#1A1A2D',
   },
 
   subtitle: {
-    fontSize: rf(2),
+    fontSize: responsive.fontSize(16),
     color: '#666',
     textAlign: 'center',
     marginTop: rh(1.5),
-    marginBottom: rh(4),
+    marginBottom: rh(1),
   },
 
   email: {
@@ -358,15 +359,15 @@ const styles_forgetotp = StyleSheet.create({
     gap: rw(2),
     padding: rw(4),
     borderRadius: rw(5),
-    marginBottom: rh(3),
+    marginBottom: rh(0),
   },
 
   otpBox: {
     width: OTP_SIZE,
     height: OTP_SIZE,
     borderRadius: rw(3),
-    borderWidth: 1.5,
-    borderColor: '#f1f1f1',
+    borderWidth: 0.5,
+    borderColor: '#000',
     textAlign: 'center',
     fontSize: rf(1.8),
     fontWeight: '700',
@@ -374,27 +375,27 @@ const styles_forgetotp = StyleSheet.create({
   },
 
   otpFilled: {
-    borderColor: '#478F4E',
-    backgroundColor: '#EFFFF5',
+    borderColor: '#000',
+    backgroundColor: '#fff',
   },
 
   button: {
-    width: '100%',
     backgroundColor: '#478F4E',
-    paddingVertical: rh(2),
-    borderRadius: rw(3),
-    alignItems: 'center',
-    marginTop: rh(2),
+    paddingVertical: responsive.paddingVertical(10),
+    borderRadius: responsive.borderRadius(12),
+    marginBottom: rh(3),
+    width: '100%',
   },
 
   buttonText: {
     color: '#fff',
-    fontSize: rf(2.2),
+    fontSize: responsive.fontSize(17),
     fontWeight: '800',
+    textAlign: 'center',
   },
 
   resendText: {
-    marginTop: rh(2),
+    marginTop: rh(0),
     fontSize: rf(1.8),
     color: '#666',
   },
@@ -405,7 +406,6 @@ const styles_forgetotp = StyleSheet.create({
     fontSize: rf(1.7),
   },
 });
-
 
 const styles_forgetpassword = StyleSheet.create({
   container: {
@@ -427,65 +427,78 @@ const styles_forgetpassword = StyleSheet.create({
 
   content: {
     flex: 1,
-    paddingHorizontal: rw(6),
-    marginTop: rh(1),
+    backgroundColor: '#fff',
   },
 
   title: {
-    fontSize: rf(3.8),
+    fontSize: responsive.fontSize(30),
     fontWeight: 'bold',
-    marginBottom: rh(1),
+    marginTop: responsive.marginTop(50),
   },
 
   description: {
-    fontSize: rf(2.1),
+    fontSize: responsive.fontSize(16),
     color: '#555',
     marginBottom: rh(4),
     fontFamily: 'Source Serif 4',
   },
 
   label: {
-    fontSize: rf(1.8),
+    fontSize: responsive.fontSize(14),
     marginBottom: rh(1),
     color: '#1A1A2D',
   },
 
+  labelemail: {
+    fontSize: responsive.fontSize(14),
+    marginBottom: rh(1),
+    color: '#D00416',
+    textAlign: 'right',
+    textDecorationLine: 'underline',
+  },
+
   input: {
-    height: rh(6.8),
-    borderWidth: 1,
+    borderWidth: 0.5,
     borderRadius: rw(2),
     paddingHorizontal: rw(4),
-    marginBottom: rh(3),
-    fontSize: rf(2),
+    marginBottom: rh(0.5),
+    fontSize: responsive.fontSize(16),
+    padding: responsive.padding(13)
   },
 
   button: {
     backgroundColor: '#478F4E',
-    paddingVertical: rh(2),
-    borderRadius: rw(2),
+    paddingVertical: responsive.paddingVertical(10),
+    borderRadius: responsive.borderRadius(12),
     alignItems: 'center',
     marginBottom: rh(3),
   },
 
   buttonText: {
     color: '#fff',
-    fontSize: rf(2.2),
+    fontSize: responsive.fontSize(16),
     fontWeight: 'bold',
     fontFamily: 'Source Serif 4',
   },
 
   footer: {
     textAlign: 'center',
-    fontSize: rf(1.8),
+    fontSize: responsive.fontSize(14),
     color: '#666',
     fontFamily: 'Source Serif 4',
   },
 
   loginLink: {
-    fontSize: rf(1.8),
-    fontWeight: '600',
+    fontSize: responsive.fontSize(14),
+    fontWeight: 'bold',
     color: '#1A1A2D',
     fontFamily: 'Source Serif 4',
+    textAlign: 'center',
+
+    // 👇 underline
+    textDecorationLine: 'underline',
+    textDecorationColor: '#1A1A2D', // optional
+    textDecorationStyle: 'solid', // optional
   },
 
   errorText: {
@@ -496,7 +509,6 @@ const styles_forgetpassword = StyleSheet.create({
     fontFamily: 'Source Serif 4',
   },
 });
-
 
 const styles_setpassword = StyleSheet.create({
   container: {
@@ -518,25 +530,25 @@ const styles_setpassword = StyleSheet.create({
 
   content: {
     flex: 1,
-    paddingHorizontal: rw(6),
-    paddingTop: rh(3),
+    backgroundColor: '#fff',
   },
 
   title: {
-    fontSize: rf(2.6),
+    fontSize: responsive.fontSize(30),
+    marginTop: responsive.marginTop(20),
     fontWeight: 'bold',
     marginBottom: rh(1),
   },
 
   subtitle: {
-    fontSize: rf(2),
+    fontSize: responsive.fontSize(16),
     color: '#666',
     marginBottom: rh(3),
     fontFamily: 'Source Serif 4',
   },
 
   label: {
-    fontSize: rf(1.8),
+    fontSize: responsive.fontSize(14),
     marginBottom: rh(1),
     color: '#1A1A2D',
   },
@@ -545,7 +557,7 @@ const styles_setpassword = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     borderWidth: 1,
-    borderRadius: rw(2.5),
+    borderRadius: responsive.borderRadius(10),
     paddingHorizontal: rw(3),
     height: rh(6.8),
     marginBottom: rh(2.5),
@@ -553,14 +565,14 @@ const styles_setpassword = StyleSheet.create({
 
   input: {
     flex: 1,
-    fontSize: rf(2),
+    fontSize: responsive.fontSize(16),
     color: '#333',
   },
 
   button: {
     backgroundColor: '#478F4E',
     paddingVertical: rh(2),
-    borderRadius: rw(2),
+    borderRadius: responsive.borderRadius(12),
     alignItems: 'center',
     marginTop: rh(1.5),
     marginBottom: rh(4),
@@ -568,7 +580,7 @@ const styles_setpassword = StyleSheet.create({
 
   buttonText: {
     color: '#fff',
-    fontSize: rf(2.2),
+    fontSize: responsive.fontSize(17),
     fontWeight: 'bold',
     fontFamily: 'Source Serif 4',
   },

@@ -8,11 +8,11 @@ import {
 } from 'react-native';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 
-const TermsConditions = ({navigation}) => {
+const TermsConditions = ({ navigation }) => {
   return (
     <View style={styles.container}>
       {/* Header */}
-       <Header
+      <Header
         title="Terms & Conditions"
         navigation={navigation}
         showBack={true}
@@ -22,7 +22,8 @@ const TermsConditions = ({navigation}) => {
       {/* Content */}
       <ScrollView
         showsVerticalScrollIndicator={false}
-        contentContainerStyle={styles.content}>
+        contentContainerStyle={styles.content}
+      >
         {/* User Agreement */}
         <View style={styles.section}>
           <Text style={styles.sectionTitle}>User Agreement</Text>
@@ -136,9 +137,10 @@ export default TermsConditions;
 //   },
 // });
 
-import {scale, verticalScale, moderateScale} from 'react-native-size-matters';
-import {responsiveFontSize} from 'react-native-responsive-dimensions';
+import { scale, verticalScale, moderateScale } from 'react-native-size-matters';
+import { responsiveFontSize } from 'react-native-responsive-dimensions';
 import Header from '../../../../constants/Header';
+import responsive from '../../../../constants/responsive';
 
 const styles = StyleSheet.create({
   container: {
@@ -168,15 +170,15 @@ const styles = StyleSheet.create({
     marginBottom: verticalScale(18),
   },
   sectionTitle: {
-    fontSize: responsiveFontSize(1.9), // ~15
+    fontSize: responsive.fontSize(16), // ~14
+
     fontWeight: '700',
     marginBottom: verticalScale(8),
     color: '#000',
   },
   text: {
-    fontSize: responsiveFontSize(1.8), // ~14
+    fontSize: responsive.fontSize(14), // ~14
     color: '#333',
     lineHeight: verticalScale(20),
   },
 });
-

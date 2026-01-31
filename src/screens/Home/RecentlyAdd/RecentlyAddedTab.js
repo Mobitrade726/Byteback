@@ -82,12 +82,7 @@
 
 // export default RecentlyAddedTab;
 
-import {
-  Text,
-  View,
-  StyleSheet,
-  TouchableOpacity,
-} from 'react-native';
+import { Text, View, StyleSheet, TouchableOpacity } from 'react-native';
 import { createMaterialTopTabNavigator } from '@react-navigation/material-top-tabs';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import { useSelector } from 'react-redux';
@@ -106,6 +101,7 @@ import {
   responsiveHeight,
   responsiveWidth,
 } from 'react-native-responsive-dimensions';
+import responsive from '../../../constants/responsive';
 
 const Tab = createMaterialTopTabNavigator();
 
@@ -133,18 +129,20 @@ const RecentlyAddedTab = ({ navigation, route }) => {
       />
 
       <Tab.Navigator
+        detachInactiveScreens={false} // 🔥 iOS FIX
         // initialRouteName={initialTab || osList[0]?.os_name || 'Default'}
         initialRouteName={initialTab || catList[0]?.category_name || 'Default'}
         screenOptions={{
           tabBarScrollEnabled: true,
-
+          lazy: false,
           tabBarItemStyle: {
             width: responsiveWidth(25),
             paddingHorizontal: responsiveWidth(2), // 👈 width control
           },
 
           tabBarLabelStyle: {
-            fontSize: responsiveFontSize(1.5),
+            fontSize: responsive.fontSize(14),
+            fontWeight: 'bold',
             paddingHorizontal: 0, // 👈 extra padding remove
           },
 
@@ -154,7 +152,7 @@ const RecentlyAddedTab = ({ navigation, route }) => {
           },
 
           tabBarStyle: {
-            height: responsiveHeight(4.8),
+            height: responsiveHeight(6.5),
           },
         }}
       >
@@ -200,7 +198,6 @@ const styles = StyleSheet.create({
 
   tabContent: {
     flex: 1,
-    paddingHorizontal: RW(2),
   },
 
   tabText: {

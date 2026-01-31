@@ -89,6 +89,7 @@ const KycStatusScreen = ({ navigation }) => {
     documents: documents,
   });
 
+
   useEffect(() => {
     dispatch(fetchProfile());
   }, [dispatch]);
@@ -96,9 +97,9 @@ const KycStatusScreen = ({ navigation }) => {
   const getBannerColor = () => {
     switch (kycData.status) {
       case 'Approved':
-        return '#4CAF50';
+        return '#1C9C48';
       case 'Pending':
-        return '#F44336';
+        return '#11A5D7';
       default:
         return '#999';
     }
@@ -141,13 +142,15 @@ const KycStatusScreen = ({ navigation }) => {
     doc => doc.status === 'Approved',
   );
 
+  console.log('kycData.documents------------------------>', kycData.documentnumber?.aadhaar_no);
+
   return (
     <View style={styles.safe}>
       <Header title="KYC Status" navigation={navigation} showBack={true} />
-      <ScrollView contentContainerStyle={styles.scroll}>
+      <ScrollView showsVerticalScrollIndicator={false} contentContainerStyle={styles.scroll}>
         {/* Banner */}
         <View style={[styles.banner, { backgroundColor: getBannerColor() }]}>
-          <View style={{ flex: 1 }}>
+          <View style={{ flex: 1, marginTop: responsive.marginTop(15) }}>
             <Text style={styles.bannerTitle}>{getBannerText().title}</Text>
             <Text style={styles.bannerSub}>{getBannerText().sub}</Text>
           </View>
@@ -157,7 +160,7 @@ const KycStatusScreen = ({ navigation }) => {
             </Text>
           </View>
         </View>
-
+        <Text style={{fontSize: responsive.fontSize(20), marginTop: responsive.marginTop(15), fontWeight:'500'}}>Submitted Info</Text>
         <View style={styles.infoSection}>
           <Text style={styles.label}>
             {displayType === 'Individual' ? 'Customer Name' : 'Firm Name'}
@@ -180,9 +183,9 @@ const KycStatusScreen = ({ navigation }) => {
             <Text style={styles.label}>
               {kycData?.proof_of_identity || 'N/A'}
             </Text>
-            {kycData?.documentnumber?.aadhaarCard ? (
+            {kycData?.documentnumber?.aadhaar_no ? (
               <Text style={styles.value}>
-                {kycData.documentnumber.aadhaarCard}
+                {kycData.documentnumber.aadhaar_no}
               </Text>
             ) : null}
 
@@ -234,7 +237,7 @@ const KycStatusScreen = ({ navigation }) => {
                   style={[
                     styles.docCard,
                     isPending && {
-                      borderWidth: moderateScale(1),
+                      // borderWidth: moderateScale(1),
                       borderColor: 'red',
                     },
                   ]}
@@ -251,7 +254,7 @@ const KycStatusScreen = ({ navigation }) => {
                   <View style={styles.docIconWrapper}>
                     <Feather
                       name="file"
-                      size={moderateScale(24)}
+                      size={moderateScale(18)}
                       color={icon.color}
                     />
                   </View>
@@ -265,7 +268,7 @@ const KycStatusScreen = ({ navigation }) => {
 
                   <Ionicons
                     name={icon.name}
-                    size={moderateScale(22)}
+                    size={moderateScale(18)}
                     color={icon.color}
                   />
                 </TouchableOpacity>
@@ -282,6 +285,7 @@ export default KycStatusScreen;
 
 import { moderateScale, scale, verticalScale } from 'react-native-size-matters';
 import { responsiveFontSize as RF } from 'react-native-responsive-dimensions';
+import responsive from '../../../../constants/responsive';
 
 const styles = StyleSheet.create({
   safe: {
@@ -289,32 +293,30 @@ const styles = StyleSheet.create({
     backgroundColor: '#fff',
   },
   scroll: {
-    padding: scale(16),
+    marginHorizontal: responsive.marginHorizontal(10),
   },
   banner: {
     flexDirection: 'row',
-    padding: scale(16),
+    padding: responsive.fontSize(16),
     borderRadius: scale(12),
-    marginBottom: verticalScale(20),
-    alignItems: 'center',
-    marginHorizontal: scale(15),
+    alignItems: 'flex-start', marginTop: responsive.marginTop(5)
   },
   bannerTitle: {
-    fontSize: RF(2.5),
-    fontWeight: '800',
+    fontSize: responsive.fontSize(24),
+    fontWeight: 'bold',
     color: '#fff',
   },
   bannerSub: {
-    fontSize: RF(1.7),
-    marginTop: verticalScale(4),
+    fontSize: responsive.fontSize(16),
+    marginTop: responsive.marginTop(5),
     color: '#fff',
   },
   statusPill: {
     backgroundColor: '#fff',
     paddingVertical: verticalScale(6),
     paddingHorizontal: scale(12),
-    borderRadius: scale(20),
-    justifyContent: 'center',
+    borderRadius: scale(8),
+    alignSelf: 'flex-end',
   },
   statusPillText: {
     fontSize: RF(1.5),
@@ -327,27 +329,25 @@ const styles = StyleSheet.create({
   },
   label: {
     color: '#000',
-    fontSize: RF(1.8),
-    marginTop: verticalScale(10),
+    fontSize: responsive.fontSize(16),
+    marginTop: responsive.marginTop(20),
     fontWeight: 'bold',
   },
   value: {
-    color: '#333',
-    fontSize: RF(1.6),
+    color: '#666666',
+    fontSize: responsive.fontSize(12),
     marginTop: verticalScale(2),
   },
   docsTitle: {
-    fontSize: RF(2),
+    fontSize: responsive.fontSize(20),
     fontWeight: 'bold',
-    marginBottom: verticalScale(10),
+    marginBottom: responsive.marginBottom(20),
   },
   docCard: {
-    backgroundColor: '#f8f8f8',
-    padding: scale(14),
     borderRadius: scale(10),
     flexDirection: 'row',
     alignItems: 'center',
-    marginBottom: verticalScale(10),
+    marginBottom: responsive.marginBottom(30),
   },
   docIconWrapper: {
     backgroundColor: '#e0e0e0',
@@ -359,12 +359,12 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   docTitle: {
-    fontSize: RF(1.8),
+    fontSize: responsive.fontSize(16),
     fontWeight: '600',
     color: '#222',
   },
   docStatus: {
-    fontSize: RF(1.6),
+    fontSize: responsive.fontSize(12),
     color: '#666',
   },
   sectionTitle: {

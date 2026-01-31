@@ -86,12 +86,7 @@
 // export default shopbybrandsTab;
 
 import React from 'react';
-import {
-  Text,
-  View,
-  StyleSheet,
-  TouchableOpacity,
-} from 'react-native';
+import { Text, View, StyleSheet, TouchableOpacity } from 'react-native';
 import { createMaterialTopTabNavigator } from '@react-navigation/material-top-tabs';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import { useSelector } from 'react-redux';
@@ -104,6 +99,7 @@ import {
   responsiveFontSize,
 } from 'react-native-responsive-dimensions';
 import { scale, verticalScale, moderateScale } from 'react-native-size-matters';
+import responsive from '../../../constants/responsive';
 
 const Tab = createMaterialTopTabNavigator();
 
@@ -133,7 +129,7 @@ const ShopbybrandsTab = ({ navigation, route }) => {
 
       <Tab.Navigator
         initialRouteName={initialTab || catList[0]?.category_name || 'Default'}
-         screenOptions={{
+        screenOptions={{
           tabBarScrollEnabled: true,
 
           tabBarItemStyle: {
@@ -142,7 +138,8 @@ const ShopbybrandsTab = ({ navigation, route }) => {
           },
 
           tabBarLabelStyle: {
-            fontSize: responsiveFontSize(1.5),
+            fontSize: responsive.fontSize(14),
+            fontWeight: 'bold',
             paddingHorizontal: 0, // 👈 extra padding remove
           },
 
@@ -152,7 +149,7 @@ const ShopbybrandsTab = ({ navigation, route }) => {
           },
 
           tabBarStyle: {
-            height: responsiveHeight(4.8),
+            height: responsiveHeight(6.5),
           },
         }}
       >
@@ -177,7 +174,7 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: '#fff',
-    paddingBottom: verticalScale(5),
+    // paddingBottom: verticalScale(5),
   },
 
   header: {
@@ -202,8 +199,8 @@ const styles = StyleSheet.create({
 
   tabContent: {
     flex: 1,
-    paddingHorizontal: scale(10),
-    paddingTop: verticalScale(5),
+    // paddingHorizontal: scale(10),
+    // paddingTop: verticalScale(5),
   },
 
   tabText: {

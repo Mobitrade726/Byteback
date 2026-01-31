@@ -2057,75 +2057,73 @@ const ForgetOTP = ({ navigation, route }) => {
         showSearch={false}
         onBackPress={() => navigation.goBack()}
       />
-      <View style={styles_forgetotp.container}>
-        <View style={styles_forgetotp.content}>
-          <Text style={styles_forgetotp.title}>Check your email</Text>
+      <View style={styles_forgetotp.content}>
+        <Text style={styles_forgetotp.title}>Please check your email</Text>
 
-          <Text style={styles_forgetotp.subtitle}>
-            We sent a 6-digit code to{'\n'}
-            <Text style={styles_forgetotp.email}>{email}</Text>
-          </Text>
+        <Text style={styles_forgetotp.subtitle}>
+          We sent a 6-digit code to {email}
+          {/* <Text style={styles_forgetotp.email}>{email}</Text> */}
+        </Text>
 
-          {/* OTP BOXES */}
-          <View style={styles_forgetotp.otpCard}>
-            {otp.map((digit, index) => (
-              <TextInput
-                key={index}
-                ref={el => (inputs.current[index] = el)}
-                style={[
-                  styles_forgetotp.otpBox,
-                  digit && styles_forgetotp.otpFilled,
-                ]}
-                keyboardType="number-pad"
-                maxLength={1}
-                value={digit}
-                onChangeText={t => handleChange(t, index)}
-              />
-            ))}
-          </View>
+        {/* OTP BOXES */}
+        <View style={styles_forgetotp.otpCard}>
+          {otp.map((digit, index) => (
+            <TextInput
+              key={index}
+              ref={el => (inputs.current[index] = el)}
+              style={[
+                styles_forgetotp.otpBox,
+                digit && styles_forgetotp.otpFilled,
+              ]}
+              keyboardType="number-pad"
+              maxLength={1}
+              value={digit}
+              onChangeText={t => handleChange(t, index)}
+            />
+          ))}
+        </View>
 
-          {/* ERROR */}
-          {error && <Text style={styles_forgetotp.errorText}>{error}</Text>}
+        {/* ERROR */}
+        {error && <Text style={styles_forgetotp.errorText}>{error}</Text>}
 
-          {/* VERIFY BUTTON */}
+        {/* VERIFY BUTTON */}
+        <TouchableOpacity
+          style={[styles_forgetotp.button, loading && { opacity: 0.7 }]}
+          onPress={() => handleVerify(false)}
+          disabled={loading}
+        >
+          {loading ? (
+            <ActivityIndicator color="#fff" />
+          ) : (
+            <Text style={styles_forgetotp.buttonText}>Verify</Text>
+          )}
+        </TouchableOpacity>
+
+        {/* RESEND / TIMER */}
+        <View style={styles_forgetotp.resendText}>
           <TouchableOpacity
-            style={[styles_forgetotp.button, loading && { opacity: 0.7 }]}
-            onPress={() => handleVerify(false)}
-            disabled={loading}
+            onPress={handleResendOtp}
+            disabled={timer > 0 || resendCount >= RESEND_LIMIT}
           >
-            {loading ? (
-              <ActivityIndicator color="#fff" />
-            ) : (
-              <Text style={styles_forgetotp.buttonText}>Verify</Text>
-            )}
+            <Text style={{ color: timer > 0 ? 'gray' : '#007AFF' }}>
+              {resendCount >= RESEND_LIMIT
+                ? 'Resend limit reached'
+                : timer > 0
+                ? 'Send again in'
+                : 'Resend OTP'}
+            </Text>
           </TouchableOpacity>
-
-          {/* RESEND / TIMER */}
-          <View style={styles_forgetotp.resendText}>
-            <TouchableOpacity
-              onPress={handleResendOtp}
-              disabled={timer > 0 || resendCount >= RESEND_LIMIT}
+          {timer > 0 && (
+            <Text
+              style={{
+                fontWeight: '700',
+                marginLeft: 5,
+                textAlign: 'center',
+              }}
             >
-              <Text style={{ color: timer > 0 ? 'gray' : '#007AFF' }}>
-                {resendCount >= RESEND_LIMIT
-                  ? 'Resend limit reached'
-                  : timer > 0
-                  ? 'Send again in'
-                  : 'Resend OTP'}
-              </Text>
-            </TouchableOpacity>
-            {timer > 0 && (
-              <Text
-                style={{
-                  fontWeight: '700',
-                  marginLeft: 5,
-                  textAlign: 'center',
-                }}
-              >
-                00:{timer < 10 ? `0${timer}` : timer}
-              </Text>
-            )}
-          </View>
+              00:{timer < 10 ? `0${timer}` : timer}
+            </Text>
+          )}
         </View>
       </View>
     </>

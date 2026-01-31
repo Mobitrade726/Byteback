@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from 'react';
+import React, { useEffect, useState } from 'react';
 import {
   View,
   Text,
@@ -8,11 +8,13 @@ import {
 } from 'react-native';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import axios from 'axios';
-import {API_BASE_URL} from '../../../../utils/utils';
+import { API_BASE_URL } from '../../../../utils/utils';
 
-const ContactUs = ({navigation}) => {
+const ContactUs = ({ navigation }) => {
   const [contactData, setContactData] = useState(null);
   const [loading, setLoading] = useState(true);
+
+  console.log('contactData===================>', contactData);
 
   useEffect(() => {
     const fetchContactDetails = async () => {
@@ -34,7 +36,11 @@ const ContactUs = ({navigation}) => {
   if (loading) {
     return (
       <View style={styles.container}>
-        <ActivityIndicator size="large" color="#000" style={{marginTop: 50}} />
+        <ActivityIndicator
+          size="large"
+          color="#000"
+          style={{ marginTop: 50 }}
+        />
       </View>
     );
   }
@@ -55,30 +61,40 @@ const ContactUs = ({navigation}) => {
 
         <View style={styles.contactRow}>
           <View style={styles.iconBox}>
-            <Ionicons name="call-outline" size={moderateScale(22)} color="#000" />
+            <Ionicons
+              name="call-outline"
+              size={moderateScale(18)}
+              color="#000"
+            />
           </View>
-          <View>
+          <View style={{width:"80%"}}>
             <Text style={styles.contactText}>
               {contactData?.phone || 'N/A'}
             </Text>
-            <Text style={styles.subText}>Mon–Sat, 10 AM – 6 PM</Text>
+            <Text style={styles.subText}>{contactData?.regd_address}</Text>
           </View>
         </View>
 
         <View style={styles.contactRow}>
           <View style={styles.iconBox}>
-            <Ionicons name="mail-outline" size={moderateScale(22)} color="#000" />
+            <Ionicons
+              name="mail-outline"
+              size={moderateScale(18)}
+              color="#000"
+            />
           </View>
           <Text style={styles.contactText}>{contactData?.email || 'N/A'}</Text>
         </View>
 
         {/* Live Chat */}
-        <Text style={[styles.sectionTitle, {marginTop: moderateScale(20)}]}>Live Chat</Text>
+        <Text style={[styles.sectionTitle, { marginTop: moderateScale(20) }]}>
+          Live Chat
+        </Text>
         <View style={styles.contactRow}>
           <View style={styles.iconBox}>
             <Ionicons
               name="chatbubble-ellipses-outline"
-              size={moderateScale(22)}
+              size={moderateScale(18)}
               color="#000"
             />
           </View>
@@ -145,9 +161,10 @@ export default ContactUs;
 //   },
 // });
 
-import {scale, verticalScale, moderateScale} from 'react-native-size-matters';
-import {responsiveFontSize} from 'react-native-responsive-dimensions';
+import { scale, verticalScale, moderateScale } from 'react-native-size-matters';
+import { responsiveFontSize } from 'react-native-responsive-dimensions';
 import Header from '../../../../constants/Header';
+import responsive from '../../../../constants/responsive';
 
 const styles = StyleSheet.create({
   container: {
@@ -174,7 +191,7 @@ const styles = StyleSheet.create({
     paddingBottom: verticalScale(20),
   },
   sectionTitle: {
-    fontSize: responsiveFontSize(1.9), // ~15
+    fontSize: responsive.fontSize(16), // ~14
     fontWeight: '700',
     marginBottom: verticalScale(12),
     color: '#000',
@@ -185,8 +202,8 @@ const styles = StyleSheet.create({
     marginBottom: verticalScale(16),
   },
   iconBox: {
-    width: scale(40),
-    height: scale(40),
+    width: scale(35),
+    height: scale(35),
     borderRadius: moderateScale(8),
     backgroundColor: '#f4f4f4',
     justifyContent: 'center',
@@ -194,12 +211,13 @@ const styles = StyleSheet.create({
     marginRight: scale(12),
   },
   contactText: {
-    fontSize: responsiveFontSize(1.8), // ~14
+    fontSize: responsive.fontSize(16), // ~14
+
     fontWeight: '500',
     color: '#000',
   },
   subText: {
-    fontSize: responsiveFontSize(1.6), // ~13
+    fontSize: responsive.fontSize(14), // ~14
     color: '#555',
     marginTop: verticalScale(2),
   },

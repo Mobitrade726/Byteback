@@ -235,6 +235,7 @@ import {
   responsiveHeight,
   responsiveWidth,
 } from 'react-native-responsive-dimensions';
+import responsive from '../../../../constants/responsive';
 
 const styles = StyleSheet.create({
   container: {
@@ -284,26 +285,19 @@ const styles = StyleSheet.create({
     color: '#fff',
   },
   card: {
-    backgroundColor: '#fff',
+    backgroundColor: '#EAE6E5',
     borderRadius: moderateScale(10),
-    padding: moderateScale(14),
-    marginVertical: moderateScale(8),
-    borderWidth: 1,
-    borderColor: '#EBEFF2',
+    padding: moderateScale(14), marginVertical: responsive.marginVertical(5)
+
   },
 
   cardHeader: {
     flexDirection: 'row',
-    alignItems: 'flex-start',
+    alignItems: 'flex-start', 
   },
 
   iconBox: {
-    width: moderateScale(40),
-    height: moderateScale(40),
-    backgroundColor: '#E7F7FF',
-    borderRadius: moderateScale(12),
-    justifyContent: 'center',
-    alignItems: 'center',
+    justifyContent: 'center', alignSelf:'center',
     marginRight: moderateScale(10),
   },
 
@@ -312,38 +306,32 @@ const styles = StyleSheet.create({
   },
 
   typeText: {
-    fontSize: moderateScale(16),
+    fontSize: responsive.fontSize(16),
     fontWeight: '600',
-    color: '#1A1A1A',
+    color: '#171D1C',
     marginBottom: 4,
   },
 
   address: {
-    fontSize: moderateScale(13),
-    color: '#444',
-    lineHeight: 18,
+    fontSize: responsive.fontSize(12),
+    color: '#666666',
   },
 
   edit: {
     color: '#11A5D7',
-    fontSize: moderateScale(14),
+    fontSize: responsive.fontSize(12),
     fontWeight: '600',
     paddingHorizontal: moderateScale(4),
   },
 
   radioRow: {
     flexDirection: 'row',
-    alignItems: 'center',
-    marginTop: moderateScale(14),
-    paddingTop: moderateScale(10),
-    borderTopWidth: 1,
-    borderTopColor: '#E5E7EB',
+    alignItems: 'center', marginBottom: responsive.marginBottom(10)
   },
   addButton: {
-    backgroundColor: '#22C55E',
-    padding: 15,
-    paddingVertical: 12,
-    borderRadius: 12,
+    backgroundColor: '#1C9C48',
+    padding: responsive.padding(10),
+    borderRadius: responsive.borderRadius(12),
     flexDirection: 'row',
     justifyContent: 'center',
     alignItems: 'center',
@@ -353,13 +341,13 @@ const styles = StyleSheet.create({
     marginBottom: responsiveHeight(1),
   },
   addButtonText: {
-    color: '#fff',
-    fontSize: 12,
+    color: '#FFFBFA',
+    fontSize: responsive.fontSize(12),
     fontWeight: 'bold',
   },
   defaultLabel: {
-    marginLeft: moderateScale(10),
-    fontSize: moderateScale(14),
+    marginLeft: moderateScale(5),
+    fontSize: responsive.fontSize(14),
     color: '#1A1A1A',
     fontWeight: '500',
   },

@@ -144,6 +144,7 @@ import {useRoute} from '@react-navigation/native';
 import Header from '../../constants/Header';
 import {moderateScale, verticalScale} from 'react-native-size-matters';
 import {responsiveFontSize} from 'react-native-responsive-dimensions';
+import responsive from '../../constants/responsive';
 
 const Tab = createMaterialTopTabNavigator();
 
@@ -194,7 +195,7 @@ const SignUpTab = ({navigation}) => {
             } else if (route.name === 'Signup_Address') {
               iconName = focused ? 'location' : 'location-outline';
             }
-            return <Ionicons name={iconName} size={moderateScale(18)} color={color} />;
+            return <Ionicons name={iconName} size={moderateScale(14)} color={color} />;
           },
           tabBarLabel: ({focused}) => {
             let label =
@@ -206,18 +207,18 @@ const SignUpTab = ({navigation}) => {
             return (
               <Text
                 style={{
-                  color: focused ? '#478F4E' : '#aaa',
-                  fontSize: responsiveFontSize(1.6), // ~12
+                  color: focused ? '#4B9AC1' : '#aaa',
+                  fontSize: responsive.fontSize(11), // ~12
                 }}>
                 {label}
               </Text>
             );
           },
           tabBarIndicatorStyle: {
-            backgroundColor: '#478F4E',
+            backgroundColor: '#4B9AC1',
             height: verticalScale(2),
           },
-          tabBarActiveTintColor: '#478F4E',
+          tabBarActiveTintColor: '#4B9AC1',
           tabBarInactiveTintColor: '#aaa',
           tabBarShowIcon: true,
           tabBarStyle: {
@@ -253,7 +254,7 @@ const styles = StyleSheet.create({
     backgroundColor: '#fff',
   },
   title: {
-    fontSize: responsiveFontSize(2.1), // ~17
+    fontSize: responsive.fontSize(17), // ~17
     fontWeight: '600',
     color: '#111',
   },

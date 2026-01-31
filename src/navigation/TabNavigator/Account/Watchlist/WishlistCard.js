@@ -22,7 +22,7 @@ const WishlistCard = ({data, onRemove}) => {
           <View style={styles.titleRow}>
             <Text style={styles.title}>{data.model_name}</Text>
 
-            {/* Heart Button */}
+            {/* Heart Button */}    
             <TouchableOpacity
               style={styles.heartBtn}
               onPress={() => onRemove && onRemove(data.id)} // ✅ Check if function exists

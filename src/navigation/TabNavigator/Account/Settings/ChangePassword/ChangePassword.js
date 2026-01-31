@@ -239,6 +239,7 @@ import { moderateScale, verticalScale, scale } from 'react-native-size-matters';
 import Header from '../../../../../constants/Header';
 import { useSelector } from 'react-redux';
 import { error } from 'pdf-lib';
+import responsive from '../../../../../constants/responsive';
 
 const ChangePassword = ({ navigation }) => {
   const token = useSelector(state => state.auth.token);
@@ -318,6 +319,7 @@ const ChangePassword = ({ navigation }) => {
       <Header title="Change Password" navigation={navigation} showBack={true} />
 
       <View style={styles.bodyContainer}>
+        <Text style={styles.titletop}>Change Password</Text>
         <Text style={styles.subtitle}>
           Please type something you’ll remember
         </Text>
@@ -383,18 +385,17 @@ const ChangePassword = ({ navigation }) => {
               />
             </TouchableOpacity>
           </View>
-
-          <TouchableOpacity
-            style={[styles.saveButton, loading && { opacity: 0.5 }]}
-            onPress={handleChangePassword}
-            disabled={loading}
-          >
-            <Text style={styles.saveText}>
-              {loading ? 'Saving...' : 'Save Password'}
-            </Text>
-          </TouchableOpacity>
         </View>
       </View>
+      <TouchableOpacity
+        style={[styles.saveButton, loading && { opacity: 0.5 }]}
+        onPress={handleChangePassword}
+        disabled={loading}
+      >
+        <Text style={styles.saveText}>
+          {loading ? 'Saving...' : 'Save Password'}
+        </Text>
+      </TouchableOpacity>
     </View>
   );
 };
@@ -420,52 +421,55 @@ const styles = StyleSheet.create({
     fontWeight: '400',
   },
 
+  titletop: {
+    fontSize: responsive.fontSize(20),
+    color: '#171D1C',
+    fontWeight: '500',
+    marginBottom: responsive.marginBottom(3),
+  },
+
   /* Card Box */
   cardBox: {
     backgroundColor: '#FFFFFF',
-    borderRadius: moderateScale(8),
-    padding: RW(4),
-    // paddingVertical: RH(3),
-    shadowColor: '#000',
-    borderWidth: 1,
-    borderColor: '#f1f1f1',
   },
 
   label: {
-    fontSize: RF(1.5),
+    fontSize: responsive.fontSize(14),
     color: '#111',
     marginBottom: RH(0.8),
     marginTop: RH(1),
-    fontWeight: '500',
   },
 
   inputWrapper: {
     flexDirection: 'row',
     alignItems: 'center',
-    backgroundColor: '#F3F4F6',
-    borderRadius: moderateScale(5),
-    paddingHorizontal: RW(3),
-    // paddingVertical: RH(1.4),
+    backgroundColor: '#FFFBFA',
+    borderRadius: responsive.borderRadius(10),
+    paddingHorizontal: RW(2),
     marginBottom: RH(1.5),
+    borderWidth: 0.5,
+    borderColor: '#333333',
   },
 
   input: {
     flex: 1,
-    fontSize: RF(1.5),
+    fontSize: responsive.fontSize(16),
     color: '#111',
+    padding: responsive.padding(12),
   },
 
   saveButton: {
-    backgroundColor: '#478F4E',
-    borderRadius: moderateScale(5),
-    alignItems: 'center',
-    marginHorizontal: RW(5),
-    padding: moderateScale(10), width: RW(50), alignSelf:'center'
+    backgroundColor: '#1C9C48',
+    borderRadius: responsive.borderRadius(12),
+    padding: responsive.padding(10),
+    marginBottom: responsive.marginBottom(8),
+    marginHorizontal: responsive.marginHorizontal(10),
   },
 
   saveText: {
     color: '#fff',
-    fontSize: RF(1.5),
+    fontSize: responsive.fontSize(17),
     fontWeight: '600',
+    textAlign: 'center',
   },
 });

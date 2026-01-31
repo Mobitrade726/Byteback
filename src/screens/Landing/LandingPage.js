@@ -1,5 +1,5 @@
-import {useNavigation} from '@react-navigation/native';
-import React, {useState} from 'react';
+import { useNavigation } from '@react-navigation/native';
+import React, { useState } from 'react';
 import {
   View,
   Text,
@@ -30,20 +30,27 @@ const LandingPage = () => {
 
   return (
     <>
-      <Header
-        title="Create your account"
-        navigation={navigation}
-        showBack={true}
-        showSearch={false}
-      />
-      <View style={styles.container}>
-        <ScrollView>
+      <View style={styles.containermain}>
+        <Header
+          title="Create your account"
+          navigation={navigation}
+          showBack={true}
+          showSearch={false}
+        />
+        <View style={styles.container}>
+          <Text style={styles.buttonTextLebel}>Login or Sign Up as</Text>
+          <Text style={styles.buttonTextOptions}>Please select an option</Text>
+
           {options.map(option => (
             <TouchableOpacity
               key={option.id}
-              style={styles.optionContainer}
-              onPress={() => setSelectedOption(option.id)}>
-              {/* <Image source={option.icon} style={styles.icon} /> */}
+              style={[
+                styles.optionContainer,
+                selectedOption === option.id && styles.selectedOptionBorder,
+              ]}
+              onPress={() => setSelectedOption(option.id)}
+            >
+              <Image source={option.icon} style={styles.icon} />
               <Text style={styles.optionText}>{option.label}</Text>
 
               <View style={styles.radioCircle}>
@@ -53,13 +60,13 @@ const LandingPage = () => {
               </View>
             </TouchableOpacity>
           ))}
-        </ScrollView>
-
+        </View>
         <TouchableOpacity
           onPress={() =>
-            navigation.navigate('SignUpTab', {accountType: selectedOption})
+            navigation.navigate('SignUpTab', { accountType: selectedOption })
           }
-          style={styles.button}>
+          style={styles.button}
+        >
           <Text style={styles.buttonText}>Continue</Text>
         </TouchableOpacity>
       </View>

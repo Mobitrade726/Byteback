@@ -24,6 +24,7 @@ import { moderateScale, scale, verticalScale } from 'react-native-size-matters';
 import { setAuthData } from '../../redux/slices/authSlice';
 import { useDispatch } from 'react-redux';
 import AlertModal from '../../constants/AlertModal';
+import responsive from '../../constants/responsive';
 
 const LoginScreen = ({ navigation }) => {
   const dispatch = useDispatch();
@@ -275,7 +276,13 @@ const LoginScreen = ({ navigation }) => {
             <Text style={styles.errorText}>{errors.emailOrPhone}</Text>
           )}
 
-          <View style={{ position: 'relative' }}>
+          <View
+            style={{
+              position: 'relative',
+              justifyContent: 'center',
+              marginVertical: responsive.marginVertical(10),
+            }}
+          >
             <TextInput
               style={[styles.input, errors.password && { borderColor: 'red' }]}
               placeholder="Password"
@@ -290,7 +297,6 @@ const LoginScreen = ({ navigation }) => {
               style={{
                 position: 'absolute',
                 right: moderateScale(15),
-                top: moderateScale(18),
               }}
               onPress={() => setShowPassword(!showPassword)}
             >
@@ -327,6 +333,12 @@ const LoginScreen = ({ navigation }) => {
               <Text style={styles.loginText}>Log in</Text>
             )}
           </TouchableOpacity>
+          <TouchableOpacity
+            onPress={() => navigation.navigate('LandingPage')}
+            style={styles.signupButton}
+          >
+            <Text style={styles.loginText}>Sign up</Text>
+          </TouchableOpacity>
 
           <AlertModal
             visible={alertVisible}
@@ -348,7 +360,7 @@ const LoginScreen = ({ navigation }) => {
           <TouchableOpacity onPress={() => navigation.navigate('LandingPage')}>
             <Text style={styles.bottomText}>
               New here?{' '}
-              <Text style={{ color: '#478F4E' }}>Create an Account</Text>
+              <Text style={{ color: '#CB444B' }}>Create an Account</Text>
             </Text>
           </TouchableOpacity>
         </View>

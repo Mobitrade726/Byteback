@@ -610,6 +610,7 @@ import { moderateScale, verticalScale } from 'react-native-size-matters';
 import { responsiveFontSize } from 'react-native-responsive-dimensions';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import AlertModal from '../../constants/AlertModal';
+import responsive from '../../constants/responsive';
 
 const RegisterAsDealer = ({ navigation }) => {
   const colorScheme = useColorScheme();
@@ -836,7 +837,7 @@ const RegisterAsDealer = ({ navigation }) => {
           {errors.Password && (
             <Text style={styles.errorText}>{errors.Password}</Text>
           )}
-          <View style={styles.inputWrapper}>
+          <View style={[styles.inputWrapper, {marginTop: responsive.marginTop(20)}]}>
             <TextInput
               style={[
                 styles.inputField,
@@ -925,7 +926,7 @@ const RegisterAsDealer = ({ navigation }) => {
       )}
 
       <TextInput
-        style={styles.input}
+        style={[styles.input, {marginTop: responsive.marginTop(20)}]}
         placeholder="Firm Name*"
         value={firmName}
         onChangeText={setFirmName}
@@ -936,7 +937,7 @@ const RegisterAsDealer = ({ navigation }) => {
       )}
 
       <TextInput
-        style={styles.input}
+        style={[styles.input]}
         placeholder="Contact Person*"
         value={contactPerson}
         onChangeText={setContactPerson}
@@ -976,7 +977,7 @@ const RegisterAsDealer = ({ navigation }) => {
       )}
 
       <TextInput
-        style={styles.input}
+        style={[styles.input, {marginTop: responsive.marginTop(20)}]}
         placeholder="Contact Number*"
         keyboardType="phone-pad"
         value={contactNumber}
@@ -1024,11 +1025,11 @@ const RegisterAsDealer = ({ navigation }) => {
           {errors.Password && (
             <Text style={styles.errorText}>{errors.Password}</Text>
           )}
-          <View style={styles.inputWrapper}>
+          <View style={[styles.inputWrapper, {marginTop: responsive.marginTop(20)}]}>
             <TextInput
               style={[
                 styles.inputField,
-                errors.ConfirmPassword && { borderColor: 'red' },
+                errors.ConfirmPassword && { borderColor: 'red'},
               ]}
               placeholder="Confirm Password*"
               secureTextEntry={!showConfirmPassword}
@@ -1070,7 +1071,7 @@ const RegisterAsDealer = ({ navigation }) => {
 
   return (
     <View style={styles.container}>
-      <ScrollView contentContainerStyle={styles.formContainer}>
+      <ScrollView showsVerticalScrollIndicator={false} contentContainerStyle={styles.formContainer}>
         {renderForm()}
         <TouchableOpacity style={styles.nextButton} onPress={handleNext}>
           <Text style={styles.nextButtonText}>Next</Text>
@@ -1157,12 +1158,12 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     borderColor: '#333333',
     borderRadius: moderateScale(16),
-    padding: moderateScale(12),
-    marginBottom: verticalScale(15),
-    fontSize: responsiveFontSize(1.8),
+    padding: responsive.padding(13),
+    marginBottom: verticalScale(25),
+    fontSize: responsive.fontSize(14),
   },
   nextButton: {
-    backgroundColor: '#478F4E',
+    backgroundColor: '#4B9AC1',
     paddingVertical: verticalScale(15),
     borderRadius: moderateScale(10),
     alignItems: 'center',

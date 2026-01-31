@@ -11,6 +11,9 @@ import {
   Pressable,
 } from 'react-native';
 import Ionicons from 'react-native-vector-icons/Ionicons';
+import Feather from 'react-native-vector-icons/Feather';
+import Fontisto from 'react-native-vector-icons/Fontisto';
+import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 import { useDispatch, useSelector } from 'react-redux';
 import Header from '../../../../constants/Header';
 import {
@@ -20,6 +23,9 @@ import {
 } from '../../../../redux/slices/orderSlice';
 import { moderateScale } from 'react-native-size-matters';
 import ActivityLoader from '../../../../constants/Loader';
+import Clipboard from '@react-native-clipboard/clipboard';
+import Toast from 'react-native-toast-message';
+import responsive from '../../../../constants/responsive';
 
 const { width, height } = Dimensions.get('window');
 const wp = p => (width * p) / 100;
@@ -33,6 +39,7 @@ const MyorderDetails = ({ navigation, route }) => {
     invoiceData,
     loading,
   } = useSelector(state => state.orders);
+
   const [selectedProduct, setSelectedProduct] = useState(null);
   const [returnModal, setReturnModal] = useState(false);
   const [invoiceLoading, setInvoiceLoading] = useState(false);
@@ -62,6 +69,15 @@ const MyorderDetails = ({ navigation, route }) => {
   if (loading) {
     return <ActivityLoader />;
   }
+
+  const handleCopy = value => {
+    Clipboard.setString(value);
+
+    Toast.show({
+      type: 'success',
+      text2: 'Copied to clipboard',
+    });
+  };
 
   // safe values
   const statusName = orderDetails?.order_status ?? '--';
@@ -197,52 +213,106 @@ const MyorderDetails = ({ navigation, route }) => {
         </View>
         {/* ORDER / TRACK */}
         <View style={styles.row}>
+          {/* Order Number */}
           <View style={styles.infoCard}>
-            <Text style={styles.infoSmall}>Order Number</Text>
-            <Text style={styles.infoBold}>#{order_id_Number ?? '—'}</Text>
+            <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+              <Feather name="package" size={12} color="#6B7280" />
+              <Text style={styles.infoSmall}>Order Number</Text>
+            </View>
+
+            <View style={styles.valueRow}>
+              <Text style={styles.infoBold}>#{order_id_Number ?? '—'}</Text>
+
+              {order_id_Number && (
+                <TouchableOpacity
+                  onPress={() => handleCopy(`#${order_id_Number}`)}
+                >
+                  <Ionicons name="copy-outline" size={16} color="#6B7280" />
+                </TouchableOpacity>
+              )}
+            </View>
           </View>
 
+          {/* Tracking */}
           <View style={styles.infoCard}>
-            <Text style={styles.infoSmall}>Tracking</Text>
-            <Text style={styles.infoBold}>
-              {orderDetails?.awb_details ?? 'Not available'}
-            </Text>
+            <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+              <Feather name="package" size={12} color="#6B7280" />
+              <Text style={styles.infoSmall}>Tracking Number</Text>
+            </View>
+
+            <View style={styles.valueRow}>
+              <Text style={styles.infoBold}>
+                {orderDetails?.awb_details ?? 'Not available'}
+              </Text>
+
+              {orderDetails?.awb_details && (
+                <TouchableOpacity
+                  onPress={() => handleCopy(orderDetails.awb_details)}
+                >
+                  <Ionicons name="copy-outline" size={16} color="#6B7280" />
+                </TouchableOpacity>
+              )}
+            </View>
           </View>
         </View>
+
         {/* RM */}
         <View style={styles.rmCard}>
           <View style={styles.rmLeft}>
             <Ionicons
               name="person-circle"
-              size={moderateScale(44)}
+              size={moderateScale(30)}
               color="#0A84FF"
             />
+            <View style={styles.rmCenter}>
+              <Text style={styles.rmTitle}>Relationship Manager</Text>
+              <Text style={styles.rmName}>
+                {orderDetails?.relationship_manager_name ?? '—'}
+              </Text>
+            </View>
           </View>
-          <View style={styles.rmCenter}>
-            <Text style={styles.rmTitle}>Relationship Manager</Text>
-            <Text style={styles.rmName}>
-              {orderDetails?.relationship_manager_name ?? '—'}
-            </Text>
-            <Text style={styles.rmText}>
+          <View
+            style={{
+              flexDirection: 'row',
+              marginBottom: responsive.marginBottom(5),
+              marginLeft: 3,
+            }}
+          >
+            <Fontisto name="email" size={moderateScale(12)} color="#62748E" />
+            <Text style={styles.rmemail}>
               {orderDetails?.relationship_manager_email ?? ''}
             </Text>
           </View>
-          <View style={styles.rmRight}>
-            <Pressable
-              onPress={() => {
-                const phone = orderDetails?.relationship_manager_number;
-                if (phone) navigation.navigate('DialerScreen', { phone });
-              }}
-              style={styles.callBtn}
-            >
-              <Ionicons name="call" size={18} color="#fff" />
-            </Pressable>
+          <View style={{ flexDirection: 'row', marginLeft: 3 }}>
+            <Ionicons
+              name="call-outline"
+              size={moderateScale(12)}
+              color="#62748E"
+            />
+            <Text style={styles.rmemail}>
+              {orderDetails?.relationship_manager_number ?? ''}
+            </Text>
           </View>
         </View>
+
+        {/* RM Query */}
+        <View style={styles.rmCard}>
+          <Text style={styles.rmQuery}>Note:</Text>
+          <Text style={styles.rmQueryDesc}>
+            For any queries related to your order contact the relationship
+            manager. Our Staff will contact you to confirm your order for
+            processing after order confirmation.
+          </Text>
+        </View>
+
         {/* ADDRESS */}
         <View style={styles.addressCard}>
-          <Ionicons name="location" size={20} color="#333" />
-          <View style={{ marginLeft: wp(3), flex: 1 }}>
+          <MaterialIcons
+            name="share-location"
+            size={moderateScale(30)}
+            color="#333"
+          />
+          <View style={{ marginLeft: wp(1), flex: 1 }}>
             <Text style={styles.addressLabel}>Deliver to</Text>
             <Text style={styles.addressText}>
               {orderDetails?.buyer_address ?? '—'}
@@ -307,13 +377,14 @@ const MyorderDetails = ({ navigation, route }) => {
                 </>
               )}
             </View>
-
-            <Image
-              source={{ uri: product?.model_image }}
-              style={styles.productImage}
-              // source={require('../../../../../assets/images/orderdelever.png')}
-              defaultSource={require('../../../../../assets/images/orderdelever.png')}
-            />
+            <View style={styles.productbackground}>
+              <Image
+                source={{ uri: product?.model_image }}
+                style={styles.productImage}
+                // source={require('../../../../../assets/images/orderdelever.png')}
+                defaultSource={require('../../../../../assets/images/orderdelever.png')}
+              />
+            </View>
           </View>
         ))}
         {/* Bill Details */}
@@ -519,9 +590,16 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
     marginBottom: hp(1.5),
   },
+  valueRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    gap: 8,
+  },
+
   infoCard: {
     flex: 1,
-    backgroundColor: '#FFFFFF',
+    backgroundColor: '#F5F5F5',
     borderRadius: wp(3),
     paddingVertical: hp(1.5),
     paddingHorizontal: wp(3),
@@ -531,46 +609,62 @@ const styles = StyleSheet.create({
     shadowOffset: { width: 0, height: 4 },
     marginHorizontal: wp(1),
     borderWidth: 1,
-    borderColor: '#f1f1f1',
+    borderColor: '#E2E8F0',
   },
   infoSmall: {
-    color: '#6B7280',
-    fontSize: wp(3),
+    color: '#666666',
+    fontSize: responsive.fontSize(12),
     fontWeight: '500',
+    marginLeft: 2,
   },
   infoBold: {
-    fontWeight: '800',
-    fontSize: wp(3),
+    fontSize: responsive.fontSize(14),
     marginTop: hp(0.4),
     color: '#111827',
   },
 
   /* ----------------------------- RM CARD ---------------------------- */
   rmCard: {
-    backgroundColor: '#FFFFFF',
+    backgroundColor: '#F5F5F5',
     borderRadius: wp(3),
     padding: wp(3),
-    flexDirection: 'row',
-    alignItems: 'center',
     shadowColor: '#93C5FD',
     shadowOpacity: 0.22,
     shadowOffset: { width: 0, height: 6 },
     shadowRadius: 10,
     borderWidth: 1,
-    borderColor: '#f1f1f1',
+    borderColor: '#E2E8F0',
     marginBottom: moderateScale(10),
   },
-  rmCenter: { flex: 1 },
+  rmLeft: {
+    flexDirection: 'row',
+    marginBottom: responsive.marginBottom(5),
+  },
+  rmQuery: {
+    marginBottom: responsive.marginBottom(5),
+    fontSize: responsive.fontSize(10),
+    fontWeight: 'bold',
+  },
+  rmQueryDesc: {
+    marginBottom: responsive.marginBottom(5),
+    fontSize: responsive.fontSize(10),
+    color: '#666666',
+  },
+  rmCenter: { flex: 1, marginLeft: 5 },
   rmTitle: {
-    fontSize: wp(3.2),
-    fontWeight: '700',
-    color: '#1F2937',
+    fontSize: responsive.fontSize(14),
+    color: '#0F172B',
   },
   rmName: {
-    color: '#2563EB',
-    fontWeight: '800',
-    marginTop: hp(0.2),
+    color: '#1447E6',
+    fontSize: responsive.fontSize(12),
   },
+  rmemail: {
+    color: '#314158',
+    fontSize: responsive.fontSize(12),
+    marginLeft: 5,
+  },
+
   rmText: {
     color: '#6B7280',
     marginTop: hp(0.4),
@@ -585,7 +679,7 @@ const styles = StyleSheet.create({
 
   /* ----------------------------- ADDRESS ---------------------------- */
   addressCard: {
-    backgroundColor: '#FFFFFF',
+    backgroundColor: '#EAE6E5',
     borderRadius: wp(3),
     padding: wp(3),
     flexDirection: 'row',
@@ -599,41 +693,39 @@ const styles = StyleSheet.create({
   },
   addressLabel: {
     color: '#6B7280',
-    fontWeight: '600',
-    fontSize: wp(3),
+    fontSize: responsive.fontSize(13),
   },
   addressText: {
-    fontWeight: '700',
-    color: '#111827',
-    fontSize: wp(3),
+    fontWeight: '600',
+    color: '#171D1C',
+    fontSize: responsive.fontSize(14),
   },
 
   /* ----------------------------- PRODUCT LIST ---------------------------- */
   sectionTitle: {
-    fontSize: wp(4),
-    fontWeight: '800',
-    color: '#1F2937',
+    fontSize: responsive.fontSize(20),
+    fontWeight: '600',
+    color: '#171D1C',
     marginBottom: hp(1),
   },
   productRow: {
     flexDirection: 'row',
-    backgroundColor: '#FFFFFF',
+    backgroundColor: '#fff',
     borderRadius: wp(3),
-    padding: wp(3),
     alignItems: 'center',
     justifyContent: 'space-between',
-
-    shadowColor: '#C7D2FE',
-    shadowOpacity: 0.25,
+    elevation: 2,
     shadowRadius: 12,
     marginBottom: hp(1.4),
-    borderWidth: 1,
-    borderColor: '#f1f1f1',
+
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 4 },
+    shadowOpacity: 0.15,
   },
-  productInfo: { flex: 1, paddingRight: wp(3) },
+  productInfo: { flex: 1, paddingLeft: wp(3) },
   grade: {
     color: '#6B7280',
-    fontSize: wp(3),
+    fontSize: responsive.fontSize(12),
   },
 
   priceRow: {
@@ -644,33 +736,46 @@ const styles = StyleSheet.create({
   },
 
   priceLabel: {
-    fontSize: wp(3),
+    fontSize: responsive.fontSize(12),
     color: '#444',
     fontWeight: '500',
   },
 
   priceValue: {
-    fontSize: wp(3),
-    fontWeight: '600',
+    fontSize: responsive.fontSize(12),
     color: '#000',
   },
 
   productTitle: {
-    fontSize: wp(3),
+    fontSize: responsive.fontSize(10),
     fontWeight: '800',
     color: '#111827',
   },
   productPrice: {
-    fontSize: wp(3),
-    fontWeight: '800',
-    color: '#2563EB',
+    fontSize: responsive.fontSize(10),
     marginTop: hp(0.4),
   },
+  productbackground: {
+    width: responsive.width(90),
+    height: responsive.height(110),
+    justifyContent: 'center',
+    margin: 8,
+    // borderRadius: responsive.borderRadius(12),
+    alignItems: 'center',
+    backgroundColor: '#fff',
+
+    // image shadow box
+    shadowColor: '#000',
+    shadowOpacity: 0.25,
+    shadowRadius: 8,
+    shadowOffset: { width: 0, height: 4 },
+    elevation: 8,
+  },
   productImage: {
-    width: wp(23),
-    height: wp(23),
-    borderRadius: wp(2),
+    width: responsive.width(70),
+    height: responsive.height(95),
     resizeMode: 'contain',
+    alignSelf: 'center',
   },
   returnBtn: {
     marginTop: hp(1),
@@ -693,11 +798,16 @@ const styles = StyleSheet.create({
     backgroundColor: '#FFFFFF',
     borderRadius: wp(3),
     padding: wp(3.5),
-    shadowColor: '#C7D2FE',
-    shadowOpacity: 0.2,
-    shadowRadius: 10,
     borderWidth: 1,
     borderColor: '#f1f1f1',
+
+    // image shadow box
+    elevation: 2,
+
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 4 },
+    shadowOpacity: 0.15,
+    shadowRadius: 6,
   },
   billRow: {
     flexDirection: 'row',
@@ -715,7 +825,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'space-between',
     gap: wp(4),
-    marginVertical: wp(2)
+    marginVertical: wp(2),
   },
   footerBtn: {
     flex: 1,
@@ -725,7 +835,8 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     gap: wp(2),
     borderWidth: 1,
-    borderColor: '#f1f1f1', padding: moderateScale(10)
+    borderColor: '#f1f1f1',
+    padding: moderateScale(10),
   },
   footerBtnText: {
     fontWeight: '900',

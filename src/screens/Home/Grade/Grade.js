@@ -260,7 +260,7 @@
 
 // export default Grade;
 
-import React, {useState} from 'react';
+import React, { useState } from 'react';
 import {
   View,
   Text,
@@ -271,12 +271,13 @@ import {
 } from 'react-native';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import LinearGradient from 'react-native-linear-gradient';
-import {moderateScale, scale, verticalScale} from 'react-native-size-matters';
+import { moderateScale, scale, verticalScale } from 'react-native-size-matters';
 import Header from '../../../constants/Header';
+import responsive from '../../../constants/responsive';
 
-const {width, height} = Dimensions.get('window');
+const { width, height } = Dimensions.get('window');
 
-const Grade = ({navigation}) => {
+const Grade = ({ navigation }) => {
   const [expandedIndex, setExpandedIndex] = useState(null);
 
   const grades = [
@@ -392,7 +393,8 @@ const Grade = ({navigation}) => {
         {/* Top Gradient Section */}
         <LinearGradient
           colors={['#a17f5d', '#6d4c41']}
-          style={styles.gradientBox}>
+          style={styles.gradientBox}
+        >
           <Text style={styles.gradientText}>
             Our grading system helps you understand the condition of refurbished
             products. Each grade represents a different level of wear and tear,
@@ -405,11 +407,12 @@ const Grade = ({navigation}) => {
           <View key={index} style={styles.accordionItem}>
             <TouchableOpacity
               style={styles.accordionHeader}
-              onPress={() => toggleExpand(index)}>
+              onPress={() => toggleExpand(index)}
+            >
               <Text style={styles.accordionTitle}>{item.title}</Text>
               <Ionicons
                 name={expandedIndex === index ? 'chevron-up' : 'chevron-down'}
-                size={moderateScale(20)}
+                size={moderateScale(12)}
                 color="#000"
               />
             </TouchableOpacity>
@@ -440,7 +443,7 @@ const Grade = ({navigation}) => {
 };
 
 const styles = StyleSheet.create({
-  container: {flex: 1},
+  container: { flex: 1 },
   header: {
     flexDirection: 'row',
     alignItems: 'center',
@@ -463,7 +466,7 @@ const styles = StyleSheet.create({
     marginBottom: verticalScale(10),
   },
   gradientText: {
-    fontSize: moderateScale(12),
+    fontSize: responsive.fontSize(12),
     color: '#fff',
     lineHeight: verticalScale(20),
     padding: scale(15),
@@ -482,16 +485,16 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   accordionTitle: {
-    fontSize: moderateScale(15),
+    fontSize: responsive.fontSize(16),
     fontWeight: '500',
-    color: '#000',
+    color: '#171D1C',
   },
   accordionContentWrapper: {
     paddingHorizontal: scale(14),
     paddingBottom: verticalScale(12),
   },
   accordionContent: {
-    fontSize: moderateScale(14),
+    fontSize: responsive.fontSize(12),
     color: '#444',
     lineHeight: verticalScale(20),
   },
@@ -499,10 +502,9 @@ const styles = StyleSheet.create({
     marginTop: verticalScale(5),
   },
   pointsTitle: {
-    fontSize: moderateScale(14),
-    fontWeight: '600',
+    fontSize: responsive.fontSize(12),
     marginBottom: verticalScale(6),
-    color: '#333',
+    color: '#333333',
   },
   pointRow: {
     flexDirection: 'row',
@@ -510,13 +512,13 @@ const styles = StyleSheet.create({
     marginBottom: verticalScale(4),
   },
   bullet: {
-    fontSize: moderateScale(14),
+    fontSize: moderateScale(20),
     color: '#666',
     marginRight: scale(6),
     lineHeight: verticalScale(20),
   },
   pointText: {
-    fontSize: moderateScale(14),
+    fontSize: responsive.fontSize(12),
     color: '#666',
     flex: 1,
     lineHeight: verticalScale(20),

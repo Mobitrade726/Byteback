@@ -167,6 +167,7 @@ import {
 } from '../../redux/slices/forgotPasswordSlice';
 import { styles_setpassword } from './styles';
 import Header from '../../constants/Header';
+import responsive from '../../constants/responsive';
 
 const SetPassword = ({ navigation, route }) => {
   const { email } = route.params; // get email from previous screen
@@ -181,21 +182,6 @@ const SetPassword = ({ navigation, route }) => {
     state => state.forgotPassword,
   );
   useEffect(() => {
-    const newErrors = {};
-    if (!newPassword.trim()) newErrors.newPassword = 'New password is required';
-    else if (newPassword.length < 6)
-      newErrors.newPassword = 'Password must be at least 6 characters';
-
-    if (!confirmPassword.trim())
-      newErrors.confirmPassword = 'Confirm password is required';
-    else if (confirmPassword !== newPassword)
-      newErrors.confirmPassword = 'Passwords do not match';
-
-    setErrors(newErrors);
-  }, [newPassword, confirmPassword]);
-
-  // Handle API response
-  useEffect(() => {
     if (success) {
       dispatch(resetForgotPasswordState());
       navigation.navigate('LoginScreen'); // go to login on success
@@ -203,48 +189,59 @@ const SetPassword = ({ navigation, route }) => {
   }, [success]);
 
   const handleReset = () => {
-    // Validation check
     const newErrors = {};
-    if (!newPassword.trim()) newErrors.newPassword = 'New password is required';
-    else if (newPassword.length < 6)
+
+    if (!newPassword.trim()) {
+      newErrors.newPassword = 'New password is required';
+    } else if (newPassword.length < 6) {
       newErrors.newPassword = 'Password must be at least 6 characters';
+    }
 
-    if (!confirmPassword.trim())
+    if (!confirmPassword.trim()) {
       newErrors.confirmPassword = 'Confirm password is required';
-    else if (confirmPassword !== newPassword)
+    } else if (confirmPassword !== newPassword) {
       newErrors.confirmPassword = 'Passwords do not match';
+    }
 
-    if (Object.keys(newErrors).length === 0) {
-      // Call API
-      dispatch(
-        resetPasswordAPI({
-          email,
-          password: newPassword,
-          password_confirmation: confirmPassword,
-        }),
-      );
-    } else {
-      setErrors(newErrors);
+    if (Object.keys(newErrors).length > 0) {
+      setErrors(newErrors); // 🔥 error only after click
+      return;
+    }
+
+    // ✅ No errors → API call
+    dispatch(
+      resetPasswordAPI({
+        email,
+        password: newPassword,
+        password_confirmation: confirmPassword,
+      }),
+    );
+  };
+
+  const onChangeNewPassword = text => {
+    setNewPassword(text);
+    if (errors.newPassword) {
+      setErrors(prev => ({ ...prev, newPassword: undefined }));
+    }
+  };
+
+  const onChangeConfirmPassword = text => {
+    setConfirmPassword(text);
+    if (errors.confirmPassword) {
+      setErrors(prev => ({ ...prev, confirmPassword: undefined }));
     }
   };
 
   return (
     <>
-      <Header
-        navigation={navigation}
-        showBack={true}
-        showSearch={false}
-        onBackPress={() => navigation.goBack()}
-      />
-      <View style={styles_setpassword.container}>
-        {/* <TouchableOpacity
-        style={styles_setpassword.backButton}
-        onPress={() => navigation.goBack()}
-      >
-        <Ionicons name="chevron-back-outline" size={18} color="#000" />
-      </TouchableOpacity> */}
-
-        <View style={styles_setpassword.content}>
+      <View style={styles_setpassword.content}>
+        <Header
+          navigation={navigation}
+          showBack={true}
+          showSearch={false}
+          onBackPress={() => navigation.goBack()}
+        />
+        <View style={{ marginHorizontal: responsive.marginHorizontal(10) }}>
           <Text style={styles_setpassword.title}>Reset password</Text>
           <Text style={styles_setpassword.subtitle}>
             Please type something you’ll remember
@@ -260,7 +257,7 @@ const SetPassword = ({ navigation, route }) => {
               ]}
               secureTextEntry={!showNew}
               value={newPassword}
-              onChangeText={setNewPassword}
+              onChangeText={onChangeNewPassword}
               placeholder="Enter new password"
               placeholderTextColor="#aaa"
             />
@@ -288,7 +285,7 @@ const SetPassword = ({ navigation, route }) => {
               ]}
               secureTextEntry={!showConfirm}
               value={confirmPassword}
-              onChangeText={setConfirmPassword}
+              onChangeText={onChangeConfirmPassword}
               placeholder="Confirm password"
               placeholderTextColor="#aaa"
             />

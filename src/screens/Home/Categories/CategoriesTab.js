@@ -176,6 +176,7 @@ import {
   responsiveWidth,
 } from 'react-native-responsive-dimensions';
 import { moderateScale } from 'react-native-size-matters';
+import responsive from '../../../constants/responsive';
 
 const Tab = createMaterialTopTabNavigator();
 
@@ -205,26 +206,6 @@ const CategoriesTab = ({ navigation, route }) => {
 
       <Tab.Navigator
         initialRouteName={initialTab || catList[0]?.category_name || 'Default'}
-        // screenOptions={{
-        //   tabBarLabelStyle: {
-        //     fontSize: responsiveFontSize(1.8),
-        //     fontWeight: '500',
-
-        //   },
-        //   tabBarActiveTintColor: '#478F4E',
-        //   tabBarInactiveTintColor: '#aaa',
-        //   tabBarIndicatorStyle: {
-        //     backgroundColor: '#478F4E',
-        //     height: responsiveHeight(0.5),
-        //   },
-        //   tabBarStyle: {
-        //     height: responsiveHeight(6),
-        //     elevation: 0,
-        //     shadowOpacity: 0,
-        //   },
-        //   tabBarScrollEnabled: true, // For many tabs
-        //   lazy: true,
-        // }}
         screenOptions={{
           tabBarScrollEnabled: true,
 
@@ -234,7 +215,8 @@ const CategoriesTab = ({ navigation, route }) => {
           },
 
           tabBarLabelStyle: {
-            fontSize: responsiveFontSize(1.5),
+            fontSize: responsive.fontSize(14),
+            fontWeight:'bold',
             paddingHorizontal: 0, // 👈 extra padding remove
           },
 
@@ -244,7 +226,7 @@ const CategoriesTab = ({ navigation, route }) => {
           },
 
           tabBarStyle: {
-            height: responsiveHeight(4.8),
+            height: responsiveHeight(6.5),
           },
         }}
       >

@@ -77,6 +77,7 @@
 import {StyleSheet} from 'react-native';
 import {scale, verticalScale, moderateScale} from 'react-native-size-matters';
 import {responsiveFontSize} from 'react-native-responsive-dimensions';
+import responsive from '../../../../constants/responsive';
 
 const styles = StyleSheet.create({
   container: {
@@ -98,7 +99,7 @@ const styles = StyleSheet.create({
   },
   text: {
     flex: 1,
-    fontSize: responsiveFontSize(2), // ~16
+    fontSize: responsive.fontSize(16), 
     color: '#000',
   },
   arrow: {
@@ -116,7 +117,7 @@ const styles = StyleSheet.create({
     marginHorizontal: moderateScale(16),
   },
   logoutText: {
-    fontSize: responsiveFontSize(1.9), // ~15
+    fontSize: responsive.fontSize(17), // ~15
     color: '#fff',
     fontWeight: '600',
     marginLeft: moderateScale(8),

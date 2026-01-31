@@ -228,6 +228,7 @@ import Toast from 'react-native-toast-message';
 import AlertModal from '../../constants/AlertModal';
 import { moderateScale } from 'react-native-size-matters';
 import Header from '../../constants/Header';
+import responsive from '../../constants/responsive';
 
 const ForgotPasswordScreen = ({ navigation }) => {
   const [emailforget, setEmail] = useState('');
@@ -300,19 +301,14 @@ const ForgotPasswordScreen = ({ navigation }) => {
 
   return (
     <>
-      <StatusBar
-        backgroundColor="transparent"
-        translucent={true}
-        barStyle="dark-content"
-      />
-      <Header
-        navigation={navigation}
-        showBack={true}
-        showSearch={false}
-        onBackPress={() => navigation.goBack()}
-      />
-      <View style={styles_forgetpassword.container}>
-        <View style={styles_forgetpassword.content}>
+      <View style={styles_forgetpassword.content}>
+        <Header
+          navigation={navigation}
+          showBack={true}
+          showSearch={false}
+          onBackPress={() => navigation.goBack()}
+        />
+        <View style={{ paddingHorizontal: responsive.paddingHorizontal(15) }}>
           <Text style={styles_forgetpassword.title}>Forgot password?</Text>
           <Text style={styles_forgetpassword.description}>
             Don’t worry! It happens. Please enter the email associated with your
@@ -331,9 +327,13 @@ const ForgotPasswordScreen = ({ navigation }) => {
             value={emailforget}
             onChangeText={text => setEmail(text)}
           />
+
           {errors.email && (
             <Text style={styles_forgetpassword.errorText}>{errors.email}</Text>
           )}
+          <TouchableOpacity onPress={(()=> navigation.navigate('ForgetEmail'))}>
+            <Text style={styles_forgetpassword.labelemail}>Forgot Email?</Text>
+          </TouchableOpacity>
           <TouchableOpacity
             style={[styles_forgetpassword.button, loading && { opacity: 0.7 }]}
             onPress={() => handleSendCode()}

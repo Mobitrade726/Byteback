@@ -57,6 +57,7 @@ const responsive = {
 
   padding: size => scaleSize(size),
   paddingHorizontal: size => scaleSize(size),
+  paddingVertical: size => scaleSize(size),
   paddingBottom: size => verticalScaleSize(size),
 
   margin: size => scaleSize(size),

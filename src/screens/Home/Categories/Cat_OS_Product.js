@@ -15,7 +15,8 @@ import { useNavigation, useRoute } from '@react-navigation/native';
 import Header from '../../../constants/Header';
 import {
   addToWishlistAPI,
-  removeFromWishlistAPI, fetchWishlist
+  removeFromWishlistAPI,
+  fetchWishlist,
 } from '../../../redux/slices/wishlistSlice';
 import {
   fetchProductList,
@@ -34,6 +35,8 @@ import {
 import { ProductCardStyles } from '../../../constants/ProductCardStyles';
 import Loader from '../../../constants/Loader';
 import { FilterModalStyles_All } from '../../../constants/FilterModalStyles_Search';
+import responsive from '../../../constants/responsive';
+import { SafeAreaView } from 'react-native-safe-area-context';
 
 const { width } = Dimensions.get('window');
 
@@ -490,63 +493,60 @@ const Cat_OS_Product = ({}) => {
     };
 
     return (
-      <TouchableOpacity
-        onPress={() =>
-          navigation.navigate('ProductList', {
-            product_barcode_id: item?.barcode_id,
-          })
-        }
-        style={ProductCardStyles.cardD}
-      >
-        {/* Image + Heart */}
-        <View style={ProductCardStyles.imageContainerD}>
-          {item && (
+      <View style={{ width: responsive.width(175) }}>
+        <View style={ProductCardStyles.cardShadow}>
+          <TouchableOpacity
+            onPress={() =>
+              navigation.navigate('ProductList', {
+                product_barcode_id: item?.barcode_id,
+              })
+            }
+            style={ProductCardStyles.cardD}
+          >
             <Text style={ProductCardStyles.refurbishedLabelD}>PRE-OWNED</Text>
-          )}
 
-          {/* <Image
+            {/* <Image
             source={{ uri: item.feature_image }}
             style={ProductCardStyles.imageD}
           /> */}
 
-          <Image
-            source={
-              item?.feature_image
-                ? { uri: item.feature_image }
-                : require('../../../../assets/images/empty.jpeg')
-            }
-            style={ProductCardStyles.imageD}
-            resizeMode='contain'
-          />
-
-          {/* ❤️ Wishlist Button */}
-          <TouchableOpacity
-            style={ProductCardStyles.heartIconD}
-            onPress={() => handleWishlistToggle()}
-          >
-            <AntDesign
-              name={isInWishlist ? 'heart' : 'hearto'}
-              size={20}
-              color={isInWishlist ? '#E74C3C' : '#999'}
+            <Image
+              source={
+                item?.feature_image
+                  ? { uri: item.feature_image }
+                  : require('../../../../assets/images/empty.jpeg')
+              }
+              style={ProductCardStyles.imageD}
+              resizeMode="contain"
             />
+
+            {/* ❤️ Wishlist Button */}
+            <TouchableOpacity
+              style={ProductCardStyles.heartIconD}
+              onPress={() => handleWishlistToggle()}
+            >
+              <AntDesign
+                name={isInWishlist ? 'heart' : 'hearto'}
+                size={moderateScale(12)}
+                color={isInWishlist ? '#E74C3C' : '#999'}
+              />
+            </TouchableOpacity>
+
+            {/* Grade Box */}
+
+            <Text style={ProductCardStyles.gradeText}>
+              Grade {item.grade_number}
+            </Text>
           </TouchableOpacity>
         </View>
-
-        {/* Grade Box */}
-
-        <Text style={ProductCardStyles.gradeTextD}>
-          Grade {item.grade_number}
-        </Text>
-
-        {/* Product Info */}
-        <Text style={ProductCardStyles.productNameD}>{item.model_name}</Text>
-        <Text style={ProductCardStyles.colorTextD}>● {item.color_name}</Text>
-        <View style={ProductCardStyles.priceRowD}>
-          <Text style={ProductCardStyles.priceD}>₹ {item.price}</Text>
-        </View>
-      </TouchableOpacity>
+        <Text style={ProductCardStyles.productName}>{item.model_name}</Text>
+        <Text style={ProductCardStyles.colorText}>● {item.color_name}</Text>
+        <Text style={ProductCardStyles.price}>₹ {item.price}</Text>
+      </View>
     );
   };
+
+  const [modalKey, setModalKey] = useState(0);
 
   return (
     <View style={styles.container}>
@@ -556,14 +556,14 @@ const Cat_OS_Product = ({}) => {
           onPress={() => setShowSortModal(true)}
           style={styles.sortButton}
         >
-          <Icon name="grid" size={16} color="#000" />
+          <Icon name="grid" size={moderateScale(12)} color="#000" />
           <Text style={styles.sortText}>Sort By</Text>
         </TouchableOpacity>
         <TouchableOpacity
           onPress={() => setFilterSortModal(true)}
           style={styles.filterButton}
         >
-          <Icon name="sliders" size={16} color="#000" />
+          <Icon name="sliders" size={moderateScale(12)} color="#000" />
           <Text style={styles.sortText}>Filter</Text>
         </TouchableOpacity>
       </View>
@@ -580,12 +580,10 @@ const Cat_OS_Product = ({}) => {
           keyExtractor={(item, index) =>
             item.id?.toString() ?? index.toString()
           }
+          showsVerticalScrollIndicator={false}
           numColumns={2}
           contentContainerStyle={{
-            paddingHorizontal: moderateScale(15),
-            paddingBottom: moderateScale(80),
-            justifyContent:
-              filteredProduct.length === 1 ? 'flex-start' : 'space-between',
+            paddingHorizontal: responsive.paddingHorizontal(15),
           }}
         />
       ) : (
@@ -604,16 +602,28 @@ const Cat_OS_Product = ({}) => {
       )}
 
       {/* Sort Modal */}
-      <Modal visible={showSortModal} transparent animationType="slide">
-        <View style={styles.modalContainer}>
+      <Modal
+        visible={showSortModal}
+        presentationStyle="fullScreen" // ✅ iOS FIX
+        animationType="slide"
+        onShow={() => {
+          // 🔥 iOS layout fix
+          setModalKey(prev => prev + 1);
+        }}
+      >
+        <SafeAreaView key={modalKey} style={styles.modalContainer}>
           <View style={{ margin: 20, flex: 1 }}>
             {/* Modal Header */}
             <View style={styles.modalHeader}>
               <TouchableOpacity onPress={() => setShowSortModal(false)}>
-                <Ionicons name="close" size={24} color="#000" />
+                <Ionicons name="close" size={moderateScale(20)} color="#000" />
               </TouchableOpacity>
               <Text style={styles.modalTitle}>Sort by</Text>
-              <Ionicons name="grid-outline" size={20} color="#000" />
+              <Ionicons
+                name="grid-outline"
+                size={moderateScale(15)}
+                color="#000"
+              />
             </View>
 
             {/* Sort Options */}
@@ -646,19 +656,31 @@ const Cat_OS_Product = ({}) => {
               <Text style={styles.applyText}>Apply</Text>
             </TouchableOpacity>
           </View>
-        </View>
+        </SafeAreaView>
       </Modal>
 
       {/* Filter Modal */}
-      <Modal visible={showFilterModal} animationType="slide" transparent>
-        <View style={FilterModalStyles_All.modalContainer}>
+      <Modal
+        visible={showFilterModal}
+        animationType="slide"
+        transparent={false}
+        presentationStyle="fullScreen" // ✅ iOS FIX
+        onShow={() => {
+          // 🔥 iOS layout fix
+          setModalKey(prev => prev + 1);
+        }}
+      >
+        <SafeAreaView
+          key={modalKey}
+          style={FilterModalStyles_All.modalContainer}
+        >
           {/* Header */}
           <View style={FilterModalStyles_All.header1}>
             <TouchableOpacity onPress={() => setFilterSortModal(false)}>
-              <Ionicons name="close" size={24} />
+              <Ionicons name="close" size={moderateScale(20)} />
             </TouchableOpacity>
             <Text style={FilterModalStyles_All.headerTitle1}>Filter</Text>
-            <Ionicons name="options-outline" size={20} />
+            <Ionicons name="options-outline" size={moderateScale(20)} />
           </View>
 
           <View style={FilterModalStyles_All.body}>
@@ -675,7 +697,7 @@ const Cat_OS_Product = ({}) => {
                 >
                   <Ionicons
                     name={tab.icon}
-                    size={18}
+                    size={moderateScale(12)}
                     color={selectedTab === tab.key ? '#000' : '#555'}
                   />
                   <Text
@@ -710,7 +732,7 @@ const Cat_OS_Product = ({}) => {
               <Text style={FilterModalStyles_All.applyText}>Apply</Text>
             </TouchableOpacity>
           </View>
-        </View>
+        </SafeAreaView>
       </Modal>
     </View>
   );
@@ -747,6 +769,7 @@ const styles = StyleSheet.create({
     gap: 12,
     marginLeft: 15,
     marginBottom: 10,
+    marginTop: responsive.marginTop(5),
   },
   sortButton: {
     borderWidth: 1,
@@ -769,7 +792,7 @@ const styles = StyleSheet.create({
     gap: 6,
   },
   sortText: {
-    fontSize: 14,
+    fontSize: responsive.fontSize(14),
     fontWeight: '500',
     color: '#000',
   },
@@ -843,6 +866,7 @@ const styles = StyleSheet.create({
   modalContainer: {
     flex: 1,
     backgroundColor: '#fff',
+    borderWidth: 1,
   },
   modalHeader: {
     flexDirection: 'row',
@@ -857,8 +881,8 @@ const styles = StyleSheet.create({
     borderRadius: 10,
   },
   modalTitle: {
-    fontSize: 16,
-    fontWeight: '500',
+    fontSize: moderateScale(16),
+    fontWeight: '600',
   },
   optionList: {
     marginVertical: 20,
@@ -905,11 +929,6 @@ const styles = StyleSheet.create({
   applyText: {
     color: '#fff',
     fontWeight: '500',
-  },
-
-  modalContainer: {
-    flex: 1,
-    backgroundColor: '#fff',
   },
 
   body: {

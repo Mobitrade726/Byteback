@@ -684,7 +684,7 @@ const WishlistScreen = ({ navigation }) => {
             <Text style={styles.warrenty}>30-day warranty</Text>
 
             {/*  Campare */}
-            <View style={{marginTop: responsive.marginTop(10)}}>
+            {/* <View style={{ marginTop: responsive.marginTop(10) }}>
               <View
                 style={{
                   flexDirection: 'row',
@@ -692,17 +692,25 @@ const WishlistScreen = ({ navigation }) => {
                   borderWidth: moderateScale(1),
                   paddingVertical: moderateScale(3),
                   paddingHorizontal: moderateScale(10),
-                  borderRadius: moderateScale(10), borderColor:"#666666", alignItems:'center', justifyContent:'center'
+                  borderRadius: moderateScale(10),
+                  borderColor: '#666666',
+                  alignItems: 'center',
+                  justifyContent: 'center',
                 }}
               >
-                <Ionicons name="swap-horizontal" size={moderateScale(10)} color="#666666" />
+                <Ionicons
+                  name="swap-horizontal"
+                  size={moderateScale(10)}
+                  color="#666666"
+                />
                 <Text style={styles.compareText}>Compare</Text>
               </View>
-            </View>
+            </View> */}
           </View>
         </View>
         {/* Move to Cart */}
-        <TouchableOpacity style={{marginTop: responsive.marginTop(3)}}
+        <TouchableOpacity
+          style={{ marginTop: responsive.marginTop(3) }}
           onPress={() => {
             const wishlistproduct = {
               barcode_id: item.barcode_id,
@@ -739,10 +747,15 @@ const WishlistScreen = ({ navigation }) => {
               borderWidth: moderateScale(1),
               paddingVertical: moderateScale(5),
               paddingHorizontal: moderateScale(10),
-              borderRadius: moderateScale(10), justifyContent:'center'
+              borderRadius: moderateScale(10),
+              justifyContent: 'center',
             }}
           >
-            <Ionicons name="cart-outline" size={moderateScale(10)} color="#FFFBFA" />
+            <Ionicons
+              name="cart-outline"
+              size={moderateScale(10)}
+              color="#FFFBFA"
+            />
             <Text style={styles.movetocart}>Move to Cart</Text>
           </View>
         </TouchableOpacity>
@@ -793,7 +806,7 @@ export default WishlistScreen;
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#FFFBFA',
+    backgroundColor: '#fff',
   },
   emptyCard: {
     margin: responsiveWidth(5),
@@ -829,18 +842,17 @@ const styles = StyleSheet.create({
     padding: moderateScale(8),
     borderRadius: moderateScale(8),
 
-    // iOS shadow
-    shadowColor: '#000',
-    shadowOffset: { width: 0, height: 4 },
-    shadowOpacity: 0.15,
-    shadowRadius: 6,
-
     // Android shadow
-    elevation: 8,
+    elevation: 5,
 
     // Optional (clean look)
     borderWidth: 1,
     borderColor: '#eee',
+
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 4 },
+    shadowOpacity: 0.15,
+    shadowRadius: 6,
   },
 
   row: {
@@ -860,6 +872,7 @@ const styles = StyleSheet.create({
     shadowOffset: { width: 0, height: 4 },
     shadowOpacity: 0.15,
     shadowRadius: 6,
+    backgroundColor: '#FFFBFA',
 
     // Android shadow
     elevation: 8,
@@ -913,7 +926,8 @@ const styles = StyleSheet.create({
   preowned: {
     fontSize: responsive.fontSize(8),
     color: '#777',
-    marginBottom: responsive.marginBottom(8), marginTop: responsive.marginTop(3)
+    marginBottom: responsive.marginBottom(8),
+    marginTop: responsive.marginTop(3),
   },
   specs: {
     fontSize: responsive.fontSize(11),
@@ -936,11 +950,13 @@ const styles = StyleSheet.create({
   movetocart: {
     fontSize: responsive.fontSize(11),
     color: '#FFFBFA',
-    textAlign: 'center', marginLeft:5, 
+    textAlign: 'center',
+    marginLeft: 5,
   },
   compareText: {
     fontSize: responsive.fontSize(11),
     color: '#666666',
-    textAlign: 'center',  marginLeft:5
+    textAlign: 'center',
+    marginLeft: 5,
   },
 });

@@ -1,6 +1,7 @@
 import {StyleSheet} from 'react-native';
 import {scale, verticalScale, moderateScale} from 'react-native-size-matters';
 import {responsiveFontSize} from 'react-native-responsive-dimensions';
+import responsive from '../../../../constants/responsive';
 
 const styles = StyleSheet.create({
   container: {
@@ -45,24 +46,25 @@ const styles = StyleSheet.create({
   divider: {
     height: verticalScale(1),
     backgroundColor: '#ccc',
-    marginBottom: verticalScale(15),
+    marginBottom: verticalScale(15), marginTop: responsive.marginTop(10)
   },
   mainTitle: {
     color: '#fff',
-    fontSize: responsiveFontSize(2.2), // ~18
+    fontSize: responsive.fontSize(20), // ~18
     fontWeight: 'bold',
     fontFamily: 'Source Serif 4',
     marginBottom: verticalScale(15),
   },
   bodyText: {
     color: '#fff',
-    fontSize: responsiveFontSize(1.9), // ~15
+    fontSize: responsive.fontSize(12),
     fontFamily: 'Source Serif 4',
     marginBottom: verticalScale(10),
   },
   bold: {
     fontWeight: 'bold',
     color: '#fff',
+    fontSize: responsive.fontSize(12)
   },
 });
 

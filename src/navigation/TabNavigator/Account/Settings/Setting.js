@@ -36,11 +36,11 @@ const Settings = ({navigation}) => {
             })
           }
           style={styles.item}>
-          <AntDesign name="user" size={moderateScale(22)} style={styles.icon} />
+          <AntDesign name="user" size={moderateScale(15)} style={styles.icon} />
           <Text style={styles.text}>Edit Profile</Text>
           <Ionicons
             name="chevron-forward"
-            size={moderateScale(25)}
+            size={moderateScale(15)}
             style={styles.arrow}
           />
         </TouchableOpacity>
@@ -49,13 +49,13 @@ const Settings = ({navigation}) => {
           style={styles.item}>
           <Ionicons
             name="notifications-outline"
-            size={moderateScale(22)}
+            size={moderateScale(15)}
             style={styles.icon}
           />
           <Text style={styles.text}>Push Notifications</Text>
           <Ionicons
             name="chevron-forward"
-            size={moderateScale(20)}
+            size={moderateScale(15)}
             style={styles.arrow}
           />
         </View>
@@ -88,13 +88,13 @@ const Settings = ({navigation}) => {
           style={styles.item}>
           <Ionicons
             name="lock-closed-outline"
-            size={moderateScale(22)}
+            size={moderateScale(15)}
             style={styles.icon}
           />
           <Text style={styles.text}>Privacy</Text>
           <Ionicons
             name="chevron-forward"
-            size={moderateScale(20)}
+            size={moderateScale(15)}
             style={styles.arrow}
           />
         </View>
@@ -103,13 +103,13 @@ const Settings = ({navigation}) => {
           style={styles.item}>
           <Ionicons
             name="lock-closed-outline"
-            size={moderateScale(22)}
+            size={moderateScale(15)}
             style={styles.icon}
           />
           <Text style={styles.text}>Change Password</Text>
           <Ionicons
             name="chevron-forward"
-            size={moderateScale(20)}
+            size={moderateScale(15)}
             style={styles.arrow}
           />
         </TouchableOpacity>
@@ -141,7 +141,7 @@ const Settings = ({navigation}) => {
           style={styles.logoutButton}>
           <SimpleLineIcons
             name="logout"
-            size={moderateScale(18)}
+            size={moderateScale(15)}
             color="#fff"
           />
           <Text style={styles.logoutText}>Logout from all devices</Text>

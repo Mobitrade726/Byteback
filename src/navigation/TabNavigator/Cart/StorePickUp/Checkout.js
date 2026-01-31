@@ -35,6 +35,7 @@ import {
   responsiveFontSize,
 } from 'react-native-responsive-dimensions';
 import { scale, verticalScale, moderateScale } from 'react-native-size-matters';
+import responsive from '../../../../constants/responsive';
 
 const Checkout = () => {
   const navigation = useNavigation();
@@ -57,7 +58,6 @@ const Checkout = () => {
   const [selectedStore, setSelectedStore] = useState(1);
   const [paymentMethod, setPaymentMethod] = useState('cod'); // 'cod' | 'online' | 'wallet'
   const [submitting, setSubmitting] = useState(false);
-
 
   // placeholder store data (replace with real API/store)
   const storeData = [
@@ -94,7 +94,6 @@ const Checkout = () => {
       dispatch(checkoutDetailsAPI(checkoutData.id));
     }
   }, [checkoutData]);
-
 
   // helper strings for addresses
   const billingAddress = addresses?.length
@@ -199,7 +198,6 @@ const Checkout = () => {
         barcode_ids: barcode_ids,
       };
 
-
       // Create order on backend
       const createOrderRes = await axios.post(
         `${API_BASE_URL}/orders/create`,
@@ -279,7 +277,8 @@ const Checkout = () => {
           description: 'Payment for Order',
           image: 'https://i.postimg.cc/3x3QzSGq/logo.png',
           currency: 'INR',
-          key: 'rzp_test_RLLrUG1OvG4YYd',
+          // key: 'rzp_test_RLLrUG1OvG4YYd',  // testing key
+          key: 'rzp_live_RBA9jadId2klBP',     // live key
           amount: Math.round(totalAmount * 100), // in paise
           name: 'Byteback',
           order_id: razorpayOrderId,
@@ -290,7 +289,6 @@ const Checkout = () => {
           },
           theme: { color: '#1C9C48' },
         };
-
 
         RazorpayCheckout.open(options)
           .then(async data => {
@@ -396,43 +394,39 @@ const Checkout = () => {
       >
         {/* Delivery Options */}
         <Text style={styles.sectionTitle}>Delivery Options</Text>
-        <View style={styles.optionGroup}>
-          <TouchableOpacity
-            style={[
-              styles.radioBox,
-              deliveryMode === 'home' && styles.selectedBox,
-            ]}
-            onPress={() => setDeliveryMode('home')}
-          >
-            <Ionicons
-              name={
-                deliveryMode === 'home' ? 'radio-button-on' : 'radio-button-off'
-              }
-              size={20}
-              color="#00A859"
-            />
-            <Text style={styles.optionText}>Home Delivery</Text>
-          </TouchableOpacity>
+        <TouchableOpacity
+          style={[
+            styles.radioBox,
+            deliveryMode === 'home' && styles.selectedBox,
+          ]}
+          onPress={() => setDeliveryMode('home')}
+        >
+          <Ionicons
+            name={
+              deliveryMode === 'home' ? 'radio-button-on' : 'radio-button-off'
+            }
+            size={moderateScale(12)}
+            color="#00A859"
+          />
+          <Text style={styles.optionText}>Home Delivery</Text>
+        </TouchableOpacity>
 
-          <TouchableOpacity
-            style={[
-              styles.radioBox,
-              deliveryMode === 'pickup' && styles.selectedBox,
-            ]}
-            onPress={() => setDeliveryMode('pickup')}
-          >
-            <Ionicons
-              name={
-                deliveryMode === 'pickup'
-                  ? 'radio-button-on'
-                  : 'radio-button-off'
-              }
-              size={20}
-              color="#00A859"
-            />
-            <Text style={styles.optionText}>Store Pickup</Text>
-          </TouchableOpacity>
-        </View>
+        <TouchableOpacity
+          style={[
+            styles.radioBox,
+            deliveryMode === 'pickup' && styles.selectedBox,
+          ]}
+          onPress={() => setDeliveryMode('pickup')}
+        >
+          <Ionicons
+            name={
+              deliveryMode === 'pickup' ? 'radio-button-on' : 'radio-button-off'
+            }
+            size={moderateScale(12)}
+            color="#00A859"
+          />
+          <Text style={styles.optionText}>Store Pickup</Text>
+        </TouchableOpacity>
 
         {/* Pickup Locations */}
         {deliveryMode === 'pickup' && (
@@ -508,28 +502,26 @@ const Checkout = () => {
         )}
 
         {/* Address & Instructions */}
-        <View style={{ marginTop: 10 }}>
-          <View
-            onPress={() => navigation.navigate('SelectAddress')}
-            style={styles.infoBox}
-          >
-            <View style={{ borderWidth: 1, padding: 5, borderRadius: 50 }}>
-              <Ionicons name="location-outline" size={moderateScale(20)} />
-            </View>
-            <View style={{ flex: 1 }}>
-              <Text style={styles.infoTitle}>
-                {deliveryMode === 'home' ? 'Deliver to' : 'Billing Address'}
-              </Text>
-              <Text style={[styles.infoValue]}>
-                {deliveryMode === 'home'
-                  ? shippingAddress || 'No address set'
-                  : billingAddress || 'No billing address'}
-              </Text>
-            </View>
-            {/* <TouchableOpacity onPress={() => navigation.navigate('AddNewAddress')}>
+        <View
+          onPress={() => navigation.navigate('SelectAddress')}
+          style={styles.infoBox}
+        >
+          <View style={{ borderWidth: 1, padding: 5, borderRadius: 50 }}>
+            <Ionicons name="location-outline" size={moderateScale(15)} />
+          </View>
+          <View style={{ flex: 1 }}>
+            <Text style={styles.infoTitle}>
+              {deliveryMode === 'home' ? 'Deliver to' : 'Billing Address'}
+            </Text>
+            <Text style={[styles.infoValue]}>
+              {deliveryMode === 'home'
+                ? shippingAddress || 'No address set'
+                : billingAddress || 'No billing address'}
+            </Text>
+          </View>
+          {/* <TouchableOpacity onPress={() => navigation.navigate('AddNewAddress')}>
               <Ionicons name="chevron-forward" size={moderateScale(20)} />
             </TouchableOpacity> */}
-          </View>
         </View>
 
         {/* Payment Option */}
@@ -546,7 +538,7 @@ const Checkout = () => {
               name={
                 paymentMethod === 'cod' ? 'radio-button-on' : 'radio-button-off'
               }
-              size={20}
+              size={moderateScale(12)}
               color="#1A9E41"
             />
             <Text style={styles.optionText}>
@@ -567,7 +559,7 @@ const Checkout = () => {
                   ? 'radio-button-on'
                   : 'radio-button-off'
               }
-              size={20}
+              size={moderateScale(12)}
               color="#000"
             />
             <Text style={styles.optionText}>Pay Online</Text>
@@ -586,7 +578,7 @@ const Checkout = () => {
                   ? 'radio-button-on'
                   : 'radio-button-off'
               }
-              size={20}
+              size={moderateScale(12)}
               color="#000"
             />
             <Text style={styles.optionText}>
@@ -664,123 +656,15 @@ const Checkout = () => {
 
 export default Checkout;
 
-// const styles = StyleSheet.create({
-//   container: {flex: 1, backgroundColor: '#fff'},
-//   Scrollcontainer: {flex: 1, marginHorizontal: 10},
-//   sectionTitle: {
-//     fontSize: 16,
-//     fontWeight: '600',
-//     marginVertical: 15,
-//   },
-//   optionGroup: {
-//     marginBottom: 0,
-//   },
-//   radioBox: {
-//     borderWidth: 1,
-//     borderColor: '#ccc',
-//     borderRadius: 8,
-//     flexDirection: 'row',
-//     alignItems: 'center',
-//     padding: 12,
-//     gap: 10,
-//     marginBottom: 10,
-//   },
-//   selectedBox: {
-//     borderColor: '#1C9C48',
-//   },
-//   selectedPayBox: {
-//     borderColor: '#1C9C48',
-//     backgroundColor: '#E9F6ED',
-//   },
-//   optionText: {
-//     fontSize: 14,
-//     fontWeight: '500',
-//     marginLeft: 8,
-//   },
-//   containerImage: {
-//     backgroundColor: '#FDFDFD',
-//     borderRadius: 10,
-//     padding: 16,
-//     flexDirection: 'row',
-//     justifyContent: 'space-between',
-//     alignItems: 'center',
-//     elevation: 2,
-//     marginVertical: 5,
-//   },
-//   textContainerImage: {flex: 1, paddingRight: 10},
-//   titleImage: {fontSize: 16, fontWeight: 'bold', color: '#111'},
-//   subtitleImage: {fontSize: 14, color: '#4B9B8F', marginTop: 4, lineHeight: 20},
-//   imageImage: {width: 100, height: 80, borderRadius: 10},
-//   containerMoreKm: {flexDirection: 'row', alignItems: 'flex-start'},
-//   iconKM: {width: 20, height: 20, marginRight: 8, marginTop: 3},
-//   textContainerKM: {flex: 1, marginBottom: 15},
-//   boldTextKM: {fontWeight: 'bold', fontSize: 12, color: '#000'},
-//   subTextKM: {fontSize: 14, color: '#555', marginTop: 4},
-//   linkTextKM: {textDecorationLine: 'underline', color: '#000'},
-//   storeItem: {
-//     borderWidth: 1,
-//     borderColor: '#ccc',
-//     borderRadius: 12,
-//     padding: 12,
-//     marginBottom: 10,
-//     flexDirection: 'row',
-//     alignItems: 'flex-start',
-//     marginTop: 10,
-//   },
-//   storeName: {fontWeight: '600', fontSize: 14},
-//   storeStatus: {color: '#1C9C48', fontSize: 13, marginTop: 2},
-//   storeDistance: {fontSize: 12, color: '#555'},
-//   storeAddress: {fontSize: 12, color: '#777'},
-//   infoBox: {
-//     flexDirection: 'row',
-//     alignItems: 'center',
-//     padding: 12,
-//     borderWidth: 1,
-//     borderColor: '#000',
-//     backgroundColor: '#fff',
-//     borderRadius: 12,
-//     marginBottom: 12,
-//     gap: 10,
-//     height: 60,
-//   },
-//   infoTitle: {fontWeight: '600', fontSize: 13},
-//   infoValue: {fontSize: 13, color: '#444'},
-//   priceSummary: {borderColor: '#eee', marginTop: 0, paddingBottom: 10},
-//   priceRow: {
-//     fontSize: 14,
-//     flexDirection: 'row',
-//     justifyContent: 'space-between',
-//     marginVertical: 6,
-//   },
-//   bold: {fontWeight: '700'},
-//   placeOrderBtn: {
-//     backgroundColor: '#1C9C48',
-//     padding: 14,
-//     borderRadius: 10,
-//     alignItems: 'center',
-//     marginTop: 16,
-//   },
-//   placeOrderText: {color: '#fff', fontWeight: '700', fontSize: 16},
-//   termsText: {
-//     fontSize: 12,
-//     color: '#666',
-//     textAlign: 'center',
-//     marginTop: 10,
-//     marginBottom: 40,
-//   },
-// });
-
 const styles = StyleSheet.create({
   container: { flex: 1, backgroundColor: '#fff' },
   Scrollcontainer: { flex: 1, marginHorizontal: scale(10) },
 
   sectionTitle: {
-    fontSize: responsiveFontSize(2), // approx 16px
-    fontWeight: '600',
-    marginVertical: verticalScale(15),
+    fontSize: responsive.fontSize(18), // approx 16px
+    fontWeight: 'bold',
+    marginVertical: responsive.marginVertical(15),
   },
-
-  optionGroup: { marginBottom: verticalScale(0) },
 
   radioBox: {
     borderWidth: 1,
@@ -788,15 +672,14 @@ const styles = StyleSheet.create({
     borderRadius: moderateScale(8),
     flexDirection: 'row',
     alignItems: 'center',
-    padding: moderateScale(12),
-    gap: moderateScale(10),
-    marginBottom: verticalScale(10),
+    padding: responsive.padding(12),
+    marginVertical: responsive.marginVertical(5),
   },
   selectedBox: { borderColor: '#1C9C48' },
-  selectedPayBox: { borderColor: '#1C9C48', backgroundColor: '#E9F6ED' },
+  selectedPayBox: { borderColor: '#1C9C48', backgroundColor: '#CFE8D9' },
 
   optionText: {
-    fontSize: responsiveFontSize(1.8), // approx 14px
+    fontSize: responsive.fontSize(14), // approx 14px
     fontWeight: '500',
     marginLeft: scale(8),
   },
@@ -829,25 +712,29 @@ const styles = StyleSheet.create({
     borderRadius: moderateScale(10),
   },
 
-  containerMoreKm: { flexDirection: 'row', alignItems: 'flex-start' },
+  containerMoreKm: { flexDirection: 'row', alignItems: 'flex-start', marginTop: responsive.marginTop(10) },
   iconKM: {
     width: scale(20),
     height: verticalScale(20),
     marginRight: scale(8),
-    marginTop: verticalScale(3),
+    marginTop: verticalScale(5),
   },
   textContainerKM: { flex: 1, marginBottom: verticalScale(15) },
   boldTextKM: {
     fontWeight: 'bold',
-    fontSize: responsiveFontSize(1.5),
+    fontSize: responsive.fontSize(12),
     color: '#000',
   },
   subTextKM: {
-    fontSize: responsiveFontSize(1.8),
+    fontSize: responsive.fontSize(12),
     color: '#555',
     marginTop: verticalScale(4),
   },
-  linkTextKM: { textDecorationLine: 'underline', color: '#000' },
+  linkTextKM: {
+    textDecorationLine: 'underline',
+    color: '#000',
+    fontSize: responsive.fontSize(12),
+  },
 
   storeItem: {
     borderWidth: 1,
@@ -871,17 +758,15 @@ const styles = StyleSheet.create({
   infoBox: {
     flexDirection: 'row',
     alignItems: 'center',
-    padding: moderateScale(12),
+    padding: responsive.padding(12),
     borderWidth: moderateScale(1),
     borderColor: '#000',
-    backgroundColor: '#fff',
-    borderRadius: moderateScale(12),
-    marginBottom: verticalScale(12),
-    gap: moderateScale(10),
-    height: verticalScale(60),
+    backgroundColor: '#FFFBFA',
+    borderRadius: responsive.borderRadius(12),
+    gap: moderateScale(8),  marginTop: responsive.marginTop(3)
   },
-  infoTitle: { fontWeight: '600', fontSize: responsiveFontSize(1.6) },
-  infoValue: { fontSize: responsiveFontSize(1.6), color: '#444' },
+  infoTitle: {  fontSize: responsive.fontSize(14) },
+  infoValue: { fontSize: responsive.fontSize(12), color: '#444', fontWeight:'bold' },
 
   priceSummary: {
     borderColor: '#eee',
@@ -889,7 +774,7 @@ const styles = StyleSheet.create({
     paddingBottom: verticalScale(10),
   },
   summaryText: {
-    fontSize: responsiveFontSize(1.6),
+    fontSize: responsive.fontSize(14), fontWeight:'500', color:"#333333"
   },
   priceRow: {
     fontSize: responsiveFontSize(1.8),
@@ -897,23 +782,23 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
     marginVertical: verticalScale(6),
   },
-  bold: { fontWeight: '700', fontSize: responsiveFontSize(1.6) },
+  bold: { fontSize: responsive.fontSize(14), color:"#666666" },
 
   placeOrderBtn: {
     backgroundColor: '#1C9C48',
-    padding: verticalScale(14),
-    borderRadius: moderateScale(10),
+    padding: responsive.padding(12),
+    borderRadius: responsive.borderRadius(12),
     alignItems: 'center',
     marginTop: verticalScale(16),
   },
   placeOrderText: {
-    color: '#fff',
-    fontWeight: '700',
-    fontSize: responsiveFontSize(2),
+    color: '#FFFBFA',
+    fontWeight: 'bold',
+    fontSize: responsive.fontSize(16),
   },
   termsText: {
-    fontSize: responsiveFontSize(1.5),
-    color: '#666',
+    fontSize: responsive.fontSize(12),
+    color: '#666666',
     textAlign: 'center',
     marginTop: verticalScale(10),
     marginBottom: verticalScale(40),

@@ -328,23 +328,26 @@
 
 // export default Header;
 
-import React, {useEffect, useState} from 'react';
+import React, { useEffect, useState } from 'react';
 import {
   Text,
   TouchableOpacity,
   View,
   Image,
   ActivityIndicator,
+  SafeAreaViewBase,
 } from 'react-native';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 import EvilIcons from 'react-native-vector-icons/EvilIcons';
-import {API_BASE_URL} from '../../utils/utils';
+import { API_BASE_URL } from '../../utils/utils';
 import {
   widthPercentageToDP as wp,
   heightPercentageToDP as hp,
 } from 'react-native-responsive-screen';
+import { SafeAreaView } from 'react-native-safe-area-context';
+import responsive from '../../constants/responsive';
 
-const Header = ({navigation}) => {
+const Header = ({ navigation }) => {
   const [logoUrl, setLogoUrl] = useState(null);
   const [loading, setLoading] = useState(true);
 
@@ -368,45 +371,52 @@ const Header = ({navigation}) => {
   }, []);
 
   return (
-    <View
-      style={{
-        backgroundColor: '#1ca147',
-        flexDirection: 'row',
-        alignItems: 'center',
-        paddingHorizontal: wp('3%'),
-        // paddingVertical: hp('1.5%'),
-        justifyContent: 'space-between',
-        height: hp('8%'),
-      }}>
-      
-      {/* LEFT - Logo */}
-      {loading ? (
-        <ActivityIndicator size="small" color="#fff" />
-      ) : logoUrl ? (
-        <Image
-          source={{uri: logoUrl}}
-          style={{
-            width: wp('30%'),
-            height: hp('3.5%'),
-            resizeMode: 'contain',
-          }}
-        />
-      ) : (
-        <Text
-          style={{
-            color: 'white',
-            fontSize: wp('5%'),
-            fontWeight: '700',
-          }}>
-          Byteback
-        </Text>
-      )}
+    <SafeAreaView edges={['left', 'right']}>
+      <View
+        style={{
+          backgroundColor: '#1ca147',
+          flexDirection: 'row',
+          alignItems: 'center',
+          paddingHorizontal: wp('3%'),
+          justifyContent: 'space-between',
+          height: hp('8.5%'),
+        }}
+      >
+        {/* LEFT - Logo */}
+        {loading ? (
+          <ActivityIndicator size="small" color="#fff" />
+        ) : logoUrl ? (
+          <Image
+            source={{ uri: logoUrl }}
+            style={{
+              width: wp('30%'),
+              height: hp('3.5%'),
+              resizeMode: 'contain',
+              marginTop: responsive.marginTop(20),
+            }}
+          />
+        ) : (
+          <Text
+            style={{
+              color: 'white',
+              fontSize: wp('5%'),
+              fontWeight: '700',
+            }}
+          >
+            Byteback
+          </Text>
+        )}
 
-      {/* RIGHT BUTTONS */}
-      <View style={{flexDirection: 'row', alignItems: 'center'}}>
-        
-        {/* Bulk Deals Button */}
-        {/* <TouchableOpacity
+        {/* RIGHT BUTTONS */}
+        <View
+          style={{
+            flexDirection: 'row',
+            alignItems: 'center',
+              marginTop: responsive.marginTop(20),
+          }}
+        >
+          {/* Bulk Deals Button */}
+          {/* <TouchableOpacity
           style={{
             flexDirection: 'row',
             backgroundColor: '#fff',
@@ -436,13 +446,13 @@ const Header = ({navigation}) => {
           </Text>
         </TouchableOpacity> */}
 
-        {/* Search Icon */}
-        <TouchableOpacity onPress={() => navigation.navigate('Search')}>
-          <EvilIcons name="search" size={wp('8%')} color="#fff" />
-        </TouchableOpacity>
-
+          {/* Search Icon */}
+          <TouchableOpacity onPress={() => navigation.navigate('Search')}>
+            <EvilIcons name="search" size={wp('8%')} color="#fff" />
+          </TouchableOpacity>
+        </View>
       </View>
-    </View>
+    </SafeAreaView>
   );
 };
 

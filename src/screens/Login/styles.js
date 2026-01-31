@@ -90,9 +90,9 @@
 
 // export default styles;
 
-
 import { StyleSheet, Dimensions } from 'react-native';
-import {moderateScale, scale, verticalScale} from 'react-native-size-matters';
+import { moderateScale, scale, verticalScale } from 'react-native-size-matters';
+import responsive from '../../constants/responsive';
 
 const { width, height } = Dimensions.get('window');
 
@@ -124,22 +124,21 @@ export default StyleSheet.create({
   },
 
   title: {
-    fontSize:moderateScale(40), // tablet & desktop bigger
+    fontSize: responsive.fontSize(64), // tablet & desktop bigger
     fontWeight: 'bold',
     color: '#3c8c4d',
-    marginBottom: hp(4),
-    marginTop: hp(6)
+    marginVertical: responsive.marginVertical(80),
   },
 
   input: {
-    height: hp(7),
     borderColor: '#333',
-    borderWidth: 1.2,
-    borderRadius: wp(4),
+    borderWidth: 2,
+    borderRadius: responsive.borderRadius(16),
     paddingHorizontal: wp(4),
-    fontSize: width > 600 ? 20 : 16,
-    marginBottom: hp(2),
+    fontSize: responsive.fontSize(17),
     fontFamily: 'Source Serif 4',
+    padding: responsive.padding(13),
+    color:"#000"
   },
 
   forgotContainer: {
@@ -148,24 +147,25 @@ export default StyleSheet.create({
   },
 
   forgotText: {
-    color: '#2B2B2B',
-    // textDecorationLine: 'underline',
-    fontSize: width > 600 ? 20 : 16,
+    color: '#CB444B',
+    textDecorationLine: 'underline',
+    fontSize: responsive.fontSize(17),
     fontFamily: 'Source Serif 4',
-    marginTop: hp(-1)
+    marginTop: hp(-1),
   },
 
   loginButton: {
     backgroundColor: '#478F4E',
     borderRadius: wp(4),
-    paddingVertical: hp(2),
+    paddingVertical: hp(1.5),
     alignItems: 'center',
     marginBottom: hp(1),
+    marginTop: responsive.marginTop(20),
   },
 
   loginText: {
     color: '#fff',
-    fontSize: width > 600 ? 20 : 18,
+    fontSize: responsive.fontSize(17),
     fontWeight: 'bold',
     fontFamily: 'Source Serif 4',
   },
@@ -173,9 +173,9 @@ export default StyleSheet.create({
   signupButton: {
     backgroundColor: '#4B9AC1',
     borderRadius: wp(4),
-    paddingVertical: hp(2),
+    paddingVertical: hp(1.5),
     alignItems: 'center',
-    marginBottom: hp(4),
+    marginBottom: responsive.marginBottom(20),
   },
 
   signupText: {
@@ -186,8 +186,8 @@ export default StyleSheet.create({
   },
 
   bottomText: {
-    color: '#2B2B2B',
-    fontSize: width > 600 ? 20 : 17,
+    color: '#CB444B',
+    fontSize: responsive.fontSize(17),
     textAlign: 'center',
     fontWeight: '600',
     fontFamily: 'Source Serif 4',

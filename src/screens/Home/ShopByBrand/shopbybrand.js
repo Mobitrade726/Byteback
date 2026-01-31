@@ -278,8 +278,6 @@
 
 // export default Shopbybrand;
 
-
-
 import React, { useCallback, useEffect, useState } from 'react';
 import {
   View,
@@ -289,6 +287,7 @@ import {
   Image,
   ImageBackground,
   Dimensions,
+  StyleSheet,
 } from 'react-native';
 import { useDispatch, useSelector } from 'react-redux';
 import { fetchBrandList } from '../../../redux/slices/productSlice';
@@ -302,6 +301,7 @@ import {
 import { scale, verticalScale, moderateScale } from 'react-native-size-matters';
 import ActivityLoader from '../../../constants/Loader';
 import LinearGradient from 'react-native-linear-gradient';
+import responsive from '../../../constants/responsive';
 
 const { width } = Dimensions.get('window');
 
@@ -451,6 +451,25 @@ const Shopbybrand = ({ catName }) => {
     </TouchableOpacity>
   );
 
+  const ProductBrandsList = ({ item }) => (
+    <View style={styles.budgetWrapper}>
+      <Image
+        source={
+          item.brand_image_url
+            ? { uri: item.brand_image_url }
+            : require('../../../../assets/images/empty.jpeg')
+        }
+        style={styles.budgetImageStyle}
+        resizeMode="cover"
+      />
+
+      {/* 🔥 Price Overlay ON image */}
+      <View style={styles.priceOverlay}>
+        <Text style={styles.budgetTitle}>{item.brand_name}</Text>
+      </View>
+    </View>
+  );
+
   // ----------------------
   // 4) Main Return
   // ----------------------
@@ -459,59 +478,7 @@ const Shopbybrand = ({ catName }) => {
   }
 
   return (
-    <View style={{ flex: 1 }}>
-      {/* <FlatList
-        data={filteredBrands}
-        keyExtractor={item => item.id.toString()}
-        numColumns={2}
-        columnWrapperStyle={{
-          justifyContent: 'space-between',
-          paddingHorizontal: scale(5),
-        }}
-        contentContainerStyle={{
-          paddingBottom: moderateScale(80),
-          justifyContent:
-            filteredBrands.length === 1 ? 'flex-start' : 'space-between',
-        }}
-        renderItem={renderBrandItem}
-        showsVerticalScrollIndicator={false}
-        ListEmptyComponent={
-          <View
-            style={{
-              flex: 1,
-              height: responsiveHeight(40),
-              justifyContent: 'center',
-              alignItems: 'center',
-            }}
-          >
-            <Ionicons
-              name="pricetag-outline"
-              size={moderateScale(60)}
-              color="#999"
-            />
-            <Text
-              style={{
-                marginTop: verticalScale(12),
-                fontSize: responsiveFontSize(2.5),
-                fontWeight: '700',
-                color: '#333',
-              }}
-            >
-              No Brands Available
-            </Text>
-            <Text
-              style={{
-                marginTop: verticalScale(8),
-                fontSize: responsiveFontSize(1.8),
-                color: '#777',
-                textAlign: 'center',
-              }}
-            >
-              Try changing OS selection or check back later.
-            </Text>
-          </View>
-        }
-      /> */}
+    <View style={{ flex: 1, backgroundColor:"#fff" }}>
       <FlatList
         data={paginatedData}
         keyExtractor={item => item.id.toString()}
@@ -519,12 +486,9 @@ const Shopbybrand = ({ catName }) => {
         showsVerticalScrollIndicator={false}
         columnWrapperStyle={{
           justifyContent: 'space-between',
-          paddingHorizontal: CARD_GAP,
-          gap: 10,
-        }}
-        contentContainerStyle={{
-          paddingBottom: moderateScale(90),
-          paddingTop: moderateScale(8),
+          alignSelf: 'center',
+          alignItems: 'center',
+          justifyContent: 'center',
         }}
         onEndReached={loadMore}
         onEndReachedThreshold={0.5}
@@ -538,67 +502,12 @@ const Shopbybrand = ({ catName }) => {
               })
             }
             style={{
-              width: CARD_WIDTH,
-              marginBottom: CARD_GAP,
-              backgroundColor: '#fff',
-              borderRadius: moderateScale(22),
+              marginVertical: 5,
+              marginHorizontal: responsive.marginHorizontal(5),  borderRadius: moderateScale(12),
 
-              // Shadow
-              shadowColor: '#000',
-              shadowOpacity: 0.08,
-              shadowRadius: 6,
-              shadowOffset: { width: 0, height: 3 },
-              elevation: 4,
             }}
           >
-            {/* IMAGE */}
-            <View
-              style={{
-                height: cardSize,
-                backgroundColor: '#fff',
-                borderTopLeftRadius: moderateScale(22),
-                borderTopRightRadius: moderateScale(22),
-                overflow: 'hidden',
-                justifyContent: 'center',
-                alignItems: 'center',
-              }}
-            >
-              <Image
-                source={
-                  item.brand_image_url
-                    ? { uri: item.brand_image_url }
-                    : require('../../../../assets/images/empty.jpeg')
-                }
-                style={{ width: '90%', height: '90%' }}
-                resizeMode="contain"
-              />
-
-              {/* Gradient */}
-              <LinearGradient
-                colors={['transparent', 'rgba(0,0,0,0.3)']}
-                style={{
-                  position: 'absolute',
-                  bottom: 0,
-                  width: '100%',
-                  height: '40%',
-                }}
-              />
-            </View>
-
-            {/* BRAND NAME */}
-            <Text
-              numberOfLines={1}
-              style={{
-                marginVertical: moderateScale(12),
-                paddingHorizontal: moderateScale(8),
-                fontSize: moderateScale(14),
-                fontWeight: '700',
-                color: '#333',
-                textAlign: 'center',
-              }}
-            >
-              {item.brand_name}
-            </Text>
+            <ProductBrandsList item={item} />
           </TouchableOpacity>
         )}
         ListEmptyComponent={
@@ -644,3 +553,41 @@ const Shopbybrand = ({ catName }) => {
 
 export default Shopbybrand;
 
+const styles = StyleSheet.create({
+  budgetWrapper: {
+    borderRadius: moderateScale(25),
+    overflow: 'hidden', // 🔥 very important
+    elevation: 1,
+    borderWidth: 0.1,
+    backgroundColor: '#fff',
+    width: responsive.height(200),
+    alignItems: 'center',
+  },
+
+  budgetImageStyle: {
+    width: responsive.height(220),
+    height: responsive.height(190),
+  },
+
+  priceOverlay: {
+    position: 'absolute',
+    bottom: 5,
+    width: '100%',
+    padding: 5,
+    marginLeft:30
+    // paddingVertical: 10,
+    // backgroundColor: 'rgba(0,0,0,0.05)',
+    // alignItems: 'center',
+  },
+
+  budgetTitle: {
+    color: '#fff',
+    fontSize: responsive.fontSize(12),
+    fontWeight: '500',
+
+    // readability
+    textShadowColor: 'rgba(0,0,0,0.8)',
+    textShadowOffset: { width: 0, height: 1 },
+    textShadowRadius: 3,
+  },
+});

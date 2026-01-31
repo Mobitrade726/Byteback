@@ -8,7 +8,7 @@ import {
 } from 'react-native';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 
-const ReturnRefundPolicy = ({navigation}) => {
+const ReturnRefundPolicy = ({ navigation }) => {
   return (
     <View style={styles.container}>
       {/* Header */}
@@ -23,7 +23,8 @@ const ReturnRefundPolicy = ({navigation}) => {
       {/* Content */}
       <ScrollView
         showsVerticalScrollIndicator={false}
-        contentContainerStyle={styles.content}>
+        contentContainerStyle={styles.content}
+      >
         {/* Eligibility */}
         <View style={styles.section}>
           <Text style={styles.sectionTitle}>Eligibility</Text>
@@ -54,8 +55,7 @@ const ReturnRefundPolicy = ({navigation}) => {
             box or equivalent.
           </Text>
           <Text style={styles.bullet}>
-            • Inspection: Byteback team inspects product within 2 business
-            days.
+            • Inspection: Byteback team inspects product within 2 business days.
           </Text>
           <Text style={styles.bullet}>
             • Refund Timeline: Bank transfer / UPI: 3–5 business days.
@@ -145,9 +145,10 @@ export default ReturnRefundPolicy;
 //   },
 // });
 
-import {scale, verticalScale, moderateScale} from 'react-native-size-matters';
-import {responsiveFontSize} from 'react-native-responsive-dimensions';
+import { scale, verticalScale, moderateScale } from 'react-native-size-matters';
+import { responsiveFontSize } from 'react-native-responsive-dimensions';
 import Header from '../../../../constants/Header';
+import responsive from '../../../../constants/responsive';
 
 const styles = StyleSheet.create({
   container: {
@@ -180,13 +181,13 @@ const styles = StyleSheet.create({
     marginBottom: verticalScale(16),
   },
   sectionTitle: {
-    fontSize: responsiveFontSize(1.9), // ~15
-    fontWeight: '700',
+    fontSize: responsive.fontSize(16), // ~14
+    fontWeight: 'bold',
     marginBottom: verticalScale(8),
     color: '#000',
   },
   bullet: {
-    fontSize: responsiveFontSize(1.8), // ~14
+    fontSize: responsive.fontSize(14), // ~14
     color: '#333',
     marginBottom: verticalScale(6),
     lineHeight: verticalScale(20),

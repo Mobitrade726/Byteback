@@ -23,6 +23,7 @@ import {
 } from 'react-native-responsive-dimensions';
 import { useFocusEffect } from '@react-navigation/native';
 import ActivityLoader from '../../../../constants/Loader';
+import responsive from '../../../../constants/responsive';
 
 const Myorder = ({ navigation }) => {
   const dispatch = useDispatch();
@@ -40,27 +41,25 @@ const Myorder = ({ navigation }) => {
   );
 
   // Loading Screen
-  if (loading)
-    return (
-      <ActivityLoader/>
-    );
+  if (loading) return <ActivityLoader />;
 
   const statusStyles = {
-    'Order Placed': { bg: '#D9D9D9', color: '#5A5A5A' },
-    'Payment Verified': { bg: '#9BD4F6', color: '#FFFFFF' },
-    'Stock-out Requested': { bg: '#E4DCCF', color: '#5A4F3D' },
-    'Under Process': { bg: '#C9B79A', color: '#FFFFFF' },
-    Packed: { bg: '#C9B79A', color: '#FFFFFF' },
-    'Ready for dispatch': { bg: '#EED8B8', color: '#6E5B3B' },
-    Dispatched: { bg: '#A28F79', color: '#FFFFFF' },
-    Delivered: { bg: '#3FAE49', color: '#FFFFFF' },
-    Returned: { bg: '#E1B040', color: '#FFFFFF' },
-    Cancelled: { bg: '#DD6B6B', color: '#FFFFFF' },
+    'Order Placed': { color: '#5A5A5A' },
+    'Payment Verified': { color: '#FFFFFF' },
+    'Stock-out Requested': { color: '#5A4F3D' },
+    'Under Process': { color: '#FFFFFF' },
+    Packed: { color: '#FFFFFF' },
+    'Ready for dispatch': { color: '#6E5B3B' },
+    Dispatched: { color: '#CF6112' },
+    Delivered: { color: '#1C9C48' },
+    Returned: { color: '#CB444B' },
+    Cancelled: { color: '#CB444B' },
 
     // Pickup orders
-    Confirmed: { bg: '#9BD4F6', color: '#FFFFFF' },
-    'Ready for pick-up': { bg: '#EED8B8', color: '#6E5B3B' },
-    'Picked by buyer': { bg: '#3FAE49', color: '#FFFFFF' },
+    Confirmed: { color: '#FFFFFF' },
+    'Ready for pick-up': { color: '#6E5B3B' },
+    'Picked by buyer': { color: '#FFFFFF' },
+    'Pending': { color: '#CF6112' },
   };
 
   const getActions = item => {
@@ -188,18 +187,12 @@ const Myorder = ({ navigation }) => {
         <View style={styles.cardTopRow}>
           <Text style={styles.orderTitle}>#{item.order_id_Number}</Text>
 
-          <View
-            style={[
-              styles.statusBox,
-              {
-                backgroundColor: statusStyles[item.order_status]?.bg || '#ccc',
-              },
-            ]}
-          >
+          <View style={[styles.statusBox]}>
             <Text
               style={{
                 color: statusStyles[item.order_status]?.color || '#000',
-                fontWeight: '700', fontSize: RF(1.3),
+                fontWeight: '700',
+                fontSize: responsive.fontSize(14),
               }}
             >
               {item.order_status}
@@ -209,7 +202,7 @@ const Myorder = ({ navigation }) => {
 
         <Text style={styles.subText}>{item.order_date_time}</Text>
         <Text style={styles.subText}>Quantity: {item.order_quantity}</Text>
-        <Text style={styles.subText}>Subtotal: ₹{item.total_amount}</Text>
+        <Text style={styles.subText}>Subtotal: <Text style={{fontWeight:'bold', fontSize: responsive.fontSize(12)}}>₹{item.total_amount}</Text></Text>
 
         {/* BUTTONS */}
         <View style={styles.actions}>
@@ -322,7 +315,8 @@ const Myorder = ({ navigation }) => {
     <View style={{ flex: 1, backgroundColor: '#fff' }}>
       {/* Header */}
       <Header title="My Orders" navigation={navigation} showBack={true} />
-      <FlatList showsVerticalScrollIndicator={false}
+      <FlatList
+        showsVerticalScrollIndicator={false}
         data={orderList || []}
         renderItem={renderOrder}
         removeClippedSubviews={false}
@@ -348,12 +342,13 @@ const styles = StyleSheet.create({
 
   // Attractive Card
   card: {
-    backgroundColor: '#fff',
-    borderRadius: scale(8),
+    backgroundColor: '#FFFBFA',
+    borderRadius: responsive.borderRadius(12),
     marginTop: moderateScale(5),
     padding: scale(10),
     marginBottom: verticalScale(5),
-    borderWidth: scale(1), borderColor:"#f1f1f1",
+    borderWidth: scale(0.5),
+    borderColor: '#666666',
   },
 
   cardTopRow: {
@@ -363,9 +358,9 @@ const styles = StyleSheet.create({
   },
 
   orderTitle: {
-    fontSize: RF(2),
-    fontWeight: '800',
-    color: '#111',
+    fontSize: responsive.fontSize(18),
+    fontWeight: 'bold',
+    color: '#171D1C',
     marginBottom: verticalScale(8),
   },
 
@@ -376,10 +371,9 @@ const styles = StyleSheet.create({
   },
 
   subText: {
-    fontSize: RF(1.5),
-    color: '#444',
+    fontSize: responsive.fontSize(12),
+    color: '#171D1C',
     marginTop: verticalScale(4),
-    fontWeight: '500',
   },
 
   actions: {
@@ -390,18 +384,15 @@ const styles = StyleSheet.create({
   },
 
   button: {
-    paddingVertical: verticalScale(8),
+    paddingVertical: verticalScale(5),
     paddingHorizontal: scale(20),
     borderRadius: scale(25),
-    backgroundColor: '#f1f1f1',
-    shadowOffset: { width: 0, height: scale(3) },
-
+    shadowOffset: { width: 0, height: scale(3) }, borderWidth: scale(0.5)
   },
 
   buttonText: {
-    fontSize: RF(1.5),
-    color: '#000',
-    fontWeight: '700',
+    fontSize: responsive.fontSize(14),
+    color: '#333333',
   },
 
   // Empty UI

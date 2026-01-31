@@ -1,12 +1,7 @@
 import React from 'react';
-import {
-  View,
-  Text,
-  ScrollView,
-  StyleSheet,
-} from 'react-native';
+import { View, Text, ScrollView, StyleSheet } from 'react-native';
 
-const ShippingDeliveryInfo = ({navigation}) => {
+const ShippingDeliveryInfo = ({ navigation }) => {
   return (
     <View style={styles.container}>
       {/* Header */}
@@ -20,7 +15,8 @@ const ShippingDeliveryInfo = ({navigation}) => {
       {/* Content */}
       <ScrollView
         showsVerticalScrollIndicator={false}
-        contentContainerStyle={styles.content}>
+        contentContainerStyle={styles.content}
+      >
         {/* Delivery Timelines */}
         <View style={styles.section}>
           <Text style={styles.sectionTitle}>Delivery Timelines</Text>
@@ -133,10 +129,10 @@ export default ShippingDeliveryInfo;
 //   },
 // });
 
-
-import {scale, verticalScale, moderateScale} from 'react-native-size-matters';
-import {responsiveFontSize} from 'react-native-responsive-dimensions';
+import { scale, verticalScale, moderateScale } from 'react-native-size-matters';
+import { responsiveFontSize } from 'react-native-responsive-dimensions';
 import Header from '../../../../constants/Header';
+import responsive from '../../../../constants/responsive';
 
 const styles = StyleSheet.create({
   container: {
@@ -166,13 +162,14 @@ const styles = StyleSheet.create({
     marginBottom: verticalScale(18),
   },
   sectionTitle: {
-    fontSize: responsiveFontSize(1.9), // ~15
+    fontSize: responsive.fontSize(16), // ~14
+
     fontWeight: '700',
     marginBottom: verticalScale(8),
     color: '#000',
   },
   text: {
-    fontSize: responsiveFontSize(1.8), // ~14
+    fontSize: responsive.fontSize(14), // ~14
     color: '#333',
     lineHeight: verticalScale(20),
     marginBottom: verticalScale(4),
@@ -184,4 +181,3 @@ const styles = StyleSheet.create({
     lineHeight: verticalScale(18),
   },
 });
-

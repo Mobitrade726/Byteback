@@ -521,6 +521,7 @@ import {
   responsiveWidth,
 } from "react-native-responsive-dimensions";
 import { scale, verticalScale, moderateScale } from "react-native-size-matters";
+import responsive from "../../constants/responsive";
 
 // ---------------
 // Responsive Helpers
@@ -563,8 +564,8 @@ const styles_confirmSignup = StyleSheet.create({
   },
 
   title: {
-    fontSize: RFF(3.8),
-    fontWeight: "600",
+    fontSize: responsive.fontSize(32),
+    fontWeight: '700',
     color: "#1a1a1a",
     marginTop: RHP(6),
     textAlign: "center",
@@ -579,7 +580,7 @@ const styles_confirmSignup = StyleSheet.create({
   },
 
   welcomeText: {
-    fontSize: RFF(2.8),
+    fontSize: responsive.fontSize(34),
     color: "#000",
     fontWeight: "400",
     textAlign: "center",
@@ -587,7 +588,7 @@ const styles_confirmSignup = StyleSheet.create({
   },
 
   brandText: {
-    fontSize: RFF(3.6),
+    fontSize: responsive.fontSize(34),
     fontWeight: "700",
     color: "#3498db",
     marginBottom: RHP(1),
@@ -595,7 +596,7 @@ const styles_confirmSignup = StyleSheet.create({
   },
 
   description: {
-    fontSize: RFF(2),
+    fontSize: responsive.fontSize(17),
     textAlign: "center",
     color: "#555",
     paddingHorizontal: RWP(6),
@@ -605,7 +606,7 @@ const styles_confirmSignup = StyleSheet.create({
 
   loginButton: {
     width: isDesktop ? "40%" : isTablet ? "60%" : "80%",
-    backgroundColor: "#2e7d32",
+    backgroundColor: "#478F4E",
     borderRadius: MSCALE(12),
     paddingVertical: VSCALE(10),
     alignSelf: "center",
@@ -616,7 +617,7 @@ const styles_confirmSignup = StyleSheet.create({
     textAlign: "center",
     color: "#fff",
     fontWeight: "700",
-    fontSize: RFF(2.2),
+    fontSize: responsive.fontSize(16),
   },
 });
 

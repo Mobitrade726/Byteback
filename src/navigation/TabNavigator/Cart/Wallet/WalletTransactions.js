@@ -308,15 +308,46 @@ export default function WalletTransactions({ navigation }) {
       ? `+ ₹ ${formattedAmount}`
       : `- ₹ ${formattedAmount}`;
     const iconName = isCredit ? 'cash-plus' : 'cash-minus';
-    const iconColor = isCredit ? '#10B981' : '#EF4444';
+    const iconColor = isCredit ? '#1C9C48' : '#CB444B';
+
+    console.log('transactions----------------', transactions);
+
+    const getTransactionIcon = description => {
+      const desc = description?.toLowerCase();
+
+      if (desc.includes('order cancelled')) {
+        return { icon: 'close-circle', color: '#CB444B' };
+      }
+
+      if (desc.includes('order')) {
+        return { icon: 'cart', color: '#1C9C48' };
+      }
+
+      if (desc.includes('refund')) {
+        return { icon: 'arrow-down', color: '#F9A825' };
+      }
+
+      if (desc.includes('added money')) {
+        return { icon: 'cash-plus', color: '#1C9C48' };
+      }
+
+      if (desc.includes('withdraw')) {
+        return { icon: 'cash-minus', color: '#D32F2F' };
+      }
+
+      return { icon: 'cash', color: '#999' };
+    };
+
+    const iconData = getTransactionIcon(item.description);
 
     return (
       <View style={styles.txnContainer}>
         <View style={styles.leftIconWrapper}>
           <MaterialCommunityIcons
-            name={iconName}
+            name={iconData.icon}
             size={moderateScale(18)}
-            color={iconColor}
+            color={iconData.color}
+            style={styles.transactionIcon}
           />
         </View>
 
@@ -331,7 +362,7 @@ export default function WalletTransactions({ navigation }) {
         <Ionicons
           name="checkmark-circle-outline"
           size={moderateScale(18)}
-          color="#10B981"
+          color="#1C9C48"
         />
       </View>
     );
@@ -351,7 +382,7 @@ export default function WalletTransactions({ navigation }) {
       {loading ? (
         <ActivityIndicator
           size="large"
-          color="#1A9E41"
+          color="#1C9C48"
           style={{ marginTop: responsiveHeight(5) }}
         />
       ) : transactions.length === 0 ? (
@@ -406,7 +437,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     paddingVertical: verticalScale(5),
     paddingHorizontal: moderateScale(10),
-    backgroundColor: '#fff', 
+    backgroundColor: '#fff',
   },
   leftIconWrapper: {
     width: moderateScale(40),
@@ -419,13 +450,12 @@ const styles = StyleSheet.create({
   },
   titleText: {
     fontSize: responsiveFontSize(1.5),
-    fontWeight: '500',
     color: '#111',
     marginTop: verticalScale(2),
   },
   dateText: {
     fontSize: responsiveFontSize(1.5),
-    color: '#666',
+    color: '#333333',
     marginTop: verticalScale(2),
   },
   separator: {
@@ -433,3 +463,231 @@ const styles = StyleSheet.create({
     backgroundColor: '#eee',
   },
 });
+
+// import React, { useEffect, useCallback } from 'react';
+// import {
+//   View,
+//   Text,
+//   StyleSheet,
+//   TouchableOpacity,
+//   FlatList,
+// } from 'react-native';
+// import { useDispatch, useSelector } from 'react-redux';
+// import { useFocusEffect } from '@react-navigation/native';
+// import Ionicons from 'react-native-vector-icons/Ionicons';
+// import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
+// import { scale, verticalScale, moderateScale } from 'react-native-size-matters';
+// import { responsiveFontSize as RF } from 'react-native-responsive-dimensions';
+
+// import Header from '../../../../constants/Header';
+// import {
+//   fetchLedgerBalance,
+//   fetchWalletBalance,
+//   fetchLatestWalletHistory,
+// } from '../../../../redux/slices/walletSlice';
+// import responsive from '../../../../constants/responsive';
+
+// /* ================= ICON MAPPER ================= */
+// const getTransactionIcon = description => {
+//   const desc = description?.toLowerCase();
+
+//   if (desc.includes('order cancelled')) {
+//     return { icon: 'close-circle', color: '#CB444B' };
+//   }
+
+//   if (desc.includes('order')) {
+//     return { icon: 'cart', color: '#1C9C48' };
+//   }
+
+//   if (desc.includes('refund')) {
+//     return { icon: 'arrow-down', color: '#F9A825' };
+//   }
+
+//   if (desc.includes('added money')) {
+//     return { icon: 'cash-plus', color: '#1C9C48' };
+//   }
+
+//   if (desc.includes('withdraw')) {
+//     return { icon: 'cash-minus', color: '#D32F2F' };
+//   }
+
+//   return { icon: 'cash', color: '#999' };
+// };
+
+// export default function Wallet({ navigation }) {
+//   const dispatch = useDispatch();
+//   const { balance, ledgerbalance } = useSelector(state => state.wallet);
+
+//   /* ================= API CALLS ================= */
+//   useEffect(() => {
+//     dispatch(fetchLedgerBalance());
+//     dispatch(fetchWalletBalance());
+//     dispatch(fetchLatestWalletHistory());
+//   }, [dispatch]);
+
+//   useFocusEffect(
+//     useCallback(() => {
+//       dispatch(fetchLedgerBalance());
+//     }, [dispatch]),
+//   );
+
+//   /* ================= RENDER ITEM ================= */
+//   const renderTransaction = ({ item }) => {
+//     const iconData = getTransactionIcon(item.description);
+
+//     const credit = Number(item.credit || 0);
+//     const debit = Number(item.debit || 0);
+
+//     let displayAmount = '';
+
+//     if (credit > 0) {
+//       displayAmount = `+ ₹ ${credit.toLocaleString('en-IN')}`;
+//     } else if (debit > 0) {
+//       displayAmount = `- ₹ ${debit.toLocaleString('en-IN')}`;
+//     }
+
+//     return (
+//       <>
+//         <View style={styles.transactionRow}>
+//           {/* LEFT ICON */}
+//           <MaterialCommunityIcons
+//             name={iconData.icon}
+//             size={moderateScale(18)}
+//             color={iconData.color}
+//             style={styles.transactionIcon}
+//           />
+
+//           {/* CENTER */}
+//           <View style={{ flex: 1 }}>
+//             <Text style={[styles.amount, { color: iconData.color }]}>
+//               {displayAmount}
+//             </Text>
+
+//             <Text style={styles.label}>{item.description}</Text>
+//             <Text style={styles.date}>{item.date}</Text>
+//           </View>
+
+//           {/* RIGHT CHECK */}
+//           <Ionicons
+//             name="checkmark-circle"
+//             size={moderateScale(18)}
+//             color="#1C9C48"
+//           />
+//         </View>
+//       </>
+//     );
+//   };
+
+//   return (
+//     <View style={styles.container}>
+//       <Header title="Wallet" navigation={navigation} showBack />
+
+//       {/* ================= TRANSACTIONS ================= */}
+//       <Text style={styles.recentTitle}>Recent Transactions</Text>
+//       <Text style={styles.recentDesc}>
+//         Only Verified Transactions Available
+//       </Text>
+
+//       <FlatList
+//         data={ledgerbalance}
+//         renderItem={renderTransaction}
+//         keyExtractor={(item, index) => index.toString()}
+//         showsVerticalScrollIndicator={false}
+//         ListHeaderComponent={() => <View style={styles.dividerspecification} />}
+//         ItemSeparatorComponent={() => (
+//           <View style={styles.dividerspecification} />
+//         )}
+//         ListFooterComponent={() => <View style={styles.dividerspecification} />}
+//       />
+//     </View>
+//   );
+// }
+
+// /* ================= STYLES ================= */
+// const styles = StyleSheet.create({
+//   container: {
+//     flex: 1,
+//     backgroundColor: '#FFF',
+//   },
+//   balanceCard: {
+//     margin: scale(12),
+//     padding: scale(14),
+//     borderRadius: scale(12),
+//     backgroundColor: '#FFF',
+//     elevation: 5,
+//   },
+//   balanceLabel: {
+//     fontSize: RF(1.8),
+//     color: '#777',
+//   },
+//   balanceAmount: {
+//     fontSize: RF(3),
+//     fontWeight: 'bold',
+//     marginVertical: verticalScale(6),
+//   },
+//   buttonRow: {
+//     flexDirection: 'row',
+//     gap: scale(10),
+//     marginTop: verticalScale(10),
+//   },
+//   addMoneyBtn: {
+//     flex: 1,
+//     backgroundColor: '#1C9C48',
+//     padding: scale(10),
+//     borderRadius: scale(10),
+//     alignItems: 'center',
+//   },
+//   addMoneyText: {
+//     color: '#FFF',
+//     fontWeight: 'bold',
+//   },
+//   withdrawBtn: {
+//     flex: 1,
+//     backgroundColor: '#666',
+//     padding: scale(10),
+//     borderRadius: scale(10),
+//     alignItems: 'center',
+//   },
+//   withdrawText: {
+//     color: '#FFF',
+//     fontWeight: 'bold',
+//   },
+//   recentTitle: {
+//     fontSize: responsive.fontSize(16),
+//     marginHorizontal: scale(14),
+//     marginBottom: verticalScale(2),
+//     textAlign: 'center',
+//   },
+//   recentDesc: {
+//     fontSize: responsive.fontSize(10),
+//     marginHorizontal: scale(14),
+//     marginBottom: verticalScale(10),
+//     textAlign: 'center',
+//   },
+//   transactionRow: {
+//     flexDirection: 'row',
+//     alignItems: 'center',
+//     paddingVertical: verticalScale(8),
+//     marginHorizontal: scale(14),
+//   },
+//   transactionIcon: {
+//     marginRight: scale(10),
+//   },
+//   amount: {
+//     fontSize: RF(1.7),
+//     fontWeight: 'bold',
+//   },
+//   label: {
+//     fontSize: RF(1.5),
+//     color: '#000',
+//   },
+//   date: {
+//     fontSize: RF(1.4),
+//     color: '#777',
+//   },
+//   dividerspecification: {
+//     height: 1,
+//     backgroundColor: '#333', // dark grey / black
+//     opacity: 0.6,
+//   },
+// });

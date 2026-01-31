@@ -166,13 +166,13 @@ const Categories = ({ navigation }) => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#FFFBFA',
+    backgroundColor: '#FFFFFF',
   },
   list: {
     alignSelf: 'center',
   },
   card: {
-    backgroundColor: '#FFFBFA',
+    backgroundColor: '#fff',
     borderRadius: responsive.borderRadius(12),
 
     // iOS shadow

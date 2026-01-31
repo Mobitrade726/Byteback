@@ -20,7 +20,7 @@ const AboutMobiTrade = ({navigation}) => {
       {/* Body */}
       <ScrollView contentContainerStyle={styles.content}>
         <View style={styles.greenCard}>
-          <Text style={styles.sectionTitle}>About Byteback</Text>
+          {/* <Text style={styles.sectionTitle}>About Byteback</Text> */}
           <View style={styles.divider} />
 
           <Text style={styles.mainTitle}>
