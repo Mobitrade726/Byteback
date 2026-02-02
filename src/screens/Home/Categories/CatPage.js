@@ -4168,6 +4168,7 @@ import Section from '../Section';
 import responsive from '../../../constants/responsive';
 import FastImage from 'react-native-fast-image';
 import { ProductCardStyles } from '../../../constants/ProductCardStyles';
+import LottieView from 'lottie-react-native';
 
 const { width } = Dimensions.get('window');
 const cardSize = width * 0.1;
@@ -4258,9 +4259,7 @@ const CatPage = ({ catName, osName, catId }) => {
 
   const categoryOSList = selectedCategoryData?.os_list || [];
 
-
-    console.log('categoryOSList+++++++++++++++++++++++++', categoryOSList);
-
+  console.log('categoryOSList+++++++++++++++++++++++++', categoryOSList);
 
   // categoryBrands = category-wise + OS-wise brands
   const categoryBrands = brands.filter(
@@ -4275,12 +4274,18 @@ const CatPage = ({ catName, osName, catId }) => {
         : true), // agar OS filter nahi, to ignore
   );
 
+  // const osGifMap = {
+  //   Android: require('../../../../assets/images/androidgif.gif'),
+  //   iOS: require('../../../../assets/images/iosgif.gif'),
+  //   windows: require('../../../../assets/images/window.gif'),
+  //   macOS: require('../../../../assets/images/macosgif.gif'),
+  // };
 
   const osGifMap = {
-    Android: require('../../../../assets/images/androidgif.gif'),
-    iOS: require('../../../../assets/images/iosgif.gif'),
-    windows: require('../../../../assets/images/window.gif'),
-    macOS: require('../../../../assets/images/macosgif.gif'),
+    Android: require('../../../../assets/images/android.json'),
+    iOS: require('../../../../assets/images/ios.json'),
+    windows: require('../../../../assets/images/windows.json'),
+    macOS: require('../../../../assets/images/macos.json'),
   };
 
   const budgetConfig = {
@@ -4397,6 +4402,7 @@ const CatPage = ({ catName, osName, catId }) => {
           showsHorizontalScrollIndicator={false}
           renderItem={({ item }) => {
             const gifSource = osGifMap[item.os_name];
+            console.log('gifSource----------------------->', gifSource);
             return (
               <TouchableOpacity
                 style={{
@@ -4424,7 +4430,7 @@ const CatPage = ({ catName, osName, catId }) => {
                     overflow: 'hidden',
                   }}
                 >
-                  <FastImage
+                  {/* <FastImage
                     source={gifSource}
                     style={{
                       width: '100%',
@@ -4432,6 +4438,18 @@ const CatPage = ({ catName, osName, catId }) => {
                       // resizeMode: 'contain',
                     }}
                     resizeMode={FastImage.resizeMode.stretch}
+                  /> */}
+
+                  <LottieView
+                    source={gifSource}
+                    autoPlay
+                    loop
+                    // style={styles.lottie}
+                    style={{
+                      width: '100%',
+                      height: responsive.height(200),
+                      alignSelf: 'center',
+                    }}
                   />
 
                   {/* 🔥 OVERLAY TEXT */}
@@ -4574,7 +4592,7 @@ const CatPage = ({ catName, osName, catId }) => {
                       })
                     }
                     style={{
-                      marginVertical: 5,
+                      marginVertical: responsive.marginVertical(5),
                       marginHorizontal: responsive.marginHorizontal(5),
                       borderRadius: moderateScale(12),
                     }}
@@ -4947,12 +4965,13 @@ const styles = StyleSheet.create({
     elevation: 1,
     borderWidth: 0.1,
     backgroundColor: '#fff',
-    width: responsive.height(200),
     alignItems: 'center',
+    width: responsive.width(165),
+    height: responsive.height(190),
   },
 
   budgetImageStyle: {
-    width: responsive.height(200),
+    width: responsive.width(165),
     height: responsive.height(190),
   },
 

@@ -58,6 +58,8 @@ const Home = ({ navigation }) => {
   );
   const { recentlyview } = useSelector(state => state.product);
 
+  console.log('recentlyview---------------------->', recentlyview)
+
   useFocusEffect(
     useCallback(() => {
       dispatch(fetchOsList());
@@ -364,7 +366,7 @@ const Home = ({ navigation }) => {
                     <View
                       style={{
                         width: '100%',
-                        paddingVertical: moderateScale(1),
+                        paddingVertical: moderateScale(1), 
                       }}
                     >
                       <Text

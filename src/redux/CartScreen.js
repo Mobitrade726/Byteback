@@ -817,7 +817,7 @@ const Cart = () => {
     <View style={styles.cartItem}>
       {/* <Image source={{ uri: item.feature_image }} style={styles.image} /> */}
       <View style={styles.details}>
-        <Text style={styles.grade}>Grade{item.grade_number}</Text>
+        <Text style={styles.grade}>Grade {item.grade_number}</Text>
         <Text style={styles.name}>{item.model}</Text>
         <Text style={styles.name}>
           {

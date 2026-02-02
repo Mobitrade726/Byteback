@@ -49,21 +49,21 @@ const ProductCardStyles = StyleSheet.create({
     fontSize: responsive.fontSize(16), // RF(1.4) ko RFValue use kar ke adjust kiya
     fontWeight: '500',
     color: '#000',
-    marginHorizontal: scale(10),
+    // marginHorizontal: scale(10),
   },
 
   colorText: {
     fontSize: responsive.fontSize(12), // RF(1.4) ko RFValue use kar ke adjust kiya
     fontWeight: '500',
     color: '#000',
-    marginHorizontal: scale(10),
+    // marginHorizontal: scale(10),
   },
 
   price: {
     fontSize: responsive.fontSize(14), // RF(1.4) ko RFValue use kar ke adjust kiya
     // fontWeight: '500',
     color: '#000',
-    marginHorizontal: scale(10),
+    // marginHorizontal: scale(10),
     marginBottom: moderateScale(5),
   },
 

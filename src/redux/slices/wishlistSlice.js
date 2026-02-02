@@ -170,6 +170,7 @@ export const addToWishlistAPI = createAsyncThunk(
       );
       return item; // return same item
     } catch (error) {
+      console.log('errror-------------------->', error?.response)
       return rejectWithValue(error.response?.data || error.message);
     }
   },

@@ -565,7 +565,7 @@ const styles = StyleSheet.create({
   },
 
   budgetImageStyle: {
-    width: responsive.height(220),
+    width: responsive.width(200),
     height: responsive.height(190),
   },
 
