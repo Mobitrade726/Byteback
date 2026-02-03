@@ -131,6 +131,8 @@ const Addresses = ({ navigation }) => {
   const [selectedAddress, setSelectedAddress] = useState(null);
   const [loading, setLoading] = useState(false);
 
+  console.log('addresse+++++++++++++++++++++++++', addresses);
+
   const token = useSelector(state => state.auth.token);
   const user_id = useSelector(state => state.auth.userId);
 

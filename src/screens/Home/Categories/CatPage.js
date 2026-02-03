@@ -4171,7 +4171,9 @@ import { ProductCardStyles } from '../../../constants/ProductCardStyles';
 import LottieView from 'lottie-react-native';
 
 const { width } = Dimensions.get('window');
-const cardSize = width * 0.1;
+const CARD_GAP = 16;
+const CARD_WIDTH = (width - CARD_GAP * 10) / 2;
+const CARD_HEIGHT = CARD_WIDTH * 1;
 
 const CatPage = ({ catName, osName, catId }) => {
   const { uri } = useSelector(state => state.cat);
@@ -4274,19 +4276,19 @@ const CatPage = ({ catName, osName, catId }) => {
         : true), // agar OS filter nahi, to ignore
   );
 
-  // const osGifMap = {
-  //   Android: require('../../../../assets/images/androidgif.gif'),
-  //   iOS: require('../../../../assets/images/iosgif.gif'),
-  //   windows: require('../../../../assets/images/window.gif'),
-  //   macOS: require('../../../../assets/images/macosgif.gif'),
-  // };
-
   const osGifMap = {
-    Android: require('../../../../assets/images/android.json'),
-    iOS: require('../../../../assets/images/ios.json'),
-    windows: require('../../../../assets/images/windows.json'),
-    macOS: require('../../../../assets/images/macos.json'),
+    Android: require('../../../../assets/images/androidgif.gif'),
+    iOS: require('../../../../assets/images/iosgif.gif'),
+    windows: require('../../../../assets/images/window.gif'),
+    macOS: require('../../../../assets/images/macosgif.gif'),
   };
+
+  // const osGifMap = {
+  //   Android: require('../../../../assets/images/android.json'),
+  //   iOS: require('../../../../assets/images/ios.json'),
+  //   windows: require('../../../../assets/images/windows.json'),
+  //   macOS: require('../../../../assets/images/macos.json'),
+  // };
 
   const budgetConfig = {
     Mobile: [
@@ -4430,7 +4432,7 @@ const CatPage = ({ catName, osName, catId }) => {
                     overflow: 'hidden',
                   }}
                 >
-                  {/* <FastImage
+                  <FastImage
                     source={gifSource}
                     style={{
                       width: '100%',
@@ -4438,9 +4440,9 @@ const CatPage = ({ catName, osName, catId }) => {
                       // resizeMode: 'contain',
                     }}
                     resizeMode={FastImage.resizeMode.stretch}
-                  /> */}
+                  />
 
-                  <LottieView
+                  {/* <LottieView
                     source={gifSource}
                     autoPlay
                     loop
@@ -4450,7 +4452,7 @@ const CatPage = ({ catName, osName, catId }) => {
                       height: responsive.height(200),
                       alignSelf: 'center',
                     }}
-                  />
+                  /> */}
 
                   {/* 🔥 OVERLAY TEXT */}
                   <View
@@ -4510,8 +4512,10 @@ const CatPage = ({ catName, osName, catId }) => {
                   style={{
                     flex: 1,
                     justifyContent: 'flex-end', // text bottom me
-                    width: responsive.width(75),
-                    height: responsive.height(75),
+                    // width: responsive.width(75),
+                    // height: responsive.height(75),
+                    height: CARD_HEIGHT,
+                    width: CARD_WIDTH,
                     borderRadius: responsive.borderRadius(16),
                   }}
                   imageStyle={{
@@ -4527,10 +4531,16 @@ const CatPage = ({ catName, osName, catId }) => {
                   >
                     <Text
                       style={{
-                        fontSize: moderateScale(8),
-                        fontWeight: '700',
+
+                        // readability
+                        textShadowColor: 'rgba(0,0,0,0.8)',
+                        textShadowOffset: { width: 0, height: 1 },
+                        textShadowRadius: 3,
+
+                        fontSize: responsive.fontSize(12),
+                        fontWeight: '500',
                         color: '#fff',
-                        marginLeft: 16,
+                        marginLeft: 25,
 
                         // readability
                         textShadowColor: 'rgba(0,0,0,0.8)',

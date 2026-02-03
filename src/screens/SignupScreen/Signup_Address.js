@@ -583,6 +583,7 @@ const Signup_Address = ({ navigation }) => {
   });
   const [errors, setErrors] = useState({});
   const [submitted, setSubmitted] = useState(false);
+  const [successAction, setSuccessAction] = useState(null);
 
   const handleChange = (name, value) => {
     setForm({ ...form, [name]: value });
@@ -659,7 +660,8 @@ const Signup_Address = ({ navigation }) => {
         const res = await axios.post(url, payload);
         if (res?.data?.status === true) {
           setAlertMessage(res?.data?.message);
-          setAlertType('success'); // "error", "warning" bhi kar sakte ho
+          setAlertType('success');
+          setSuccessAction('REGISTER');
           setAlertVisible(true);
         } else {
           setAlertMessage(res.data.message);
@@ -682,6 +684,7 @@ const Signup_Address = ({ navigation }) => {
         if (res?.data?.status === true) {
           setAlertMessage(res.data.message);
           setAlertType('success');
+          setSuccessAction('UPDATE');
           setAlertVisible(true);
         } else {
           setAlertMessage(res.data.message);
@@ -1009,14 +1012,32 @@ const Signup_Address = ({ navigation }) => {
           title={alertType === 'success' ? 'Success' : 'Error'}
           message={alertMessage}
           type={alertType}
+          // onOk={() => {
+          //   setAlertVisible(false);
+
+          //   // 👉 ONLY SUCCESS case navigate karega
+          //   if (alertType === 'success') {
+          //     navigation.navigate('ConfirmSignup', {
+          //       accountType: regData?.accountType,
+          //     });
+          //   }
+          // }}
           onOk={() => {
             setAlertVisible(false);
 
-            // 👉 ONLY SUCCESS case navigate karega
             if (alertType === 'success') {
-              navigation.navigate('ConfirmSignup', {
-                accountType: regData?.accountType,
-              });
+              if (successAction === 'REGISTER') {
+                navigation.navigate('ConfirmSignup', {
+                  accountType: regData?.accountType,
+                });
+              }
+
+              if (successAction === 'UPDATE') {
+                // navigation.goBack();
+                navigation.navigate('Account');
+              }
+
+              setSuccessAction(null); // cleanup
             }
           }}
           onClose={() => setAlertVisible(false)}

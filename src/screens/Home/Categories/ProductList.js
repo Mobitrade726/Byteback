@@ -419,11 +419,7 @@ const ProductList = ({ route, iconType, icon, text }) => {
     ? gradeNumbers[0]?.trim()?.toUpperCase()
     : gradeNumbers?.trim()?.toUpperCase();
 
-  console.log('🟢 Current Grade:', currentGrade);
-
   const currentCategory = product?.category?.trim()?.toLowerCase();
-
-  console.log('🟡 Current Category:', currentCategory);
 
   const similarProductsGrade = Array.isArray(productData)
     ? productData.filter(item => {

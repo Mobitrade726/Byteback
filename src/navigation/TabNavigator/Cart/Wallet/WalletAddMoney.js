@@ -102,6 +102,8 @@ const WalletAddMoney = ({ navigation }) => {
 
       const order = response.data;
 
+      console.log('order?.razorpay_key============================>', order?.razorpay_key)
+
       const paymentMethods = {
         upi: selectedMethod === 'upi',
         card: selectedMethod === 'card',
@@ -171,7 +173,6 @@ const WalletAddMoney = ({ navigation }) => {
               err.description?.error ||
               'Wallet payment failed. Please try again',
           });
-
           // 🔥 ADD THIS: Cancel notify API
           try {
             await axios.post(
@@ -186,12 +187,14 @@ const WalletAddMoney = ({ navigation }) => {
                 },
               },
             );
-          } catch (cancelErr) {}
-
+          } catch (cancelErr) {
+            console.log('cancelErr---------------------------->', cancelErr?.response?.data);
+          }
           setIsProcessing(false);
         });
     } catch (error) {
       setIsProcessing(false);
+      console.log('error---------------------------->', error?.response?.data);
       Alert.alert('Error', 'Something went wrong! Please try again.');
     }
   };

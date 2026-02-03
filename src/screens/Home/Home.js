@@ -10,6 +10,7 @@ import {
   BackHandler,
   StatusBar,
   Alert,
+  Dimensions,
 } from 'react-native';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import { useSelector, useDispatch } from 'react-redux';
@@ -42,6 +43,11 @@ import { useFocusEffect } from '@react-navigation/native';
 import { clearProfile } from '../../redux/slices/profileSlice';
 import responsive from '../../constants/responsive';
 import { responsiveHeight } from 'react-native-responsive-dimensions';
+const { width } = Dimensions.get('window');
+const CARD_GAP = 16;
+const CARD_WIDTH = (width - CARD_GAP * 10) / 2;
+const CARD_HEIGHT = CARD_WIDTH * 1; 
+
 
 const Home = ({ navigation }) => {
   const token = useSelector(state => state.auth.token);
@@ -58,7 +64,7 @@ const Home = ({ navigation }) => {
   );
   const { recentlyview } = useSelector(state => state.product);
 
-  console.log('recentlyview---------------------->', recentlyview)
+  console.log('recentlyview---------------------->', recentlyview);
 
   useFocusEffect(
     useCallback(() => {
@@ -353,8 +359,8 @@ const Home = ({ navigation }) => {
                     style={{
                       flex: 1,
                       justifyContent: 'flex-end', // text bottom me
-                      width: responsive.width(100),
-                      height: responsive.height(120),
+                      height: CARD_HEIGHT,
+                      width: CARD_WIDTH,
                       borderRadius: responsive.borderRadius(20),
                       marginHorizontal: responsive.marginHorizontal(2),
                     }}
@@ -366,7 +372,7 @@ const Home = ({ navigation }) => {
                     <View
                       style={{
                         width: '100%',
-                        paddingVertical: moderateScale(1), 
+                        paddingVertical: moderateScale(1),
                       }}
                     >
                       <Text

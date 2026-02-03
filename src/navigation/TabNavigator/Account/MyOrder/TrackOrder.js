@@ -58,7 +58,7 @@ const TrackOrder = ({navigation, route}) => {
 
       {/* Info */}
       <View style={{paddingHorizontal: 16, paddingBottom: 10}}>
-        <Text style={styles.infoText}>Delivery date – {orderStatusLogs?.delivery_date || '-'}</Text>
+        {/* <Text style={styles.infoText}>Delivery date – {orderStatusLogs?.delivery_date || '-'}</Text> */}
         <Text style={styles.infoText}>
           Tracking Number :
           <Text style={styles.trackingNo}>{orderStatusLogs?.awb_details || '-'}</Text>

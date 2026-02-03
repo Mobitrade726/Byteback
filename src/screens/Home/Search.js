@@ -75,35 +75,39 @@ const renderIcon = (iconData, size = moderateScale(12), color = '#333') => {
 const ProductCard = React.memo(
   ({ item, onToggleWishlist, isInWishlist, onPress }) => {
     return (
-      <View>
-        <TouchableOpacity
-          onPress={() => onPress(item)}
-          style={ProductCardStyles.cardD}
-        >
-          <View style={ProductCardStyles.imageContainerD}>
-            {item && (
-              <Text style={ProductCardStyles.refurbishedLabelD}>PRE-OWNED</Text>
-            )}
-            <Image
-              source={{ uri: item.feature_image }}
-              style={ProductCardStyles.imageD}
-              resizeMode="contain"
-            />
-            <TouchableOpacity
-              style={ProductCardStyles.heartIconD}
-              onPress={() => onToggleWishlist(item)}
-            >
-              <AntDesign
-                name={isInWishlist ? 'heart' : 'hearto'}
-                size={moderateScale(12)}
-                color={isInWishlist ? '#E74C3C' : '#999'}
+      <View style={{ width: responsive.width(175) }}>
+        <View style={ProductCardStyles.cardShadow}>
+          <TouchableOpacity
+            onPress={() => onPress(item)}
+            style={ProductCardStyles.cardD}
+          >
+            <View style={ProductCardStyles.imageContainerD}>
+              {item && (
+                <Text style={ProductCardStyles.refurbishedLabelD}>
+                  PRE-OWNED
+                </Text>
+              )}
+              <Image
+                source={{ uri: item.feature_image }}
+                style={ProductCardStyles.imageD}
+                resizeMode="contain"
               />
-            </TouchableOpacity>
-          </View>
-          <Text style={ProductCardStyles.gradeText}>
-            Grade {item.grade_number}
-          </Text>
-        </TouchableOpacity>
+              <TouchableOpacity
+                style={ProductCardStyles.heartIconD}
+                onPress={() => onToggleWishlist(item)}
+              >
+                <AntDesign
+                  name={isInWishlist ? 'heart' : 'hearto'}
+                  size={moderateScale(12)}
+                  color={isInWishlist ? '#E74C3C' : '#999'}
+                />
+              </TouchableOpacity>
+            </View>
+            <Text style={ProductCardStyles.gradeText}>
+              Grade {item.grade_number}
+            </Text>
+          </TouchableOpacity>
+        </View>
         <Text style={ProductCardStyles.productName}>{item.model_name}</Text>
         <Text style={ProductCardStyles.colorText}>● {item.color_name}</Text>
         <View style={ProductCardStyles.priceRowD}>
@@ -125,7 +129,10 @@ const SearchRefactored = ({ navigation }) => {
   const wishlistItems = useSelector(state => state.wishlist.items || []);
   const { catList = [] } = useSelector(state => state.home || {});
 
-  console.log('nocartidfilterdata---------------->', nocartidfilterdata?.grades);
+  console.log(
+    'nocartidfilterdata---------------->',
+    nocartidfilterdata?.grades,
+  );
 
   // UI state
   const [searchText, setSearchText] = useState('');
