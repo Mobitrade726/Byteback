@@ -340,7 +340,6 @@
 //   },
 // });
 
-
 import React, { useEffect, useState } from 'react';
 import {
   Text,
@@ -355,24 +354,40 @@ import NetInfo from '@react-native-community/netinfo';
 import { Provider } from 'react-redux';
 import { store, persistor } from './src/redux/store';
 import { PersistGate } from 'redux-persist/integration/react';
-
+import { checkFlexibleUpdate } from './src/utils/flexibleUpdate';
 import { NavigationContainer } from '@react-navigation/native';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
 import Toast from 'react-native-toast-message';
 
-import RootNavigation from './src/navigation/TabNavigator/RootNavigation'
+import RootNavigation from './src/navigation/TabNavigator/RootNavigation';
 
 const { width } = Dimensions.get('window');
 
 const App = () => {
   const [isConnected, setIsConnected] = useState(true);
 
+  // useEffect(() => {
+  //   const unsubscribe = NetInfo.addEventListener(state => {
+  //     setIsConnected(state.isConnected);
+  //   });
+  //   return () => unsubscribe();
+  // }, []);
+
+  const [checkedUpdate, setCheckedUpdate] = useState(false);
+
   useEffect(() => {
     const unsubscribe = NetInfo.addEventListener(state => {
       setIsConnected(state.isConnected);
+
+      // ✅ Internet ON + Update not checked yet
+      if (state.isConnected && !checkedUpdate) {
+        checkFlexibleUpdate();
+        setCheckedUpdate(true);
+      }
     });
+
     return () => unsubscribe();
-  }, []);
+  }, [checkedUpdate]);
 
   /* -------- NO INTERNET -------- */
   if (!isConnected) {
