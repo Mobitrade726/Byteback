@@ -142,8 +142,6 @@ const KycStatusScreen = ({ navigation }) => {
     doc => doc.status === 'Approved',
   );
 
-  console.log('kycData.documents------------------------>', kycData.documentnumber?.aadhaar_no);
-
   return (
     <View style={styles.safe}>
       <Header title="KYC Status" navigation={navigation} showBack={true} />

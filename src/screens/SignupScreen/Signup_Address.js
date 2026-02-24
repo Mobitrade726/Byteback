@@ -800,8 +800,6 @@ const Signup_Address = ({ navigation }) => {
           handleInvalidZip(zip);
         }
       } catch (error) {
-        console.log('ZIP ERROR:', error?.response?.data);
-
         // ❌ API ERROR → CLEAR + ALERT
         handleInvalidZip(zip);
       } finally {

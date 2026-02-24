@@ -89,8 +89,8 @@ android {
         applicationId "com.byteback"
         minSdkVersion rootProject.ext.minSdkVersion
         targetSdkVersion rootProject.ext.targetSdkVersion
-        versionCode 13
-        versionName "1.0.13"
+        versionCode 15
+        versionName "1.0.15"
     }
     signingConfigs {
     release {

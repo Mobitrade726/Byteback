@@ -198,8 +198,6 @@ const Checkout = () => {
         barcode_ids: barcode_ids,
       };
 
-      console.log('createPayload++++++++++++++++++++++++++++++++', createPayload)
-
       // Create order on backend
       const createOrderRes = await axios.post(
         `${API_BASE_URL}/orders/create`,
@@ -371,7 +369,6 @@ const Checkout = () => {
         type: 'error',
         text2: error?.response?.data?.message || error.message,
       });
-      console.log('error+++++++++++++++placeorder++++++++++++++++', error?.response?.data)
       setSubmitting(false);
     }
   }, [

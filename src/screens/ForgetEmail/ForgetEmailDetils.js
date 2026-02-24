@@ -33,11 +33,6 @@ const ForgetEmailDetils = ({ navigation }) => {
     dispatch(forgotEmailAPI());
   }, [dispatch]);
 
-  console.log(
-    'resetDataEmail---------------------------------->',
-    resetDataEmail,
-  );
-
   const copyEmail = () => {
     Clipboard.setString(resetDataEmail?.data?.email || '');
     setShowToast(true);

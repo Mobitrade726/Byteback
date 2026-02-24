@@ -21,9 +21,6 @@ export const checkFlexibleUpdate = async () => {
 
       // 👂 Listen download status
       inAppUpdates.addStatusUpdateListener(downloadStatus => {
-
-        console.log('Download Status:', downloadStatus);
-
         if (downloadStatus.installStatus === IAUInstallStatus.DOWNLOADED) {
           console.log('✅ Update Downloaded - Will install on restart');
         }

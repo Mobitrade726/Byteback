@@ -179,7 +179,6 @@ const LoginScreen = ({ navigation }) => {
           loc = await getLocation(); // This should have its own timeout internally
         } catch (e) {
           setLoading(false);
-          console.log('Location Error:', e);
         }
 
         // 4️⃣ Reverse-geocoding (only if location exists)
@@ -213,7 +212,6 @@ const LoginScreen = ({ navigation }) => {
             };
           } catch (error) {
             setLoading(false);
-            console.log('Reverse Geocode Error:', error?.message);
             // Continue login even if address fails
           }
         }

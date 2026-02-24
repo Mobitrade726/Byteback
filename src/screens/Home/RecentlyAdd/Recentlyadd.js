@@ -72,9 +72,6 @@ const Recentlyadd = ({ tabId, catName, catId }) => {
     }, [dispatch]),
   );
 
-  console.log('lateststock--------------->', lateststock);
-  console.log('applyselectedfilters--------------->', applyselectedfilters);
-
   // Apply filters
   useEffect(() => {
     if (!lateststock) return;
@@ -235,7 +232,6 @@ const Recentlyadd = ({ tabId, catName, catId }) => {
     );
   };
   const renderItemColor = ({ item }) => {
-    console.log('item----------------------->', item?.color_name);
     const isSelected = selectedColors.includes(item.color_name);
     return (
       <TouchableOpacity

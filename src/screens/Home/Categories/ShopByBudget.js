@@ -1154,8 +1154,6 @@ const ShopByBudget = ({ navigation }) => {
   const { priceId, osname, arrayosname, rangeLabel, catName } =
     route.params || {};
 
-  console.log('rangeLabel---------------------->', rangeLabel);
-
   const dispatch = useDispatch();
   const { productData } = useSelector(state => state.product);
   const wishlistItems = useSelector(state => state.wishlist.items);

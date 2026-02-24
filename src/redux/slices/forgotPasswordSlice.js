@@ -35,7 +35,6 @@ export const forgotPasswordAPI = createAsyncThunk(
 export const forgotEmailAPI = createAsyncThunk(
   'auth/forgotEmailAPI',
   async (mobile, { rejectWithValue }) => {
-    console.log('mobile---------------->', mobile);
     try {
       const response = await axios.post(
         `${API_BASE_URL}/forget-email`,
@@ -47,14 +46,12 @@ export const forgotEmailAPI = createAsyncThunk(
           },
         },
       );
-      console.log('res++++++++++++++++++++++++', response?.data);
       if (response.data?.status) {
         return response.data;
       } else {
         return rejectWithValue(response.data?.message || 'Failed to send OTP');
       }
     } catch (error) {
-      console.log('error++++++++++++++++++++++++', error?.response);
       return rejectWithValue(error.response?.data?.message || 'Network error');
     }
   },

@@ -102,7 +102,6 @@ const WalletAddMoney = ({ navigation }) => {
 
       const order = response.data;
 
-      console.log('order?.razorpay_key============================>', order?.razorpay_key)
 
       const paymentMethods = {
         upi: selectedMethod === 'upi',
@@ -194,7 +193,6 @@ const WalletAddMoney = ({ navigation }) => {
         });
     } catch (error) {
       setIsProcessing(false);
-      console.log('error---------------------------->', error?.response?.data);
       Alert.alert('Error', 'Something went wrong! Please try again.');
     }
   };

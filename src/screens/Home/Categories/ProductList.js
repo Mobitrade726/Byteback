@@ -361,17 +361,38 @@ const ProductList = ({ route, iconType, icon, text }) => {
 
   const label = product_categry === 'mobile' ? 'IMEI Number' : 'Serial Number';
 
-  const rowData = [label];
-
-  const productSpecs = [
-    [rowData, barcodeDetails?.imei_number],
-    ['Model Name', barcodeDetails?.barcode_model?.model_name],
+  const mobileSpecs = [
+    [label, barcodeDetails?.imei_number],
+    ['Brand', barcodeDetails?.barcode_brand?.brand_name],
+    ['Model', barcodeDetails?.barcode_model?.model_name],
+    ['Operating System', modelSpecification?.operating_system],
+    ['Variant', barcodeDetails?.barcode_variant?.variant_name],
     ['Color', barcodeDetails?.barcode_color?.color_name],
-    ...(product_categry === 'mobile'
-      ? [['SIM Type', modelSpecification?.sim_type]]
-      : []),
-    ['Touchscreen', modelSpecification?.touchscreen],
+    ['SIM Type', modelSpecification?.sim_type],
+    ['Rear Camera', modelSpecification?.rear_camera],
+    ['IP Rating', modelSpecification?.ip_rating],
   ];
+
+  const laptopSpecs = [
+    [label, barcodeDetails?.imei_number],
+    ['Brand', barcodeDetails?.barcode_brand?.brand_name],
+    ['Model', barcodeDetails?.barcode_model?.model_name],
+    ['Screen Size', modelSpecification?.screen_size],
+    ['Year', barcodeDetails?.barcode_year?.year_name],
+    ['RAM', modelSpecification?.ram],
+    ['Storage', barcodeDetails?.barcode_storage?.rom_name],
+    ['Processor', modelSpecification?.processor],
+    ['Generation', barcodeDetails?.barcode_generation?.generation_name],
+    ['Grade', gradeNumbers],
+    ['Category', product_categry],
+  ];
+
+  const productSpecs =
+    product_categry === 'mobile'
+      ? mobileSpecs
+      : product_categry === 'laptop'
+      ? laptopSpecs
+      : [];
 
   const handleShare = async item => {
     try {
@@ -435,72 +456,84 @@ const ProductList = ({ route, iconType, icon, text }) => {
     : [];
 
   const renderItemSimilar = ({ item }) => (
-    <TouchableOpacity
-      onPress={() => {
-        navigation.push('ProductList', {
-          product_barcode_id: item?.barcode_id,
-          product_barcode_price: item?.price,
-        });
+    <View
+      style={{
+        width: responsive.width(120),
       }}
-      style={styles.cardsimilar}
     >
-      <Image
-        source={
-          item?.feature_image
-            ? { uri: item.feature_image }
-            : require('../../../../assets/images/productlistslider.png')
-        }
-        style={styles.imagesimilar}
-      />
+      <TouchableOpacity
+        onPress={() => {
+          navigation.push('ProductList', {
+            product_barcode_id: item?.barcode_id,
+            product_barcode_price: item?.price,
+          });
+        }}
+        style={styles.cardsimilar}
+      >
+        <Image
+          source={
+            item?.feature_image
+              ? { uri: item.feature_image }
+              : require('../../../../assets/images/productlistslider.png')
+          }
+          style={styles.imagesimilar}
+        />
 
-      <Text style={styles.titlesimilar}>{item?.model_name}</Text>
+        <Text style={styles.titlesimilar}>{item?.model_name}</Text>
 
-      <Text style={styles.descsimilar}>{item?.color_name}</Text>
+        <Text style={styles.descsimilar}>{item?.color_name}</Text>
 
-      <Text style={styles.descsimilar}>
-        {item?.category === 'Mobile'
-          ? item?.variant_name
-          : `${item?.ram || '-'} / ${item?.rom || '-'}`}
-      </Text>
+        <Text style={styles.descsimilar}>
+          {item?.category === 'Mobile'
+            ? item?.variant_name
+            : `${item?.ram || '-'} / ${item?.rom || '-'}`}
+        </Text>
 
-      <Text style={styles.gradesimilar}>Grade {item?.grade_number}</Text>
+        <Text style={styles.gradesimilar}>Grade {item?.grade_number}</Text>
 
-      <Text style={styles.pricesimilar}>₹{item?.price}</Text>
-    </TouchableOpacity>
+        <Text style={styles.pricesimilar}>₹{item?.price}</Text>
+      </TouchableOpacity>
+    </View>
   );
   const renderItemGrade = ({ item }) => (
-    <TouchableOpacity
-      onPress={() => {
-        navigation.push('ProductList', {
-          product_barcode_id: item?.barcode_id,
-          product_barcode_price: item?.price,
-        });
+    <View
+      style={{
+        width: responsive.width(120),
       }}
-      style={styles.cardsimilar}
     >
-      <Image
-        source={
-          item?.feature_image
-            ? { uri: item.feature_image }
-            : require('../../../../assets/images/productlistslider.png')
-        }
-        style={styles.imagesimilar}
-      />
+      <TouchableOpacity
+        onPress={() => {
+          navigation.push('ProductList', {
+            product_barcode_id: item?.barcode_id,
+            product_barcode_price: item?.price,
+          });
+        }}
+        style={styles.cardsimilar}
+      >
+        <Image
+          source={
+            item?.feature_image
+              ? { uri: item.feature_image }
+              : require('../../../../assets/images/productlistslider.png')
+          }
+          style={styles.imagesimilar}
+        />
 
-      <Text style={styles.titlesimilar}>{item?.model_name}</Text>
+        <Text style={styles.titlesimilar}>{item?.model_name}</Text>
 
-      <Text style={styles.descsimilar}>{item?.color_name}</Text>
+        <Text style={styles.descsimilar}>{item?.color_name}</Text>
 
-      <Text style={styles.descsimilar}>
-        {item?.category === 'Mobile'
-          ? item?.variant_name
-          : `${item?.ram || '-'} / ${item?.rom || '-'}`}
-      </Text>
+        <Text style={styles.descsimilar}>
+          {item?.category === 'Mobile'
+            ? item?.variant_name
+            : `${item?.ram || '-'} / ${item?.rom || '-'}`}
+        </Text>
 
-      <Text style={styles.gradesimilar}>Grade {item?.grade_number}</Text>
+        <Text style={styles.gradesimilar}>Grade {item?.grade_number}</Text>
 
-      <Text style={styles.pricesimilar}>₹{item?.price}</Text>
-    </TouchableOpacity>
+        <Text style={styles.pricesimilar}>₹{item?.price}</Text>
+      </TouchableOpacity>
+    </View>
   );
 
   const features = [
@@ -542,7 +575,7 @@ const ProductList = ({ route, iconType, icon, text }) => {
     },
   ];
 
-  const screenDefects = details.filter(d => d.defect_type === 'Screen Defects');
+  const category = product?.category?.toLowerCase();
 
   return (
     <View style={styles.container}>
@@ -553,8 +586,8 @@ const ProductList = ({ route, iconType, icon, text }) => {
           showBack={true}
           showSearch
         />
-        <View style={styles.container}>
-          <Swiper
+        <View style={styles.swapcontainer}>
+          {/* <Swiper
             key={imagesToShow.length}
             ref={swiperRef}
             autoplay={imagesToShow.length > 1}
@@ -574,6 +607,29 @@ const ProductList = ({ route, iconType, icon, text }) => {
                 resizeMode="cover"
               />
             ))}
+          </Swiper> */}
+
+          <Swiper
+            key={imagesToShow.length}
+            ref={swiperRef}
+            autoplay={imagesToShow.length > 1}
+            loop={imagesToShow.length > 1}
+            showsPagination
+            style={styles.swiper}
+            dotStyle={styles.dot}
+            activeDotStyle={styles.activeDot}
+            paginationStyle={styles.pagination}
+            onIndexChanged={index => setActiveIndex(index)}
+          >
+            {imagesToShow.map((item, index) => (
+              <View key={index} style={styles.imageCard}>
+                <Image
+                  source={item.url ? { uri: item.url } : item.image}
+                  style={styles.mainImage}
+                  resizeMode="cover"
+                />
+              </View>
+            ))}
           </Swiper>
 
           <View
@@ -588,8 +644,8 @@ const ProductList = ({ route, iconType, icon, text }) => {
                   key={index}
                   activeOpacity={0.8}
                   onPress={() => {
-                    swiperRef.current?.scrollTo(index, true); // ✅ ONLY THIS
-                    setActiveIndex(index); // for highlight
+                    swiperRef.current?.scrollTo(index, true);
+                    setActiveIndex(index);
                   }}
                   style={{
                     alignSelf: 'center',
@@ -689,10 +745,38 @@ const ProductList = ({ route, iconType, icon, text }) => {
                 {barcodeDetails?.barcode_model?.model_name || 'N/A'}
               </Text>
               <Text style={styles.priceP}>
-                ₹{barcodeDetails?.purchase_price || 'N/A'}
+                ₹{barcodeDetails?.purchase_price}
               </Text>
-              <Text style={{ fontSize: responsive.fontSize(12) }}>
-                Size: {barcodeDetails?.barcode_variant?.variant_name || 'N/A'}
+              <Text
+                style={{
+                  fontSize: responsive.fontSize(12),
+                  fontWeight: 'bold',
+                }}
+              >
+                {category === 'mobile' && (
+                  <>
+                    Variant :{' '}
+                    {barcodeDetails?.barcode_variant?.variant_name || 'N/A'}
+                  </>
+                )}
+
+                {category === 'laptop' && (
+                  <>
+                    RAM : {barcodeDetails?.barcode_storage?.rom_code || 'N/A'}{' '}
+                    Storage :{' '}
+                    {barcodeDetails?.barcode_storage?.rom_name || 'N/A'}
+                  </>
+                )}
+              </Text>
+              <Text
+                style={{
+                  fontSize: responsive.fontSize(12),
+                  fontWeight: 'bold',
+                }}
+              >
+                {category === 'laptop' && (
+                  <>Gen | Processor: {modelSpecification?.processor || 'N/A'}</>
+                )}
               </Text>
               <View
                 style={{
@@ -702,7 +786,12 @@ const ProductList = ({ route, iconType, icon, text }) => {
                   alignItems: 'center',
                 }}
               >
-                <Text style={{ fontSize: responsive.fontSize(12) }}>
+                <Text
+                  style={{
+                    fontSize: responsive.fontSize(12),
+                    fontWeight: 'bold',
+                  }}
+                >
                   Color: {barcodeDetails?.barcode_color?.color_name || 'N/A'}
                 </Text>
                 <View
@@ -819,7 +908,7 @@ const ProductList = ({ route, iconType, icon, text }) => {
             </View>
             {productSpecs.map(([label, value], index) => (
               <View
-                key={label}
+                key={`${label}-${index}`}
                 style={[
                   styles.specRowFeature,
                   {
@@ -857,192 +946,624 @@ const ProductList = ({ route, iconType, icon, text }) => {
             </TouchableOpacity>
           </View>
 
-          {showSpecs && (
+          {showSpecs && category === 'laptop' && (
             <View style={{}}>
-              <Text style={styles.headlinesviewspecifications}>
-                OS & Processor Features
-              </Text>
-              <View style={styles.dividerspecification} />
-
-              <View style={styles.specRowSpecification}>
-                <Text style={styles.specLabelSpecification}>
-                  Operating System
-                </Text>
-                <Text style={styles.specValuespecification}>
-                  {modelSpecification?.operating_system || 'N/A'}
-                </Text>
-              </View>
-
-              <View style={styles.dividerspecification} />
-
-              <View style={styles.specRowSpecification}>
-                <Text style={styles.specLabelSpecification}>Processor</Text>
-                <Text style={styles.specValuespecification}>
-                  {modelSpecification?.processor || 'N/A'}
-                </Text>
-              </View>
-
-              <Text style={styles.headlinesviewspecifications}>
-                Display Features
-              </Text>
+              {/* General star */}
+              <Text style={styles.headlinesviewspecifications}>General</Text>
               <View style={styles.dividerspecification} />
               <View style={styles.specRowSpecification}>
-                <Text style={styles.specLabelSpecification}>Display Size</Text>
+                <Text style={styles.specLabelSpecification}>Brand</Text>
                 <Text style={styles.specValuespecification}>
-                  {modelSpecification?.screen_size || 'N/A'}
+                  {barcodeDetails?.barcode_brand?.brand_name || '--'}
                 </Text>
               </View>
               <View style={styles.dividerspecification} />
               <View style={styles.specRowSpecification}>
-                <Text style={styles.specLabelSpecification}>Resolution</Text>
+                <Text style={styles.specLabelSpecification}>Modal</Text>
                 <Text style={styles.specValuespecification}>
-                  {modelSpecification?.resolution || 'N/A'}
+                  {barcodeDetails?.barcode_model?.model_name || '--'}
                 </Text>
               </View>
               <View style={styles.dividerspecification} />
               <View style={styles.specRowSpecification}>
-                <Text style={styles.specLabelSpecification}>GPU</Text>
-                <Text style={styles.specValuespecification}>
-                  {modelSpecification?.graphics || 'N/A'}
-                </Text>
-              </View>
-
-              <Text style={styles.headlinesviewspecifications}>
-                Memory & Storage
-              </Text>
-              <View style={styles.dividerspecification} />
-              {barcodeDetails?.barcode_brand?.category === 'Mobile' ? (
-                <>
-                  <View style={styles.specRowSpecification}>
-                    <Text style={styles.specLabelSpecification}>
-                      Internal Storage
-                    </Text>
-                    <Text style={styles.specValuespecification}>
-                      {barcodeDetails?.barcode_storage || 'N/A'}
-                    </Text>
-                  </View>
-                  <View style={styles.dividerspecification} />
-                  <View style={styles.specRowSpecification}>
-                    <Text style={styles.specLabelSpecification}>RAM</Text>
-                    <Text style={styles.specValuespecification}>
-                      {barcodeDetails?.barcode_ram || 'N/A'}
-                    </Text>
-                  </View>
-                </>
-              ) : (
-                <>
-                  <View style={styles.specRowSpecification}>
-                    <Text style={styles.specLabelSpecification}>
-                      Internal Storage
-                    </Text>
-                    <Text style={styles.specValuespecification}>
-                      {barcodeDetails?.barcode_storage?.rom_name || 'N/A'}
-                    </Text>
-                  </View>
-                  <View style={styles.dividerspecification} />
-                  <View style={styles.specRowSpecification}>
-                    <Text style={styles.specLabelSpecification}>RAM</Text>
-                    <Text style={styles.specValuespecification}>
-                      {barcodeDetails?.barcode_storage?.rom_code || 'N/A'}
-                    </Text>
-                  </View>
-                </>
-              )}
-
-              <Text style={styles.headlinesviewspecifications}>
-                Camera Features
-              </Text>
-              <View style={styles.dividerspecification} />
-              <View style={styles.specRowSpecification}>
-                <Text style={styles.specLabelSpecification}>
-                  Primary Camera
-                </Text>
-                <Text style={styles.specValuespecification}>
-                  {modelSpecification?.front_camera || 'N/A'}
+                <Text style={styles.specLabelSpecification}>Series</Text>
+                <Text style={styles.specValuespecification || '--'}>
+                  {modelSpecification?.series}
                 </Text>
               </View>
               <View style={styles.dividerspecification} />
               <View style={styles.specRowSpecification}>
-                <Text style={styles.specLabelSpecification}>
-                  Secondary Camera
-                </Text>
+                <Text style={styles.specLabelSpecification}>Dimensions</Text>
                 <Text style={styles.specValuespecification}>
-                  {modelSpecification?.no_of_rear_camera || 'N/A'}
-                </Text>
-              </View>
-              <View style={styles.dividerspecification} />
-              <View style={styles.specRowSpecification}>
-                <Text style={styles.specLabelSpecification}>Front Flashs</Text>
-                <Text style={styles.specValuespecification}>
-                  {modelSpecification?.front_flash || 'N/A'}
-                </Text>
-              </View>
-              <View style={styles.dividerspecification} />
-              <View style={styles.specRowSpecification}>
-                <Text style={styles.specLabelSpecification}>Back Flashs</Text>
-                <Text style={styles.specValuespecification}>
-                  {modelSpecification?.rear_flash || 'N/A'}
-                </Text>
-              </View>
-              <Text style={styles.headlinesviewspecifications}>
-                Other Details
-              </Text>
-              <View style={styles.dividerspecification} />
-              <View style={styles.specRowSpecification}>
-                <Text style={styles.specLabelSpecification}>Sensors</Text>
-                <Text style={styles.specValuespecification}>
-                  {modelSpecification?.fingerprint_sensor || 'N/A'}
-                </Text>
-              </View>
-              <View style={styles.dividerspecification} />
-              <View style={styles.specRowSpecification}>
-                <Text style={styles.specLabelSpecification}>GPS Type</Text>
-                <Text style={styles.specValuespecification}>
-                  {modelSpecification?.gps || 'N/A'}
-                </Text>
-              </View>
-              <Text style={styles.headlinesviewspecifications}>
-                Battery & Power
-              </Text>
-              <View style={styles.dividerspecification} />
-              <View style={styles.specRowSpecification}>
-                <Text style={styles.specLabelSpecification}>
-                  Battery Capacity
-                </Text>
-                <Text style={styles.specValuespecification}>
-                  {modelSpecification?.battery_capacity || 'N/A'}
-                </Text>
-              </View>
-              <Text style={styles.headlinesviewspecifications}>Dimensions</Text>
-              <View style={styles.dividerspecification} />
-              <View style={styles.specRowSpecification}>
-                <Text style={styles.specLabelSpecification}>Size</Text>
-                <Text style={styles.specValuespecification}>
-                  {modelSpecification?.dimensions || 'N/A'}
+                  {modelSpecification?.dimensions || '--'}
                 </Text>
               </View>
               <View style={styles.dividerspecification} />
               <View style={styles.specRowSpecification}>
                 <Text style={styles.specLabelSpecification}>Weight</Text>
                 <Text style={styles.specValuespecification}>
-                  {modelSpecification?.weight || 'N/A'}
+                  {modelSpecification?.weight || '--'}
                 </Text>
               </View>
-              <Text style={styles.headlinesviewspecifications}>Warranty</Text>
+              <View style={styles.dividerspecification} />
+              <View style={styles.specRowSpecification}>
+                <Text style={styles.specLabelSpecification}>Color</Text>
+                <Text style={styles.specValuespecification}>
+                  {barcodeDetails?.barcode_color?.color_name || '--'}
+                </Text>
+              </View>
               <View style={styles.dividerspecification} />
               <View style={styles.specRowSpecification}>
                 <Text style={styles.specLabelSpecification}>
-                  Warranty Summary
+                  Operating System
                 </Text>
                 <Text style={styles.specValuespecification}>
-                  1 Year Manufacturer Warranty for Device and 6 Months
-                  Manufacturer Warranty for In-Box Accessories
+                  {modelSpecification?.operating_system || '--'}
                 </Text>
               </View>
-              {/* <View style={styles.specRow}>
-                <Text style={styles.specLabel}>Domestic Warranty</Text>
-                <Text style={styles.specValue}>1 Year</Text>
-              </View> */}
+              <View style={styles.dividerspecification} />
+              {/* General end */}
+
+              {/* Display Features start */}
+              <Text style={styles.headlinesviewspecifications}>
+                Display Features
+              </Text>
+              <View style={styles.dividerspecification} />
+              <View style={styles.specRowSpecification}>
+                <Text style={styles.specLabelSpecification}>Screen Size</Text>
+                <Text style={styles.specValuespecification}>
+                  {modelSpecification?.screen_size || '--'}
+                </Text>
+              </View>
+              <View style={styles.dividerspecification} />
+              <View style={styles.specRowSpecification}>
+                <Text style={styles.specLabelSpecification}>Resolution</Text>
+                <Text style={styles.specValuespecification}>
+                  {modelSpecification?.resolution || '--'}
+                </Text>
+              </View>
+              <View style={styles.dividerspecification} />
+              <View style={styles.specRowSpecification}>
+                <Text style={styles.specLabelSpecification}>Touchscreen</Text>
+                <Text style={styles.specValuespecification}>
+                  {modelSpecification?.touchscreen || '--'}
+                </Text>
+              </View>
+              {/* Display Features end */}
+              {/* Hardware start */}
+              <Text style={styles.headlinesviewspecifications}>Hardware</Text>
+              <View style={styles.dividerspecification} />
+              <View style={styles.specRowSpecification}>
+                <Text style={styles.specLabelSpecification}>Processor</Text>
+                <Text style={styles.specValuespecification}>
+                  {modelSpecification?.processor || '--'}
+                </Text>
+              </View>
+              <View style={styles.dividerspecification} />
+              <View style={styles.specRowSpecification}>
+                <Text style={styles.specLabelSpecification}>Ram</Text>
+                <Text style={styles.specValuespecification}>
+                  {modelSpecification?.ram || '--'}
+                </Text>
+              </View>
+              <View style={styles.dividerspecification} />
+              <View style={styles.specRowSpecification}>
+                <Text style={styles.specLabelSpecification}>Ram Slots</Text>
+                <Text style={styles.specValuespecification}>
+                  {modelSpecification?.ram_slots || '--'}
+                </Text>
+              </View>
+              <View style={styles.dividerspecification} />
+              <View style={styles.specRowSpecification}>
+                <Text style={styles.specLabelSpecification}>Graphics</Text>
+                <Text style={styles.specValuespecification}>
+                  {modelSpecification?.graphics || '--'}
+                </Text>
+              </View>
+              <View style={styles.dividerspecification} />
+              <View style={styles.specRowSpecification}>
+                <Text style={styles.specLabelSpecification}>
+                  Dedicated Graphics
+                </Text>
+                <Text style={styles.specValuespecification}>
+                  {modelSpecification?.dedicated_graphics || '--'}
+                </Text>
+              </View>
+              <View style={styles.dividerspecification} />
+              <View style={styles.specRowSpecification}>
+                <Text style={styles.specLabelSpecification}>Hard Drive</Text>
+                <Text style={styles.specValuespecification}>
+                  {modelSpecification?.hard_drive || '--'}
+                </Text>
+              </View>
+              {/* Hardware end */}
+              {/* Input start */}
+              <Text style={styles.headlinesviewspecifications}>Inputs</Text>
+              <View style={styles.dividerspecification} />
+              <View style={styles.specRowSpecification}>
+                <Text style={styles.specLabelSpecification}>Web Cammera</Text>
+                <Text style={styles.specValuespecification}>
+                  {modelSpecification?.web_camera || '--'}
+                </Text>
+              </View>
+              <View style={styles.dividerspecification} />
+              <View style={styles.specRowSpecification}>
+                <Text style={styles.specLabelSpecification}>
+                  Pointer Device
+                </Text>
+                <Text style={styles.specValuespecification}>
+                  {modelSpecification?.pointer_device || '--'}
+                </Text>
+              </View>
+              <View style={styles.dividerspecification} />
+              <View style={styles.specRowSpecification}>
+                <Text style={styles.specLabelSpecification}>
+                  Backlit Keyboard
+                </Text>
+                <Text style={styles.specValuespecification}>
+                  {modelSpecification?.backlit_keyboard || '--'}
+                </Text>
+              </View>
+              <View style={styles.dividerspecification} />
+              <View style={styles.specRowSpecification}>
+                <Text style={styles.specLabelSpecification}>Internal Mic</Text>
+                <Text style={styles.specValuespecification}>
+                  {modelSpecification?.internal_mic || '--'}
+                </Text>
+              </View>
+              <View style={styles.dividerspecification} />
+              <View style={styles.specRowSpecification}>
+                <Text style={styles.specLabelSpecification}>Speakers</Text>
+                <Text style={styles.specValuespecification}>
+                  {modelSpecification?.speakers || '--'}
+                </Text>
+              </View>
+              {/* Input end */}
+              {/* ports amd slots start */}
+              <Text style={styles.headlinesviewspecifications}>
+                Ports amd slots
+              </Text>
+              <View style={styles.dividerspecification} />
+              <View style={styles.specRowSpecification}>
+                <Text style={styles.specLabelSpecification}>
+                  No of USB Ports
+                </Text>
+                <Text style={styles.specValuespecification}>
+                  {modelSpecification?.number_of_usb_ports || '--'}
+                </Text>
+              </View>
+              <View style={styles.dividerspecification} />
+              <View style={styles.specRowSpecification}>
+                <Text style={styles.specLabelSpecification}>USB Ports</Text>
+                <Text style={styles.specValuespecification}>
+                  {modelSpecification?.usb_ports || '--'}
+                </Text>
+              </View>
+              <View style={styles.dividerspecification} />
+              <View style={styles.specRowSpecification}>
+                <Text style={styles.specLabelSpecification}>
+                  Multi Card Slot
+                </Text>
+                <Text style={styles.specValuespecification}>
+                  {modelSpecification?.multi_card_slot || '--'}
+                </Text>
+              </View>
+              <View style={styles.dividerspecification} />
+              <View style={styles.specRowSpecification}>
+                <Text style={styles.specLabelSpecification}>Min In</Text>
+                <Text style={styles.specValuespecification}>
+                  {modelSpecification?.mic_in || '--'}
+                </Text>
+              </View>
+              {/* ports amd slots end */}
+              {/* Connectivity start */}
+              <Text style={styles.headlinesviewspecifications}>
+                Connectivity
+              </Text>
+              <View style={styles.dividerspecification} />
+              <View style={styles.specRowSpecification}>
+                <Text style={styles.specLabelSpecification}>
+                  Wi-fi Standard Supports
+                </Text>
+                <Text style={styles.specValuespecification}>
+                  {modelSpecification?.wifi || '--'}
+                </Text>
+              </View>
+              <View style={styles.dividerspecification} />
+              <View style={styles.specRowSpecification}>
+                <Text style={styles.specLabelSpecification}>
+                  Bluetooth version
+                </Text>
+                <Text style={styles.specValuespecification}>
+                  {modelSpecification?.bluetooth || '--'}
+                </Text>
+              </View>
+              {/* Connectivity end */}
+            </View>
+          )}
+          {showSpecs && category === 'mobile' && (
+            <View style={{}}>
+              <Text style={styles.headlinesviewspecifications}>General</Text>
+              <View style={styles.dividerspecification} />
+              <View style={styles.specRowSpecification}>
+                <Text style={styles.specLabelSpecification}>Brand</Text>
+                <Text style={styles.specValuespecification}>
+                  {barcodeDetails?.barcode_brand?.brand_name || '--'}
+                </Text>
+              </View>
+              <View style={styles.dividerspecification} />
+              <View style={styles.specRowSpecification}>
+                <Text style={styles.specLabelSpecification}>Modal</Text>
+                <Text style={styles.specValuespecification}>
+                  {barcodeDetails?.barcode_model?.model_name || '--'}
+                </Text>
+              </View>
+              <View style={styles.dividerspecification} />
+              <View style={styles.specRowSpecification}>
+                <Text style={styles.specLabelSpecification}>Release Date</Text>
+                <Text style={styles.specValuespecification}>
+                  {modelSpecification?.release_date || '--'}
+                </Text>
+              </View>
+              <View style={styles.dividerspecification} />
+              <View style={styles.specRowSpecification}>
+                <Text style={styles.specLabelSpecification}>Form Factor</Text>
+                <Text style={styles.specValuespecification}>
+                  {modelSpecification?.form_factor || '--'}
+                </Text>
+              </View>
+              <View style={styles.dividerspecification} />
+              <View style={styles.specRowSpecification}>
+                <Text style={styles.specLabelSpecification}>Dimensions</Text>
+                <Text style={styles.specValuespecification}>
+                  {modelSpecification?.dimensions || '--'}
+                </Text>
+              </View>
+              <View style={styles.dividerspecification} />
+              <View style={styles.specRowSpecification}>
+                <Text style={styles.specLabelSpecification}>Weight</Text>
+                <Text style={styles.specValuespecification}>
+                  {modelSpecification?.weight || '--'}
+                </Text>
+              </View>
+              <View style={styles.dividerspecification} />
+              <View style={styles.specRowSpecification}>
+                <Text style={styles.specLabelSpecification}>IP Ratting</Text>
+                <Text style={styles.specValuespecification}>
+                  {modelSpecification?.ip_rating || '--'}
+                </Text>
+              </View>
+              <View style={styles.dividerspecification} />
+              <View style={styles.specRowSpecification}>
+                <Text style={styles.specLabelSpecification}>
+                  Removable Battery
+                </Text>
+                <Text style={styles.specValuespecification}>
+                  {barcodeDetails?.barcode_color?.removable_battery || '--'}
+                </Text>
+              </View>
+              <View style={styles.dividerspecification} />
+              <View style={styles.specRowSpecification}>
+                <Text style={styles.specLabelSpecification}>
+                  Battery Capacity
+                </Text>
+                <Text style={styles.specValuespecification}>
+                  {modelSpecification?.battery_capacity || '--'}
+                </Text>
+              </View>
+              <View style={styles.dividerspecification} />
+              <View style={styles.specRowSpecification}>
+                <Text style={styles.specLabelSpecification}>
+                  Wireless Charging
+                </Text>
+                <Text style={styles.specValuespecification}>
+                  {modelSpecification?.wireless_charging || '--'}
+                </Text>
+              </View>
+              <View style={styles.dividerspecification} />
+              <View style={styles.specRowSpecification}>
+                <Text style={styles.specLabelSpecification}>Phone Variant</Text>
+                <Text style={styles.specValuespecification}>
+                  {barcodeDetails?.barcode_variant?.variant_name || '--'}
+                </Text>
+              </View>
+
+              {/* Display Features start */}
+              <Text style={styles.headlinesviewspecifications}>
+                Display Features
+              </Text>
+              <View style={styles.dividerspecification} />
+              <View style={styles.specRowSpecification}>
+                <Text style={styles.specLabelSpecification}>Refresh Rate</Text>
+                <Text style={styles.specValuespecification}>
+                  {modelSpecification?.refresh_rate || '--'}
+                </Text>
+              </View>
+              <View style={styles.dividerspecification} />
+              <View style={styles.specRowSpecification}>
+                <Text style={styles.specLabelSpecification}>Screen Size</Text>
+                <Text style={styles.specValuespecification}>
+                  {modelSpecification?.screen_size || '--'}
+                </Text>
+              </View>
+              <View style={styles.dividerspecification} />
+              <View style={styles.specRowSpecification}>
+                <Text style={styles.specLabelSpecification}>
+                  Screen Protection
+                </Text>
+                <Text style={styles.specValuespecification}>
+                  {modelSpecification?.screen_protection || '--'}
+                </Text>
+              </View>
+              <View style={styles.dividerspecification} />
+              <View style={styles.specRowSpecification}>
+                <Text style={styles.specLabelSpecification}>Resolution</Text>
+                <Text style={styles.specValuespecification}>
+                  {modelSpecification?.resolution || '--'}
+                </Text>
+              </View>
+              <View style={styles.dividerspecification} />
+              <View style={styles.specRowSpecification}>
+                <Text style={styles.specLabelSpecification}>Touchscreen</Text>
+                <Text style={styles.specValuespecification}>
+                  {modelSpecification?.touchscreen || '--'}
+                </Text>
+              </View>
+              {/* Display Features end */}
+              {/* Hardware start */}
+              <Text style={styles.headlinesviewspecifications}>Hardware</Text>
+              <View style={styles.dividerspecification} />
+              <View style={styles.specRowSpecification}>
+                <Text style={styles.specLabelSpecification}>CPU</Text>
+                <Text style={styles.specValuespecification}>
+                  {modelSpecification?.cpu || '--'}
+                </Text>
+              </View>
+              <View style={styles.dividerspecification} />
+              <View style={styles.specRowSpecification}>
+                <Text style={styles.specLabelSpecification}>Chipset</Text>
+                <Text style={styles.specValuespecification}>
+                  {modelSpecification?.chipset || '--'}
+                </Text>
+              </View>
+              <View style={styles.dividerspecification} />
+              <View style={styles.specRowSpecification}>
+                <Text style={styles.specLabelSpecification}>Ram Type</Text>
+                <Text style={styles.specValuespecification}>
+                  {modelSpecification?.ramtype || '--'}
+                </Text>
+              </View>
+              <View style={styles.dividerspecification} />
+              <View style={styles.specRowSpecification}>
+                <Text style={styles.specLabelSpecification}>Graphics</Text>
+                <Text style={styles.specValuespecification}>
+                  {modelSpecification?.graphics || '--'}
+                </Text>
+              </View>
+              {/* Hardware end */}
+              {/* Cammera Features start */}
+              <Text style={styles.headlinesviewspecifications}>
+                Cammera Features
+              </Text>
+              <View style={styles.dividerspecification} />
+              <View style={styles.specRowSpecification}>
+                <Text style={styles.specLabelSpecification}>Rear Cammera</Text>
+                <Text style={styles.specValuespecification}>
+                  {modelSpecification?.rear_camera || '--'}
+                </Text>
+              </View>
+              <View style={styles.dividerspecification} />
+              <View style={styles.specRowSpecification}>
+                <Text style={styles.specLabelSpecification}>Rear Flash</Text>
+                <Text style={styles.specValuespecification}>
+                  {modelSpecification?.rear_flash || '--'}
+                </Text>
+              </View>
+              <View style={styles.dividerspecification} />
+              <View style={styles.specRowSpecification}>
+                <Text style={styles.specLabelSpecification}>
+                  No of Rear Cammera
+                </Text>
+                <Text style={styles.specValuespecification}>
+                  {modelSpecification?.no_of_rear_camera || '--'}
+                </Text>
+              </View>
+              <View style={styles.dividerspecification} />
+              <View style={styles.specRowSpecification}>
+                <Text style={styles.specLabelSpecification}>Front Cammera</Text>
+                <Text style={styles.specValuespecification}>
+                  {modelSpecification?.front_camera || '--'}
+                </Text>
+              </View>
+              <View style={styles.dividerspecification} />
+              <View style={styles.specRowSpecification}>
+                <Text style={styles.specLabelSpecification}>Front Flash</Text>
+                <Text style={styles.specValuespecification}>
+                  {modelSpecification?.front_flash || '--'}
+                </Text>
+              </View>
+              <View style={styles.dividerspecification} />
+              <View style={styles.specRowSpecification}>
+                <Text style={styles.specLabelSpecification}>
+                  No of Front Cammera
+                </Text>
+                <Text style={styles.specValuespecification}>
+                  {modelSpecification?.no_of_front_camera || '--'}
+                </Text>
+              </View>
+              {/* cammera feture end */}
+              {/* Software start */}
+              <Text style={styles.headlinesviewspecifications}>Software</Text>
+              <View style={styles.dividerspecification} />
+              <View style={styles.specRowSpecification}>
+                <Text style={styles.specLabelSpecification}>
+                  Operating System
+                </Text>
+                <Text style={styles.specValuespecification}>
+                  {modelSpecification?.operating_system || '--'}
+                </Text>
+              </View>
+              <View style={styles.dividerspecification} />
+              <View style={styles.specRowSpecification}>
+                <Text style={styles.specLabelSpecification}>Skin</Text>
+                <Text style={styles.specValuespecification}>
+                  {modelSpecification?.skin || '--'}
+                </Text>
+              </View>
+              {/* Software feture end */}
+              {/* Network Connectivity start */}
+              <Text style={styles.headlinesviewspecifications}>
+                Network & Connectivity
+              </Text>
+              <View style={styles.dividerspecification} />
+              <View style={styles.specRowSpecification}>
+                <Text style={styles.specLabelSpecification}>Wi-fi</Text>
+                <Text style={styles.specValuespecification}>
+                  {modelSpecification?.wifi || '--'}
+                </Text>
+              </View>
+              <View style={styles.dividerspecification} />
+              <View style={styles.specRowSpecification}>
+                <Text style={styles.specLabelSpecification}>Bluetooth</Text>
+                <Text style={styles.specValuespecification}>
+                  {modelSpecification?.bluetooth || '--'}
+                </Text>
+              </View>
+              <View style={styles.dividerspecification} />
+              <View style={styles.specRowSpecification}>
+                <Text style={styles.specLabelSpecification}>GPS</Text>
+                <Text style={styles.specValuespecification}>
+                  {modelSpecification?.gps || '--'}
+                </Text>
+              </View>
+              <View style={styles.dividerspecification} />
+              <View style={styles.specRowSpecification}>
+                <Text style={styles.specLabelSpecification}>NFC</Text>
+                <Text style={styles.specValuespecification}>
+                  {modelSpecification?.nfc || '--'}
+                </Text>
+              </View>
+              <View style={styles.dividerspecification} />
+              <View style={styles.specRowSpecification}>
+                <Text style={styles.specLabelSpecification}>USB</Text>
+                <Text style={styles.specValuespecification}>
+                  {modelSpecification?.usb || '--'}
+                </Text>
+              </View>
+              <View style={styles.dividerspecification} />
+              <View style={styles.specRowSpecification}>
+                <Text style={styles.specLabelSpecification}>No. of SIMs</Text>
+                <Text style={styles.specValuespecification}>
+                  {modelSpecification?.number_of_sim || '--'}
+                </Text>
+              </View>
+              <View style={styles.dividerspecification} />
+              <View style={styles.specRowSpecification}>
+                <Text style={styles.specLabelSpecification}>SIM Type</Text>
+                <Text style={styles.specValuespecification}>
+                  {modelSpecification?.sim_type || '--'}
+                </Text>
+              </View>
+              <View style={styles.dividerspecification} />
+              <View style={styles.specRowSpecification}>
+                <Text style={styles.specLabelSpecification}>
+                  Network Support
+                </Text>
+                <Text style={styles.specValuespecification}>
+                  {modelSpecification?.network_support || '--'}
+                </Text>
+              </View>
+              <View style={styles.dividerspecification} />
+
+              <View style={styles.specRowSpecification}>
+                <Text style={styles.specLabelSpecification}>Volte</Text>
+                <Text style={styles.specValuespecification}>
+                  {modelSpecification?.volte || '--'}
+                </Text>
+              </View>
+              <View style={styles.dividerspecification} />
+              <View style={styles.specRowSpecification}>
+                <Text style={styles.specLabelSpecification}>
+                  3.5mm Audio Jack
+                </Text>
+                <Text style={styles.specValuespecification}>
+                  {modelSpecification?.audio_jack || '--'}
+                </Text>
+              </View>
+              <View style={styles.dividerspecification} />
+
+              <View style={styles.specRowSpecification}>
+                <Text style={styles.specLabelSpecification}>FM Radio</Text>
+                <Text style={styles.specValuespecification}>
+                  {modelSpecification?.fm_radio || '--'}
+                </Text>
+              </View>
+              {/* Network Connectivity end */}
+              {/* Sensor start */}
+              <Text style={styles.headlinesviewspecifications}>Sensor</Text>
+              <View style={styles.dividerspecification} />
+              <View style={styles.specRowSpecification}>
+                <Text style={styles.specLabelSpecification}>
+                  Fingerprint Sensor
+                </Text>
+                <Text style={styles.specValuespecification}>
+                  {modelSpecification?.fingerprint_sensor || '--'}
+                </Text>
+              </View>
+              <View style={styles.dividerspecification} />
+              <View style={styles.specRowSpecification}>
+                <Text style={styles.specLabelSpecification}>Face Id</Text>
+                <Text style={styles.specValuespecification}>
+                  {modelSpecification?.face_id || '--'}
+                </Text>
+              </View>
+              <View style={styles.dividerspecification} />
+              <View style={styles.specRowSpecification}>
+                <Text style={styles.specLabelSpecification}>Light Sensor</Text>
+                <Text style={styles.specValuespecification}>
+                  {modelSpecification?.light_sensor || '--'}
+                </Text>
+              </View>
+              <View style={styles.dividerspecification} />
+              <View style={styles.specRowSpecification}>
+                <Text style={styles.specLabelSpecification}>
+                  Compass / Magnetometer
+                </Text>
+                <Text style={styles.specValuespecification}>
+                  {modelSpecification?.nfc || '--'}
+                </Text>
+              </View>
+              <View style={styles.dividerspecification} />
+              <View style={styles.specRowSpecification}>
+                <Text style={styles.specLabelSpecification}>
+                  Proximity Sensor
+                </Text>
+                <Text style={styles.specValuespecification}>
+                  {modelSpecification?.proximity_sensor || '--'}
+                </Text>
+              </View>
+              <View style={styles.dividerspecification} />
+              <View style={styles.specRowSpecification}>
+                <Text style={styles.specLabelSpecification}>Accelerometer</Text>
+                <Text style={styles.specValuespecification}>
+                  {modelSpecification?.accelerometer || '--'}
+                </Text>
+              </View>
+              <View style={styles.dividerspecification} />
+              <View style={styles.specRowSpecification}>
+                <Text style={styles.specLabelSpecification}>Barometer</Text>
+                <Text style={styles.specValuespecification}>
+                  {modelSpecification?.barometer || '--'}
+                </Text>
+              </View>
+              <View style={styles.dividerspecification} />
+              <View style={styles.specRowSpecification}>
+                <Text style={styles.specLabelSpecification}>Gyroscope</Text>
+                <Text style={styles.specValuespecification}>
+                  {modelSpecification?.gyroscope || '--'}
+                </Text>
+              </View>
+              {/* Sensor end */}
             </View>
           )}
 
@@ -1235,6 +1756,7 @@ const ProductList = ({ route, iconType, icon, text }) => {
           renderItem={renderItemSimilar}
           contentContainerStyle={{ paddingHorizontal: 16 }}
         />
+
         <Text
           style={{
             fontSize: responsive.fontSize(16),
@@ -1359,6 +1881,10 @@ export const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: '#FFFBFA',
   },
+  swapcontainer: {
+    flex: 1,
+    backgroundColor: '#FFFBFA',
+  },
   header: {
     flexDirection: 'row',
     alignItems: 'center',
@@ -1378,16 +1904,43 @@ export const styles = StyleSheet.create({
     textAlign: 'center',
   },
 
+  // swiper: {
+  //   height: responsive.height(360),
+  // },
+
+  // mainImage: {
+  //   borderRadius: responsive.borderRadius(10),
+  //   height: responsive.height(360),
+  //   width: responsive.width(360),
+  //   alignSelf: 'center',
+  //   padding: responsive.padding(16),
+  //   elevation: 3,
+  // },
+
   swiper: {
-    height: responsive.height(360),
+    height: responsive.height(380),
+  },
+
+  imageCard: {
+    width: responsive.width(360),
+    alignSelf: 'center',
+    borderRadius: responsive.borderRadius(12),
+    backgroundColor: '#fff',
+    padding: responsive.padding(10),
+
+    elevation: 6, // android
+
+    shadowColor: '#000', // ios
+    shadowOffset: { width: 0, height: 3 },
+    shadowOpacity: 0.15,
+    shadowRadius: 6,
+    marginVertical: responsive.marginVertical(5),
   },
 
   mainImage: {
-    borderRadius: responsive.borderRadius(10),
-    height: responsive.height(360),
-    width: responsive.width(360),
-    alignSelf: 'center',
-    padding: responsive.padding(16),
+    height: responsive.height(350),
+    width: '100%',
+    borderRadius: responsive.borderRadius(12),
   },
 
   pagination: {
@@ -1399,12 +1952,14 @@ export const styles = StyleSheet.create({
     height: 8,
     borderRadius: 8,
     marginHorizontal: 3,
+    marginBottom: responsive.marginBottom(20),
   },
   activeDot: {
     backgroundColor: '#FFFBFA',
     width: 8,
     height: 8,
     borderRadius: 4,
+    marginBottom: responsive.marginBottom(20),
   },
 
   iconColumn: {
@@ -1459,7 +2014,7 @@ export const styles = StyleSheet.create({
     marginTop: moderateScale(5),
   },
   titleP: {
-    fontSize: responsive.fontSize(28),
+    fontSize: responsive.fontSize(25),
     fontWeight: 'bold',
     marginVertical: verticalScale(1),
     color: '#1A1A2D',
@@ -1598,8 +2153,8 @@ export const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'space-between',
     padding: responsive.padding(15),
-    borderBottomWidth: 0.2,
-    borderTopWidth: 0.2,
+    // borderBottomWidth: 0.2,
+    // borderTopWidth: 0.2,
     borderBottomColor: '#000',
   },
   specLabelSpecification: {
@@ -1640,8 +2195,8 @@ export const styles = StyleSheet.create({
   row: {
     flexDirection: 'row',
     justifyContent: 'space-between',
-    borderBottomWidth: 0.2,
-    borderTopWidth: 0.2,
+    // borderBottomWidth: 0.2,
+    // borderTopWidth: 0.2,
     borderBottomColor: '#000',
     padding: responsive.padding(8),
   },

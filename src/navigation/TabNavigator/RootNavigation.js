@@ -29,9 +29,6 @@ import { logout } from '../../redux/slices/authSlice';
 const RootNavigation = () => {
   const dispatch = useDispatch();
   const { token, sessionExpired } = useSelector(state => state.auth);
-
-  console.log('token---------------->', token)
-
   return (
     <>
       {token ? <BottomNavigator /> : <AuthStack />}

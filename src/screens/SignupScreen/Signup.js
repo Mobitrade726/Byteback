@@ -647,6 +647,245 @@ const RegisterAsDealer = ({ navigation }) => {
   const [alertVisible, setAlertVisible] = useState(false);
   const [alertMessage, setAlertMessage] = useState('');
   const [alertType, setAlertType] = useState('success');
+  const [alertTitle, setAlertTitle] = useState('');
+
+  const [apiError, setApiError] = useState('');
+  useEffect(() => {
+    const handler = setTimeout(() => {
+      const isPhoneValid = contactNumber.length === 10;
+      const isEmailValid = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
+
+      // 🔹 Only Phone
+      if (isPhoneValid && !email) {
+        checkUser();
+      }
+
+      // 🔹 Only Email
+      else if (isEmailValid && !contactNumber) {
+        checkUser();
+      }
+
+      // 🔹 Both Present
+      else if (isPhoneValid && isEmailValid) {
+        checkUser();
+      }
+    }, 500);
+
+    return () => clearTimeout(handler);
+  }, [contactNumber, email]);
+
+  const checkUser = async () => {
+    try {
+      const hasPhone = contactNumber?.trim() !== '';
+      const hasEmail = email?.trim() !== '';
+
+      let response;
+
+      // ❌ Nothing Entered
+      if (!hasPhone && !hasEmail) {
+        setAlertType('error');
+        setAlertTitle('Error');
+        setAlertMessage('Please enter email or mobile number');
+        setAlertVisible(true);
+        return;
+      }
+
+      // case 1 ✅ Only Email
+      if (hasEmail && !hasPhone) {
+        response = await axios.post(
+          'https://api.mobitrade.in/api/check-email',
+          { email },
+        );
+      }
+
+      // case 2 ✅ Only Phone
+      else if (hasPhone && !hasEmail) {
+        response = await axios.post(
+          'https://api.mobitrade.in/api/check-phone',
+          { phone: contactNumber },
+        );
+      }
+
+      // case 3 & 4 ✅ Both Email + Phone
+      else if (hasPhone && hasEmail) {
+        // 🔹 Step 1: Get user by phone
+        const phoneResponse = await axios.post(
+          'https://api.mobitrade.in/api/check-phone',
+          {
+            phone: contactNumber,
+            email: email,
+          },
+        );
+
+        console.log('Phone API RESPONSE:', phoneResponse.data);
+
+        const phoneUser = phoneResponse?.data?.user;
+        // 👆 adjust according to your backend response structure
+
+        // 🔹 Step 2: Compare email
+        if (phoneUser && phoneUser.email === email) {
+          console.log('✅ Same account');
+          response = phoneResponse;
+        } else {
+          console.log('🚀 Different account → Calling check-email');
+
+          response = await axios.post(
+            'https://api.mobitrade.in/api/check-email',
+            {
+              phone: contactNumber,
+              email: email,
+            },
+          );
+        }
+      }
+
+      // const { status, message } = response.data;
+      // const lowerMessage = message?.toLowerCase() || '';
+
+      // console.log('lowerMessage----------------->', lowerMessage);
+
+      // // ❌ ERROR CASE
+      // if (!status) {
+      //   setAlertType('error');
+
+      //   if (lowerMessage.includes('difffreent accounts')) {
+      //     setAlertTitle('Account Conflict Detected');
+      //   } else if (
+      //     lowerMessage.includes('email and mobile number are already linked')
+      //   ) {
+      //     setAlertTitle('Account Already Exists');
+      //   } else if (
+      //     lowerMessage.includes('mobile number is linked') ||
+      //     lowerMessage.includes('this phone number is already associated with an account.')
+      //   ) {
+      //     setAlertTitle('Mobile Number Already Registered');
+      //   } else if (lowerMessage.includes('email is already')) {
+      //     setAlertTitle('Email Already Registered');
+      //   } else {
+      //     setAlertTitle('Error');
+      //   }
+
+      //   setAlertMessage(message);
+      //   setAlertVisible(true);
+      //   return;
+      // }
+
+      const { status, message } = response.data;
+      const lowerMessage = message?.toLowerCase() || '';
+
+      const isErrorMessage =
+        lowerMessage.includes('associated') ||
+        lowerMessage.includes('linked') ||
+        lowerMessage.includes('already');
+
+      if (!status || isErrorMessage) {
+        setAlertType('error');
+
+        if (lowerMessage.includes('different accounts')) {
+          setAlertTitle('Account Conflict Detected');
+        } else if (
+          lowerMessage.includes('email and mobile number are already linked')
+        ) {
+          setAlertTitle('Account Already Exists');
+        } else if (
+          lowerMessage.includes('mobile number is linked') ||
+          lowerMessage.includes('this phone number is already associated with an account.')
+        ) {
+          setAlertTitle('Mobile Number Already Registered');
+        } else if (lowerMessage.includes('email is already')) {
+          setAlertTitle('Email Already Registered');
+        } else {
+          setAlertTitle('Error');
+        }
+
+        setAlertMessage(message);
+        setAlertVisible(true);
+        return;
+      }
+
+      // ✅ SUCCESS CASE
+      setAlertType('success');
+      setAlertTitle('Success');
+      setAlertMessage(message);
+      setAlertVisible(true);
+    } catch (error) {
+      const message = error?.response?.data?.message || 'Something went wrong';
+
+      setAlertType('error');
+      setAlertTitle('Error');
+      setAlertMessage(message);
+      setAlertVisible(true);
+    }
+  };
+
+  const getAlertButtons = () => {
+    switch (alertTitle) {
+      case 'Account Conflict Detected':
+        return {
+          primaryText: 'Login',
+          secondaryText: 'Recover Password',
+          onPrimaryPress: () => {
+            setAlertVisible(false);
+            navigation.navigate('LoginScreen');
+          },
+          onSecondaryPress: () => {
+            setAlertVisible(false);
+            navigation.navigate('ForgetPassword');
+          },
+        };
+
+      case 'Account Already Exists':
+        return {
+          primaryText: 'Login',
+          secondaryText: 'Recover Password',
+          onPrimaryPress: () => {
+            setAlertVisible(false);
+            navigation.navigate('LoginScreen');
+          },
+          onSecondaryPress: () => {
+            setAlertVisible(false);
+            navigation.navigate('ForgetPassword');
+          },
+        };
+
+      case 'Mobile Number Already Registered':
+        return {
+          primaryText: 'Recover Email',
+          secondaryText: 'Try Another Number',
+          onPrimaryPress: () => {
+            setAlertVisible(false);
+            navigation.navigate('ForgetEmail');
+          },
+          onSecondaryPress: () => {
+            setAlertVisible(false);
+            // setContactNumber('');
+          },
+        };
+
+      case 'Email Already Registered':
+        return {
+          primaryText: 'Recover Password',
+          secondaryText: 'Try Another Email',
+          onPrimaryPress: () => {
+            setAlertVisible(false);
+            navigation.navigate('ForgetPassword');
+          },
+          onSecondaryPress: () => {
+            setAlertVisible(false);
+            // setEmail('');
+          },
+        };
+
+      default:
+        return {
+          primaryText: 'OK',
+          secondaryText: null,
+          onPrimaryPress: () => setAlertVisible(false),
+        };
+    }
+  };
+
+  const alertButtons = getAlertButtons();
 
   useEffect(() => {
     if (profileEdit && Object.keys(profileEdit).length > 0) {
@@ -699,9 +938,9 @@ const RegisterAsDealer = ({ navigation }) => {
       }
     } catch (error) {
       setLoading(false);
-       setAlertMessage('Something went wrong while verifying GST');
-        setAlertType('error'); // "error", "warning" bhi kar sakte ho
-        setAlertVisible(true);
+      setAlertMessage('Something went wrong while verifying GST');
+      setAlertType('error'); // "error", "warning" bhi kar sakte ho
+      setAlertVisible(true);
     }
   };
 
@@ -837,7 +1076,12 @@ const RegisterAsDealer = ({ navigation }) => {
           {errors.Password && (
             <Text style={styles.errorText}>{errors.Password}</Text>
           )}
-          <View style={[styles.inputWrapper, {marginTop: responsive.marginTop(20)}]}>
+          <View
+            style={[
+              styles.inputWrapper,
+              { marginTop: responsive.marginTop(20) },
+            ]}
+          >
             <TextInput
               style={[
                 styles.inputField,
@@ -926,7 +1170,7 @@ const RegisterAsDealer = ({ navigation }) => {
       )}
 
       <TextInput
-        style={[styles.input, {marginTop: responsive.marginTop(20)}]}
+        style={[styles.input, { marginTop: responsive.marginTop(20) }]}
         placeholder="Firm Name*"
         value={firmName}
         onChangeText={setFirmName}
@@ -977,7 +1221,7 @@ const RegisterAsDealer = ({ navigation }) => {
       )}
 
       <TextInput
-        style={[styles.input, {marginTop: responsive.marginTop(20)}]}
+        style={[styles.input, { marginTop: responsive.marginTop(20) }]}
         placeholder="Contact Number*"
         keyboardType="phone-pad"
         value={contactNumber}
@@ -1025,11 +1269,16 @@ const RegisterAsDealer = ({ navigation }) => {
           {errors.Password && (
             <Text style={styles.errorText}>{errors.Password}</Text>
           )}
-          <View style={[styles.inputWrapper, {marginTop: responsive.marginTop(20)}]}>
+          <View
+            style={[
+              styles.inputWrapper,
+              { marginTop: responsive.marginTop(20) },
+            ]}
+          >
             <TextInput
               style={[
                 styles.inputField,
-                errors.ConfirmPassword && { borderColor: 'red'},
+                errors.ConfirmPassword && { borderColor: 'red' },
               ]}
               placeholder="Confirm Password*"
               secureTextEntry={!showConfirmPassword}
@@ -1071,19 +1320,46 @@ const RegisterAsDealer = ({ navigation }) => {
 
   return (
     <View style={styles.container}>
-      <ScrollView showsVerticalScrollIndicator={false} contentContainerStyle={styles.formContainer}>
+      <ScrollView
+        showsVerticalScrollIndicator={false}
+        contentContainerStyle={styles.formContainer}
+      >
         {renderForm()}
         <TouchableOpacity style={styles.nextButton} onPress={handleNext}>
           <Text style={styles.nextButtonText}>Next</Text>
         </TouchableOpacity>
-        <AlertModal
+        {/* <AlertModal
           visible={alertVisible}
-          title="Success"
+          title={alertTitle}
           message={alertMessage}
           type={alertType}
-          onOk={() => {
-            setAlertVisible(false);
-          }}
+          primaryText={alertButtons.primaryText}
+          secondaryText={alertButtons.secondaryText}
+          onPrimaryPress={alertButtons.onPrimaryPress}
+          onSecondaryPress={alertButtons.onSecondaryPress}
+          onClose={() => setAlertVisible(false)}
+          onOk={() => setAlertVisible(false)}
+        /> */}
+        {/* <AlertModal
+          visible={alertVisible}
+          title={alertTitle}
+          message={alertMessage}
+          type={alertType}
+          primaryText={alertButtons.primaryText}
+          secondaryText={alertButtons.secondaryText}
+          onPrimaryPress={alertButtons.onPrimaryPress}
+          onSecondaryPress={alertButtons.onSecondaryPress}
+          onClose={() => setAlertVisible(false)}
+        /> */}
+        <AlertModal
+          visible={alertVisible}
+          title={alertTitle}
+          message={alertMessage}
+          type={alertType}
+          primaryText={alertButtons.primaryText}
+          secondaryText={alertButtons.secondaryText}
+          onPrimaryPress={alertButtons.onPrimaryPress}
+          onSecondaryPress={alertButtons.onSecondaryPress}
           onClose={() => setAlertVisible(false)}
         />
       </ScrollView>

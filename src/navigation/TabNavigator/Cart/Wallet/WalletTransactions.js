@@ -310,7 +310,6 @@ export default function WalletTransactions({ navigation }) {
     const iconName = isCredit ? 'cash-plus' : 'cash-minus';
     const iconColor = isCredit ? '#1C9C48' : '#CB444B';
 
-    console.log('transactions----------------', transactions);
 
     const getTransactionIcon = description => {
       const desc = description?.toLowerCase();

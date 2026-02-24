@@ -51,9 +51,6 @@ const CARD_HEIGHT = CARD_WIDTH * 1;
 
 const Home = ({ navigation }) => {
   const token = useSelector(state => state.auth.token);
-
-  console.log('token------------------->', token);
-
   const { mobileBudget, LaptopBudget, SUPPORT_CARDS } = useSelector(
     state => state.home,
   );
@@ -63,8 +60,6 @@ const Home = ({ navigation }) => {
     state => state.home,
   );
   const { recentlyview } = useSelector(state => state.product);
-
-  console.log('recentlyview---------------------->', recentlyview);
 
   useFocusEffect(
     useCallback(() => {

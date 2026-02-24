@@ -812,7 +812,6 @@ export const fetchBanners = createAsyncThunk(
 
       return response.data.data;
     } catch (error) {
-      console.log('API ERROR STATUS 👉', error?.response?.status);
       return rejectWithValue(error.response?.data || error.message);
     }
   },
@@ -836,7 +835,6 @@ export const fetchOsList = createAsyncThunk(
 
       return response.data.data;
     } catch (error) {
-      console.log('API ERROR STATUS 👉', error?.response?.status);
       return rejectWithValue(error.response?.data || error.message);
     }
   },
@@ -860,7 +858,6 @@ export const fetchCatList = createAsyncThunk(
 
       return response.data.data;
     } catch (error) {
-      console.log('API ERROR STATUS 👉', error?.response?.status);
       return rejectWithValue(error.response?.data || error.message);
     }
   },
@@ -876,8 +873,6 @@ export const fetchBrands = createAsyncThunk(
       const response = await axios.get(`/brand`);
       return response.data.data;
     } catch (error) {
-      console.log('API ERROR STATUS 👉', error?.response?.status);
-
       return rejectWithValue(error.response?.data || error.message);
     }
   },

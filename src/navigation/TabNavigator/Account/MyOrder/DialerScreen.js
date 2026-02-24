@@ -30,7 +30,6 @@ const DialerScreen = ({ route, navigation }) => {
 
   const handleCall = () => {
     if (!number) return;
-    console.log('Calling:', number);
     // Actual phone call
     // Linking.openURL(`tel:${number}`);
   };

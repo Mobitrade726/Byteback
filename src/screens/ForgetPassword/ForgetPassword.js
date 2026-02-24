@@ -230,7 +230,7 @@ import { moderateScale } from 'react-native-size-matters';
 import Header from '../../constants/Header';
 import responsive from '../../constants/responsive';
 
-const ForgotPasswordScreen = ({ navigation }) => {
+const ForgetPassword = ({ navigation }) => {
   const [emailforget, setEmail] = useState('');
   const [selectedOption, accountType] = useState('individual');
   const [submitted, setSubmitted] = useState(false);
@@ -377,4 +377,6 @@ const ForgotPasswordScreen = ({ navigation }) => {
   );
 };
 
-export default ForgotPasswordScreen;
+export default ForgetPassword;
+
+

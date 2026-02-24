@@ -128,10 +128,7 @@ const axiosInstance = axios.create({
 axiosInstance.interceptors.response.use(
   response => response,
   error => {
-    console.log('🔥 AXIOS INTERCEPTOR HIT');
-
     if (error?.response?.status === 401) {
-      console.log('🚨 401 DETECTED');
       // triggerSessionExpired(); // 🔥 MODAL OPEN SIGNAL
       store.dispatch(sessionExpired());
     }

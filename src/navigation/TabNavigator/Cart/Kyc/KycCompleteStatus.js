@@ -653,8 +653,6 @@ const KycScreen = ({ navigation }) => {
 
       const json = await res.json();
 
-      console.log('json---------------------->', json);
-
       Toast.show({
         type: 'success',
         text2: json?.message || 'KYC Submitted',

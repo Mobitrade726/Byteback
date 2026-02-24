@@ -866,7 +866,6 @@ export const fetchRecentlyViewed = createAsyncThunk(
         );
       }
     } catch (error) {
-      console.log('error+++++++++++++++++++++++++', error?.response?.data)
       return rejectWithValue(error?.response?.data?.message || error.message);
     }
   },

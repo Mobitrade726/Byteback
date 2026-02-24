@@ -129,11 +129,6 @@ const SearchRefactored = ({ navigation }) => {
   const wishlistItems = useSelector(state => state.wishlist.items || []);
   const { catList = [] } = useSelector(state => state.home || {});
 
-  console.log(
-    'nocartidfilterdata---------------->',
-    nocartidfilterdata?.grades,
-  );
-
   // UI state
   const [searchText, setSearchText] = useState('');
   const [displayText, setDisplayText] = useState('');
@@ -190,15 +185,6 @@ const SearchRefactored = ({ navigation }) => {
       selectedRam ||
       selectedStorage;
     if (!anyFilters) return filteredData;
-
-    console.log(
-      'filteredDatatesting--------------------------------->',
-      filteredData,
-    );
-    console.log(
-      'selectedGrade--------------------------------->',
-      selectedGrade,
-    );
 
     return filteredData.filter(item => {
       if (selectedBrands.length && !selectedBrands.includes(item.brand_name))

@@ -14,8 +14,6 @@ const ContactUs = ({ navigation }) => {
   const [contactData, setContactData] = useState(null);
   const [loading, setLoading] = useState(true);
 
-  console.log('contactData===================>', contactData);
-
   useEffect(() => {
     const fetchContactDetails = async () => {
       try {

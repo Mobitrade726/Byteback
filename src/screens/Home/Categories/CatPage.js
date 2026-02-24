@@ -4261,8 +4261,6 @@ const CatPage = ({ catName, osName, catId }) => {
 
   const categoryOSList = selectedCategoryData?.os_list || [];
 
-  console.log('categoryOSList+++++++++++++++++++++++++', categoryOSList);
-
   // categoryBrands = category-wise + OS-wise brands
   const categoryBrands = brands.filter(
     brand =>
@@ -4404,7 +4402,6 @@ const CatPage = ({ catName, osName, catId }) => {
           showsHorizontalScrollIndicator={false}
           renderItem={({ item }) => {
             const gifSource = osGifMap[item.os_name];
-            console.log('gifSource----------------------->', gifSource);
             return (
               <TouchableOpacity
                 style={{
