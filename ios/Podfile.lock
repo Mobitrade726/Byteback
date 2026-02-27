@@ -1916,6 +1916,8 @@ PODS:
     - ReactCommon/turbomodule/core
     - SocketRocket
     - Yoga
+  - react-native-otp-verify (1.1.8):
+    - React-Core
   - react-native-pager-view (7.0.2):
     - boost
     - DoubleConversion
@@ -3161,6 +3163,7 @@ DEPENDENCIES:
   - react-native-geolocation-service (from `../node_modules/react-native-geolocation-service`)
   - react-native-image-picker (from `../node_modules/react-native-image-picker`)
   - "react-native-netinfo (from `../node_modules/@react-native-community/netinfo`)"
+  - react-native-otp-verify (from `../node_modules/react-native-otp-verify`)
   - react-native-pager-view (from `../node_modules/react-native-pager-view`)
   - react-native-razorpay (from `../node_modules/react-native-razorpay`)
   - react-native-safe-area-context (from `../node_modules/react-native-safe-area-context`)
@@ -3321,6 +3324,8 @@ EXTERNAL SOURCES:
     :path: "../node_modules/react-native-image-picker"
   react-native-netinfo:
     :path: "../node_modules/@react-native-community/netinfo"
+  react-native-otp-verify:
+    :path: "../node_modules/react-native-otp-verify"
   react-native-pager-view:
     :path: "../node_modules/react-native-pager-view"
   react-native-razorpay:
@@ -3480,6 +3485,7 @@ SPEC CHECKSUMS:
   react-native-geolocation-service: 608e1da71a1ac31b4de64d9ef2815f697978c55b
   react-native-image-picker: 43e6cd4231e670030fe09b079d696fa5a634ccfc
   react-native-netinfo: 5e036f49ab00a53569bcc0cbc2954b608b6532c3
+  react-native-otp-verify: b524a7f44b691644bea08376d6a4782a2df57e09
   react-native-pager-view: 024dcc8b59a655cdada96a21652a79be6a3be8d5
   react-native-razorpay: 41a407f4367b5b0e1bba89a77f9cab1918860844
   react-native-safe-area-context: 54d812805f3c4e08a4580ad086cbde1d8780c2e4

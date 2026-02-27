@@ -365,7 +365,7 @@ import Toast from 'react-native-toast-message';
 import RootNavigation from './src/navigation/TabNavigator/RootNavigation';
 import DeviceInfo from 'react-native-device-info';
 
-const REQUIRED_VERSION = '1.0.18';
+const REQUIRED_VERSION = '1.0.19';
 const { width } = Dimensions.get('window');
 
 const App = () => {
@@ -377,7 +377,22 @@ const App = () => {
 
     console.log('currentVersion++++++++', currentVersion);
 
-    if (currentVersion !== REQUIRED_VERSION) {
+    // if (currentVersion !== REQUIRED_VERSION) {
+    //   setUpdateVisible(true);
+    // }
+
+    const compareVersions = (v1, v2) => {
+      const v1Parts = v1.split('.').map(Number);
+      const v2Parts = v2.split('.').map(Number);
+
+      for (let i = 0; i < v1Parts.length; i++) {
+        if (v1Parts[i] < v2Parts[i]) return -1;
+        if (v1Parts[i] > v2Parts[i]) return 1;
+      }
+      return 0;
+    };
+
+    if (compareVersions(currentVersion, REQUIRED_VERSION) < 0) {
       setUpdateVisible(true);
     }
   }, []);

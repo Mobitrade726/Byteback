@@ -351,7 +351,6 @@
 
 // export default AlertModal;
 
-
 import React, { useEffect, useRef } from 'react';
 import {
   View,
@@ -367,6 +366,7 @@ import {
   responsiveWidth as rw,
   responsiveFontSize as rf,
 } from 'react-native-responsive-dimensions';
+import responsive from './responsive';
 
 const AlertModal = ({
   visible,
@@ -417,12 +417,12 @@ const AlertModal = ({
 
           {/* 🔥 BUTTON SECTION */}
           <View style={styles.buttonRow}>
-
             {/* Secondary Button */}
             {secondaryText && (
               <TouchableOpacity
                 style={[styles.button, styles.secondaryBtn]}
-                onPress={onSecondaryPress}>
+                onPress={onSecondaryPress}
+              >
                 <Text style={[styles.buttonText, { color: '#333' }]}>
                   {secondaryText}
                 </Text>
@@ -431,23 +431,14 @@ const AlertModal = ({
 
             {/* Primary Button OR Default OK */}
             {primaryText ? (
-              <TouchableOpacity
-                style={styles.button}
-                onPress={onPrimaryPress}>
-                <Text style={styles.buttonText}>
-                  {primaryText}
-                </Text>
+              <TouchableOpacity style={styles.button} onPress={onPrimaryPress}>
+                <Text style={styles.buttonText}>{primaryText}</Text>
               </TouchableOpacity>
             ) : (
-              <TouchableOpacity
-                style={styles.button}
-                onPress={onOk || onClose}>
-                <Text style={styles.buttonText}>
-                  OK
-                </Text>
+              <TouchableOpacity style={styles.button} onPress={onOk || onClose}>
+                <Text style={styles.buttonText}>OK</Text>
               </TouchableOpacity>
             )}
-
           </View>
         </Animated.View>
       </View>
@@ -491,16 +482,16 @@ const styles = StyleSheet.create({
 
   buttonRow: {
     flexDirection: 'row',
-    justifyContent: 'center',
     marginTop: rh(2),
   },
 
   button: {
     backgroundColor: '#478F4E',
     paddingVertical: rh(1.5),
-    paddingHorizontal: rw(6),
+    paddingHorizontal: rw(4),
     borderRadius: rw(3),
     marginHorizontal: rw(1.5),
+    width: responsive.width(150),
   },
 
   secondaryBtn: {
@@ -510,7 +501,7 @@ const styles = StyleSheet.create({
   buttonText: {
     color: '#fff',
     fontSize: rf(1.5),
-    fontWeight: '600',
+    fontWeight: '600', textAlign:'center'
   },
 });
 

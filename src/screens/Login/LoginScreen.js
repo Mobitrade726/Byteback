@@ -269,7 +269,7 @@ const LoginScreen = ({ navigation }) => {
               styles.input,
               errors.emailOrPhone && { borderColor: 'red' },
             ]}
-            placeholder="Email or Phone"
+            placeholder="Email"
             placeholderTextColor={isDarkMode ? '#aaa' : '#000'}
             value={emailOrPhone}
             onChangeText={setEmailOrPhone}

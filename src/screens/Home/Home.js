@@ -29,20 +29,16 @@ import {
   fetchRecentlyViewed,
   fetchProductList,
 } from '../../redux/slices/productSlice';
-import { scale, verticalScale, moderateScale } from 'react-native-size-matters';
+import { scale, moderateScale } from 'react-native-size-matters';
 import {
   addToWishlistAPI,
   removeFromWishlistAPI,
 } from '../../redux/slices/wishlistSlice';
 import AntDesign from 'react-native-vector-icons/AntDesign';
 import { ProductCardStyles } from '../../constants/ProductCardStyles';
-import { useSafeAreaInsets } from 'react-native-safe-area-context';
-import LinearGradient from 'react-native-linear-gradient';
 import Loader from '../../constants/Loader';
 import { useFocusEffect } from '@react-navigation/native';
-import { clearProfile } from '../../redux/slices/profileSlice';
 import responsive from '../../constants/responsive';
-import { responsiveHeight } from 'react-native-responsive-dimensions';
 const { width } = Dimensions.get('window');
 const CARD_GAP = 16;
 const CARD_WIDTH = (width - CARD_GAP * 10) / 2;
@@ -238,30 +234,6 @@ const Home = ({ navigation }) => {
     return <Loader />;
   }
 
-  const budgetOptions = [
-    {
-      id: 1,
-      label: 'Under ₹10,000',
-      image: 'https://i.postimg.cc/Pf3MBSK6/Category-Card-01-1.png',
-    },
-    {
-      id: 2,
-      label: '₹10,000 - ₹20,000',
-      image: 'https://i.postimg.cc/0NRJJB0y/Category-Card-02.png',
-    },
-    {
-      id: 3,
-      label: '₹20,000 - ₹30,000',
-      image:
-        'https://i.postimg.cc/zvBLrZ80/create-an-image-with-multiple-smartphones-that-are-under-10000-20000-rupees.png',
-    },
-    {
-      id: 4,
-      label: 'Above ₹30,000',
-      image: 'https://i.postimg.cc/Ls3hg6sx/Category-Card-4.png',
-    },
-  ];
-
   return (
     <>
       <View style={{ backgroundColor: '#fff' }}>
@@ -279,7 +251,8 @@ const Home = ({ navigation }) => {
           {/* Carousel */}
           <HeroCarousel data={carouselData} navigation={navigation} />
           <FlatList
-            horizontal
+            // horizontal
+            numColumns={4}
             data={catList} // clone and reverse
             keyExtractor={(item, index) =>
               item.id ? item.id.toString() : index.toString()

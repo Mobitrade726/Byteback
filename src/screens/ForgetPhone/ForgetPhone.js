@@ -109,7 +109,7 @@ const ForgetPhone = ({ navigation }) => {
             ]}
             placeholder="Enter your email"
             placeholderTextColor={isDarkMode ? '#aaa' : '#666'}
-            keyboardType="number-pad"
+            keyboardType="email-address"
             value={email}
             onChangeText={text => setEmail(text)}
           />

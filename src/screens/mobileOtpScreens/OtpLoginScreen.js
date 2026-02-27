@@ -30,62 +30,10 @@ const OtpLoginScreen = ({ navigation }) => {
 
   const { loading, error } = useSelector(state => state.mobileauth);
 
-  // const sendOTPHandler = async () => {
-  //   if (mobile.length !== 10) return;
-
-  //   // 1️⃣ First check phone
-  //   const checkResult = await dispatch(checkPhone(mobile));
-
-  //   console.log(
-  //     'checkResult------------------>',
-  //     checkResult?.payload?.message,
-  //   );
-
-  //   if (checkPhone.fulfilled.match(checkResult)) {
-  //     // Optional: Agar API se success flag aata hai
-  //     if (checkResult.payload?.registered) {
-  //       // 2️⃣ Then send OTP
-  //       const otpResult = await dispatch(sendOtp(mobile));
-
-  //       if (sendOtp.fulfilled.match(otpResult)) {
-  //         navigation.navigate('OTPScreen', { mobile });
-  //       }
-  //     } else {
-  //       setAlertTitle('Mobile Number Not Registered');
-  //       setAlertMessage(
-  //         checkResult?.payload?.message ||
-  //           'This mobile number is not linked to any existing account.',
-  //       );
-  //       setAlertType('error');
-
-  //       setAlertButtons({
-  //         primaryText: 'Recover Phone No.',
-  //         secondaryText: 'Try Another Number',
-  //         onPrimaryPress: () => {
-  //           setAlertVisible(false);
-  //           navigation.navigate('RecoverPhoneScreen'); // 👈 apna screen name
-  //         },
-  //         onSecondaryPress: () => {
-  //           setAlertVisible(false);
-  //           setMobile('');
-  //         },
-  //       });
-
-  //       setAlertVisible(true);
-  //       // alert(checkResult?.payload?.message);
-  //     }
-  //   }
-  // };
-
   const sendOTPHandler = async () => {
     if (mobile.length !== 10) return;
 
     const checkResult = await dispatch(checkPhone(mobile));
-
-    console.log(
-      'checkResult-------------------+++++++++++',
-      checkResult?.payload?.message,
-    );
 
     if (checkPhone.fulfilled.match(checkResult)) {
       if (checkResult.payload?.status == false) {
