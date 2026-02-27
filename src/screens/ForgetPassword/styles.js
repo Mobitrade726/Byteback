@@ -433,7 +433,7 @@ const styles_forgetpassword = StyleSheet.create({
   title: {
     fontSize: responsive.fontSize(30),
     fontWeight: 'bold',
-    marginTop: responsive.marginTop(50),
+    // marginTop: responsive.marginTop(50),
   },
 
   description: {

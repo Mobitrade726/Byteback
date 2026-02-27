@@ -180,26 +180,29 @@ const LoginScreen = ({ navigation }) => {
         } catch (e) {
           setLoading(false);
         }
-
         // 4️⃣ Reverse-geocoding (only if location exists)
         if (loc) {
           try {
-            const response = await axios.get(
-              'https://nominatim.openstreetmap.org/reverse',
-              {
-                params: {
-                  format: 'json',
-                  lat: loc.latitude,
-                  lon: loc.longitude,
-                  zoom: 10,
-                  addressdetails: 1,
-                  email: 'support@yourapp.com',
-                },
-                timeout: 25000, // 🔥 FIX: safe timeout
-              },
-            );
+            // const response = await axios.get(
+            //   'https://nominatim.openstreetmap.org/reverse',
+            //   {
+            //     params: {
+            //       format: 'json',
+            //       lat: loc.latitude,
+            //       lon: loc.longitude,
+            //       zoom: 10,
+            //       addressdetails: 1,
+            //       email: 'support@yourapp.com',
+            //     },
+            //     timeout: 25000, // 🔥 FIX: safe timeout
+            //   },
+            // );
+
+            // console.log('response+++++++response+++++++++++++++', response);
 
             const addressData = response?.data?.address;
+
+            console.log('addressData++++++++++++++++++++++', addressData);
 
             addr = {
               city:
@@ -212,6 +215,7 @@ const LoginScreen = ({ navigation }) => {
             };
           } catch (error) {
             setLoading(false);
+            console.log('response--------------->', error);
             // Continue login even if address fails
           }
         }
@@ -360,6 +364,13 @@ const LoginScreen = ({ navigation }) => {
               New here?{' '}
               <Text style={{ color: '#CB444B' }}>Create an Account</Text>
             </Text>
+          </TouchableOpacity>
+
+          <TouchableOpacity
+            onPress={() => navigation.navigate('OtpLoginScreen')}
+            style={styles.LoginOtpButton}
+          >
+            <Text style={styles.loginText}>Login with OTP</Text>
           </TouchableOpacity>
         </View>
       </View>

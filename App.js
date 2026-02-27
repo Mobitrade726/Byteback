@@ -348,6 +348,10 @@ import {
   Image,
   TouchableOpacity,
   Dimensions,
+  Modal,
+  Linking,
+  Platform,
+  BackHandler,
 } from 'react-native';
 
 import NetInfo from '@react-native-community/netinfo';
@@ -358,20 +362,41 @@ import { checkFlexibleUpdate } from './src/utils/flexibleUpdate';
 import { NavigationContainer } from '@react-navigation/native';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
 import Toast from 'react-native-toast-message';
-
 import RootNavigation from './src/navigation/TabNavigator/RootNavigation';
+import DeviceInfo from 'react-native-device-info';
 
+const REQUIRED_VERSION = '1.0.18';
 const { width } = Dimensions.get('window');
 
 const App = () => {
   const [isConnected, setIsConnected] = useState(true);
+  const [updateVisible, setUpdateVisible] = useState(false);
 
-  // useEffect(() => {
-  //   const unsubscribe = NetInfo.addEventListener(state => {
-  //     setIsConnected(state.isConnected);
-  //   });
-  //   return () => unsubscribe();
-  // }, []);
+  useEffect(() => {
+    const currentVersion = DeviceInfo.getVersion();
+
+    console.log('currentVersion++++++++', currentVersion);
+
+    if (currentVersion !== REQUIRED_VERSION) {
+      setUpdateVisible(true);
+    }
+  }, []);
+
+  useEffect(() => {
+    const backAction = () => {
+      if (updateVisible) {
+        return true; // block back
+      }
+      return false;
+    };
+
+    const backHandler = BackHandler.addEventListener(
+      'hardwareBackPress',
+      backAction,
+    );
+
+    return () => backHandler.remove();
+  }, [updateVisible]);
 
   const [checkedUpdate, setCheckedUpdate] = useState(false);
 
@@ -425,6 +450,65 @@ const App = () => {
           <NavigationContainer>
             <RootNavigation />
             <Toast />
+            <Modal visible={updateVisible} transparent animationType="fade">
+              <View
+                style={{
+                  flex: 1,
+                  justifyContent: 'center',
+                  alignItems: 'center',
+                  backgroundColor: 'rgba(0,0,0,0.5)',
+                }}
+              >
+                <View
+                  style={{
+                    width: '85%',
+                    backgroundColor: '#fff',
+                    padding: 25,
+                    borderRadius: 12,
+                  }}
+                >
+                  <Text
+                    style={{
+                      fontSize: 18,
+                      fontWeight: 'bold',
+                      marginBottom: 10,
+                    }}
+                  >
+                    Update Required 🚀
+                  </Text>
+
+                  <Text style={{ marginBottom: 20 }}>
+                    A new version of the app is available. Please update to
+                    continue.
+                  </Text>
+
+                  <TouchableOpacity
+                    style={{
+                      backgroundColor: '#000',
+                      padding: 12,
+                      borderRadius: 8,
+                    }}
+                    onPress={() => {
+                      Linking.openURL(
+                        Platform.OS === 'android'
+                          ? 'https://play.google.com/store/apps/details?id=com.byteback' // 👈 apna package name
+                          : 'https://apps.apple.com/app/id123456789', // 👈 apna App Store ID
+                      );
+                    }}
+                  >
+                    <Text
+                      style={{
+                        color: '#fff',
+                        textAlign: 'center',
+                        fontWeight: '600',
+                      }}
+                    >
+                      Update Now
+                    </Text>
+                  </TouchableOpacity>
+                </View>
+              </View>
+            </Modal>
           </NavigationContainer>
         </SafeAreaProvider>
       </PersistGate>

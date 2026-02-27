@@ -56,6 +56,51 @@ export const forgotEmailAPI = createAsyncThunk(
     }
   },
 );
+// export const forgotMobileAPI = createAsyncThunk(
+//   'auth/forgotMobileAPI',
+//   async (email, { rejectWithValue }) => {
+//     try {
+//       const response = await axios.post(
+//         `${API_BASE_URL}/check-phone`,
+//         {email: email }, // 👈 email in body
+//         {
+//           headers: {
+//             'Content-Type': 'application/json',
+//             Accept: 'application/json',
+//           },
+//         },
+//       );
+//       console.log("reduxt email+++++++++++++++", response)
+//       if (response.data?.status) {
+//         return response.data;
+//       } else {
+//         return rejectWithValue(response.data?.message || 'Failed to send OTP');
+//       }
+//     } catch (error) {
+//       return rejectWithValue(error.response?.data?.message || 'Network error');
+//     }
+//   },
+// );
+
+export const forgotMobileAPI = createAsyncThunk(
+  'mobileauth/forgotMobile',
+  async (email, { rejectWithValue }) => {
+    try {
+      const response = await axios.post(
+        `${API_BASE_URL}/forget-phone`,
+        { email }
+      );
+
+      console.log('FORGET PHONE RESPONSE:', response.data);
+
+      return response.data; // ✅ IMPORTANT
+    } catch (error) {
+      return rejectWithValue(
+        error.response?.data || { message: 'Something went wrong' }
+      );
+    }
+  }
+);
 
 /* =========================================================
    ✅ VERIFY OTP
@@ -122,6 +167,7 @@ const forgotPasswordSlice = createSlice({
     verifyData: null, // verify OTP response
     resetData: null, // reset password response
     resetDataEmail: null, // reset password response
+    resetDataMobile: null, // reset password response
   },
 
   reducers: {
@@ -197,6 +243,22 @@ const forgotPasswordSlice = createSlice({
         state.resetDataEmail = action.payload;
       })
       .addCase(forgotEmailAPI.rejected, (state, action) => {
+        state.loading = false;
+        state.success = false;
+        state.error = action.payload?.message || 'Something went wrong';
+      });
+    /* ================= Phone Forget ================= */
+    builder
+      .addCase(forgotMobileAPI.pending, state => {
+        state.loading = true;
+        state.error = null;
+      })
+      .addCase(forgotMobileAPI.fulfilled, (state, action) => {
+        state.loading = false;
+        state.success = true;
+        state.resetDataMobile = action.payload;
+      })
+      .addCase(forgotMobileAPI.rejected, (state, action) => {
         state.loading = false;
         state.success = false;
         state.error = action.payload?.message || 'Something went wrong';

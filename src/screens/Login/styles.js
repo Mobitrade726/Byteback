@@ -138,7 +138,7 @@ export default StyleSheet.create({
     fontSize: responsive.fontSize(17),
     fontFamily: 'Source Serif 4',
     padding: responsive.padding(13),
-    color:"#000"
+    color: '#000',
   },
 
   forgotContainer: {
@@ -175,6 +175,13 @@ export default StyleSheet.create({
     borderRadius: wp(4),
     paddingVertical: hp(1.5),
     alignItems: 'center',
+    marginBottom: responsive.marginBottom(5),
+  },
+  LoginOtpButton: {
+    backgroundColor: '#666666',
+    borderRadius: wp(4),
+    paddingVertical: hp(1.5),
+    alignItems: 'center',
     marginBottom: responsive.marginBottom(20),
   },
 
@@ -190,7 +197,7 @@ export default StyleSheet.create({
     fontSize: responsive.fontSize(17),
     textAlign: 'center',
     fontWeight: '600',
-    fontFamily: 'Source Serif 4',
+    fontFamily: 'Source Serif 4', marginBottom: responsive.marginBottom(25),
   },
 
   errorText: {

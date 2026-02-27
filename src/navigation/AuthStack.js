@@ -14,6 +14,12 @@ import setPassword from '../screens/ForgetPassword/setPassword';
 import Home from '../screens/Home/Home';
 import ForgetEmail from '../screens/ForgetEmail/ForgetEmail'
 import ForgetEmailDetils from '../screens/ForgetEmail/ForgetEmailDetils'
+import OtpLoginScreen from '../screens/mobileOtpScreens/OtpLoginScreen'
+import OTPScreen from '../screens/mobileOtpScreens/OTPScreen'
+import OTPInput from '../screens/mobileOtpScreens/OTPInput'
+import SuccessScreen from '../screens/mobileOtpScreens/SuccessScreen'
+import ForgetPhone from '../screens/ForgetPhone/ForgetPhone'
+import ForgetPhoneDetils from '../screens/ForgetPhone/ForgetPhoneDetils'
 
 
 const Stack = createNativeStackNavigator();
@@ -38,6 +44,12 @@ export default function AuthStack() {
       <Stack.Screen name="setPassword" component={setPassword} />
       <Stack.Screen name="ForgetEmail" component={ForgetEmail} />
       <Stack.Screen name="ForgetEmailDetils" component={ForgetEmailDetils} />
+      <Stack.Screen name="OtpLoginScreen" component={OtpLoginScreen} />
+      <Stack.Screen name="OTPScreen" component={OTPScreen} />
+      <Stack.Screen name="OTPInput" component={OTPInput} />
+      <Stack.Screen name="SuccessScreen" component={SuccessScreen} />
+      <Stack.Screen name="ForgetPhone" component={ForgetPhone} />
+      <Stack.Screen name="ForgetPhoneDetils" component={ForgetPhoneDetils} />
     </Stack.Navigator>
   );
 }
