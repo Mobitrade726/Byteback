@@ -365,7 +365,7 @@ import Toast from 'react-native-toast-message';
 import RootNavigation from './src/navigation/TabNavigator/RootNavigation';
 import DeviceInfo from 'react-native-device-info';
 
-const REQUIRED_VERSION = '1.0.19';
+const REQUIRED_VERSION = '1.0.20';
 const { width } = Dimensions.get('window');
 
 const App = () => {

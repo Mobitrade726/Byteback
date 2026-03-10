@@ -1,32 +1,60 @@
 import React, { useRef } from 'react';
-import {
-  View,
-  TextInput,
-  StyleSheet,
-} from 'react-native';
+import { View, TextInput, StyleSheet } from 'react-native';
 import responsive from '../../constants/responsive';
 
 const OTPInput = ({ otp, setOtp, error }) => {
   const inputs = useRef([]);
 
-  const handleChange = (value, index) => {
-    if (!/^\d?$/.test(value)) return;
+  // const handleChange = (value, index) => {
+  //   if (!/^\d?$/.test(value)) return;
 
+  //   const newOtp = [...otp];
+  //   newOtp[index] = value;
+  //   setOtp(newOtp);
+
+  //   if (value && index < otp.length - 1) {
+  //     inputs.current[index + 1].focus();
+  //   }
+  // };
+
+  const handleChange = (value, index) => {
+    if (!/^\d*$/.test(value)) return;
+
+    // ✅ If user pastes full OTP (e.g., 123456)
+    if (value.length === otp.length) {
+      setOtp(value.split(''));
+      inputs.current[otp.length - 1]?.focus();
+      return;
+    }
+
+    // ✅ If user pastes multiple digits starting from a box
+    if (value.length > 1) {
+      const newOtp = [...otp];
+      const digits = value.split('');
+
+      digits.forEach((digit, i) => {
+        if (index + i < otp.length) {
+          newOtp[index + i] = digit;
+        }
+      });
+
+      setOtp(newOtp);
+      inputs.current[Math.min(index + value.length, otp.length - 1)]?.focus();
+      return;
+    }
+
+    // ✅ Normal single digit input
     const newOtp = [...otp];
     newOtp[index] = value;
     setOtp(newOtp);
 
     if (value && index < otp.length - 1) {
-      inputs.current[index + 1].focus();
+      inputs.current[index + 1]?.focus();
     }
   };
 
   const handleKeyPress = (e, index) => {
-    if (
-      e.nativeEvent.key === 'Backspace' &&
-      !otp[index] &&
-      index > 0
-    ) {
+    if (e.nativeEvent.key === 'Backspace' && !otp[index] && index > 0) {
       inputs.current[index - 1].focus();
     }
   };
@@ -37,17 +65,14 @@ const OTPInput = ({ otp, setOtp, error }) => {
         <TextInput
           key={index}
           ref={ref => (inputs.current[index] = ref)}
-          style={[
-            styles.input,
-            error && { borderColor: '#CB444B' },
-          ]}
+          style={[styles.input, error && { borderColor: '#CB444B' }]}
           keyboardType="number-pad"
-          maxLength={1}
+          maxLength={otp.length}
           value={digit}
-          onChangeText={value =>
-            handleChange(value, index)
-          }
+          onChangeText={value => handleChange(value, index)}
           onKeyPress={e => handleKeyPress(e, index)}
+          textContentType="oneTimeCode"
+          autoComplete="sms-otp"
         />
       ))}
     </View>

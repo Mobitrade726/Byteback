@@ -167,7 +167,12 @@ const LoginScreen = ({ navigation }) => {
       setLoading(true);
 
       let loc = null;
-      let addr = null;
+      // let addr = null;
+
+      let addr = {
+        city: 'Unknown',
+        state: 'Unknown',
+      };
 
       // 2️⃣ Device Info
       const deviceType = DeviceInfo.getSystemName();
